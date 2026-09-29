@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Word Course</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --card-bg: #ffffff;
+    --card-border: #cbd5e1;
+    --box-bg: #f1f5f9;
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+    --accent-adv: #7c3aed;
+    --ribbon-bg: #f1f5f9;
+    --ribbon-border: #cbd5e1;
+    --doc-paper-bg: #ffffff;
+    --doc-paper-shadow: rgba(0, 0, 0, 0.08);
+    --highlight-cell: #dbeafe;
+    --highlight-adv: #ede9fe;
+    --completed-bg: #f0fdf4;
+    --completed-border: #86efac;
+  }
+  body.dark-theme {
+    --bg-color: #0f172a;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --card-bg: #1e293b;
+    --card-border: #334155;
+    --box-bg: #0b0f19;
+    --accent: #3b82f6;
+    --accent-hover: #60a5fa;
+    --accent-adv: #a78bfa;
+    --ribbon-bg: #1e293b;
+    --ribbon-border: #334155;
+    --doc-paper-bg: #0f172a;
+    --doc-paper-shadow: rgba(0, 0, 0, 0.4);
+    --highlight-cell: #1e3a8a;
+    --highlight-adv: #4c1d95;
+    --completed-bg: #064e3b;
+    --completed-border: #059669;
+  }
+  * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.2s ease; }
+  body { background-color: var(--bg-color); margin: 0; padding: 14px; color: var(--text-main); font-size: 15px; }
+  
+  .container { max-width: 1150px; margin: 0 auto; }
+  
+  .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .back-btn { text-decoration: none; background: var(--card-bg); border: 1.5px solid var(--card-border); color: var(--text-main); padding: 7px 16px; border-radius: 20px; font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+  .back-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .theme-toggle-btn { background: var(--card-bg); border: 1.5px solid var(--card-border); color: var(--text-main); padding: 7px 16px; border-radius: 20px; font-size: 13.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+
+  /* Hero Banner */
+  .header-card { background: linear-gradient(135deg, #1d4ed8, #2563eb); color: white; border-radius: 18px; padding: 26px 18px; text-align: center; margin-bottom: 24px; box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.25); }
+  .header-title { font-size: 28px; font-weight: 800; margin: 0 0 8px 0; }
+  .header-sub { font-size: 15.5px; opacity: 0.95; max-width: 750px; margin: auto; line-height: 1.5; }
+  .progress-badge-top { display: inline-block; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); padding: 5px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; margin-top: 10px; }
+
+  /* Section Header */
+  .section-header-box { text-align: center; margin: 34px 0 18px 0; }
+  .section-main-title { font-size: 22px; font-weight: 800; margin: 0 0 6px 0; color: var(--text-main); display: inline-block; position: relative; }
+  .section-main-title::after { content: ''; display: block; width: 50px; height: 3.5px; background: var(--accent); margin: 6px auto 0 auto; border-radius: 2px; }
+  .section-sub-text { font-size: 13.5px; color: var(--text-muted); margin-top: 6px; }
+
+  /* SIDE-BY-SIDE OVERVIEW CONTAINER */
+  .overview-side-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  .overview-panel {
+    background: var(--card-bg);
+    border: 1.5px solid var(--card-border);
+    border-radius: 18px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+  }
+  .overview-panel-title { font-size: 18.5px; font-weight: 800; color: var(--accent); display: flex; align-items: center; gap: 8px; margin: 0 0 10px 0; }
+  .overview-panel-desc { font-size: 14px; color: var(--text-muted); line-height: 1.65; margin-bottom: 14px; }
+  
+  .intro-mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .intro-mini-box { background: var(--box-bg); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--card-border); font-size: 13px; line-height: 1.5; }
+  @media(max-width: 500px) { .intro-mini-grid { grid-template-columns: 1fr; } }
+
+  .why-mini-list { display: flex; flex-direction: column; gap: 10px; }
+  .why-mini-item { background: var(--box-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 10px 12px; }
+  .why-mini-item h4 { margin: 0 0 4px 0; font-size: 14px; color: var(--text-main); font-weight: 800; display: flex; align-items: center; gap: 6px; }
+  .why-mini-item p { margin: 0; font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
+
+  /* Interactive Word Lab Sandbox (Default Hidden) */
+  .sandbox-card {
+    background: var(--card-bg);
+    border: 2px solid var(--accent);
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 34px;
+    box-shadow: 0 8px 24px -4px rgba(37, 99, 235, 0.18);
+  }
+  .sandbox-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+  .sandbox-title { font-size: 19px; font-weight: 800; color: var(--text-main); margin: 0; display: flex; align-items: center; gap: 8px; }
+  .toggle-lab-btn {
+    background: var(--box-bg);
+    border: 1.5px solid var(--card-border);
+    color: var(--text-main);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .toggle-lab-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Default Hidden State */
+  #sandboxBody { margin-top: 14px; display: none; }
+
+  /* Ribbon Toolbar */
+  .ribbon-bar {
+    background: var(--ribbon-bg);
+    border: 1px solid var(--ribbon-border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .ribbon-btn-group { display: flex; align-items: center; gap: 4px; background: var(--card-bg); border: 1px solid var(--card-border); padding: 4px; border-radius: 6px; }
+  .ribbon-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    font-size: 13.5px;
+    font-weight: 700;
+    padding: 5px 9px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .ribbon-btn:hover { background: rgba(37,99,235,0.15); color: var(--accent); }
+  .ribbon-select {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-main);
+    padding: 5px 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    outline: none;
+  }
+  .demo-preset-btn {
+    background: rgba(37,99,235,0.1);
+    border: 1px solid rgba(37,99,235,0.3);
+    color: var(--accent);
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .demo-preset-btn:hover { background: var(--accent); color: white; }
+
+  /* Document Paper */
+  .doc-paper-wrapper {
+    background: #94a3b8;
+    padding: 24px 16px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+  }
+  body.dark-theme .doc-paper-wrapper { background: #020617; }
+  
+  .doc-paper {
+    background: var(--doc-paper-bg);
+    color: var(--text-main);
+    width: 100%;
+    max-width: 780px;
+    min-height: 340px;
+    padding: 30px 38px;
+    box-shadow: 0 10px 25px var(--doc-paper-shadow);
+    border-radius: 4px;
+    outline: none;
+    font-size: 14.5px;
+    line-height: 1.65;
+    font-family: 'Calibri', 'Segoe UI', sans-serif;
+  }
+
+  .sandbox-status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    font-weight: 600;
+    padding: 0 4px;
+  }
+
+  /* Lessons Grid */
+  .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 30px; }
+  .lesson-card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--card-border);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  }
+  .lesson-card:hover { border-color: var(--accent); box-shadow: 0 6px 15px -3px rgba(0,0,0,0.06); }
+  .lesson-card.is-completed {
+    background: var(--completed-bg);
+    border-color: var(--completed-border);
+  }
+  
+  .badge { font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 6px; background: rgba(37,99,235,0.12); color: var(--accent); display: inline-block; margin-bottom: 8px; }
+  body.dark-theme .badge { color: #60a5fa; }
+  .badge-adv { background: rgba(124,58,237,0.12) !important; color: var(--accent-adv) !important; }
+
+  .lesson-title { font-size: 18px; font-weight: 800; color: var(--text-main); margin: 0 0 6px 0; }
+  .lesson-desc { font-size: 13.5px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px; }
+  
+  /* Mini Document Preview */
+  .doc-mini-wrapper { overflow-x: auto; margin-bottom: 12px; border: 1px dashed var(--card-border); background: var(--box-bg); padding: 12px; border-radius: 6px; }
+  .doc-preview-content { font-size: 13px; line-height: 1.55; }
+  .doc-highlight { background: var(--highlight-cell); padding: 2px 6px; border-radius: 4px; font-weight: 700; color: var(--accent); }
+  .doc-highlight-adv { background: var(--highlight-adv); padding: 2px 6px; border-radius: 4px; font-weight: 700; color: var(--accent-adv); }
+  
+  /* Action Badge */
+  .action-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(37,99,235,0.1);
+    border: 1px solid rgba(37,99,235,0.25);
+    color: #2563eb;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    font-family: monospace;
+  }
+  body.dark-theme .action-badge { color: #60a5fa; background: rgba(37,99,235,0.2); }
+
+  .prompt-box { background: var(--box-bg); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; border: 1px solid var(--card-border); }
+  .prompt-tag { font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; margin-bottom: 3px; display: block; }
+  .prompt-tag-adv { color: var(--accent-adv) !important; }
+  .prompt-text { font-size: 13.5px; color: var(--text-main); line-height: 1.4; margin: 0; font-family: 'Consolas', monospace; font-weight: 700; }
+  
+  .steps-box { background: rgba(37,99,235,0.06); border-left: 3.5px solid var(--accent); padding: 9px 12px; border-radius: 4px; margin-bottom: 14px; }
+  .steps-box-adv { background: rgba(124,58,237,0.06) !important; border-left: 3.5px solid var(--accent-adv) !important; }
+  .steps-title { font-size: 12.5px; font-weight: 800; color: var(--text-main); margin-bottom: 4px; }
+  .steps-list { margin: 0; padding-left: 16px; font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+  /* Mark as Completed Button */
+  .btn-complete {
+    width: 100%;
+    background: var(--box-bg);
+    border: 1.5px solid var(--card-border);
+    color: var(--text-main);
+    padding: 9px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .btn-complete:hover { border-color: #16a34a; color: #16a34a; }
+  .btn-complete.completed-active { background: #16a34a; border-color: #16a34a; color: white; }
+
+  /* Modified Strip For Next Page Button */
+  .next-course-strip {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .digital-skills-btn {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: #fff !important;
+    text-decoration: none;
+    padding: 16px 28px;
+    border-radius: 14px;
+    font-size: 18px;
+    font-weight: 800;
+    display: inline-block;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+  .digital-skills-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+  
+</style>
+</head>
+<body class="dark-theme">
+
+  <div class="container">
+    
+    <div class="top-bar">
+      <!-- Back to Home Updated to index.html -->
+      <a href="index.html" class="back-btn">← Back to Home</a>
+      <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">☀️ Light Mode</button>
+    </div>
+
+    <!-- Hero Header -->
+    <div class="header-card">
+      <div class="header-title">📄 Microsoft Word Master Course</div>
+      <div class="header-sub">વર્ડ પ્રોસેસિંગ પાયો, ૧૨ ફાઉન્ડેશન અને ૯ કોર્પોરેટ એડવાન્સ મોડ્યુલ્સ (કુલ ૨૧ લેસન્સ).</div>
+      <div class="progress-badge-top">🎯 પ્રગતિ: <span id="completedCounter">0</span> / 21 લેસન્સ પૂર્ણ</div>
+    </div>
+
+    <!-- 1. LIVE INTERACTIVE WORD SANDBOX (DEFAULT HIDDEN) -->
+    <div class="sandbox-card">
+      <div class="sandbox-header">
+        <div class="sandbox-title">⚡ લાઈવ વર્ડ કેનવાસ લેબ (Interactive Ribbon Studio)</div>
+        <button class="toggle-lab-btn" onclick="toggleLab()" id="labToggleBtn">👁️ Open Live Lab</button>
+      </div>
+
+      <div id="sandboxBody">
+        <!-- Word Ribbon Toolbar -->
+        <div class="ribbon-bar">
+          <div class="ribbon-btn-group">
+            <button class="ribbon-btn" onclick="formatDoc('bold')" title="Bold (Ctrl+B)"><b>B</b></button>
+            <button class="ribbon-btn" onclick="formatDoc('italic')" title="Italic (Ctrl+I)"><i>I</i></button>
+            <button class="ribbon-btn" onclick="formatDoc('underline')" title="Underline (Ctrl+U)"><u>U</u></button>
+            <button class="ribbon-btn" onclick="formatDoc('strikeThrough')" title="Strike"><s>S</s></button>
+          </div>
+
+          <div class="ribbon-btn-group">
+            <button class="ribbon-btn" onclick="formatDoc('justifyLeft')" title="Align Left">Left</button>
+            <button class="ribbon-btn" onclick="formatDoc('justifyCenter')" title="Align Center">Center</button>
+            <button class="ribbon-btn" onclick="formatDoc('justifyRight')" title="Align Right">Right</button>
+            <button class="ribbon-btn" onclick="formatDoc('justifyFull')" title="Justify (Ctrl+J)">Justify</button>
+          </div>
+
+          <div class="ribbon-btn-group">
+            <button class="ribbon-btn" onclick="formatDoc('insertUnorderedList')" title="Bullets">• List</button>
+            <button class="ribbon-btn" onclick="formatDoc('insertOrderedList')" title="Numbering">1. List</button>
+          </div>
+
+          <select class="ribbon-select" onchange="changeFontSize(this.value)">
+            <option value="3">12pt (Regular)</option>
+            <option value="4">14pt (Subheading)</option>
+            <option value="5" selected>16pt (Title)</option>
+            <option value="6">20pt (Large Header)</option>
+          </select>
+
+          <select class="ribbon-select" onchange="formatDoc('foreColor', this.value)">
+            <option value="#0f172a">Default (Black)</option>
+            <option value="#2563eb">Blue</option>
+            <option value="#16a34a">Green</option>
+            <option value="#dc2626">Red</option>
+          </select>
+
+          <div style="display:flex; gap:6px; margin-left:auto; flex-wrap:wrap;">
+            <button class="demo-preset-btn" onclick="loadTemplate('leave')">📄 રજાની અરજી</button>
+            <button class="demo-preset-btn" onclick="loadTemplate('paper')">📝 પરીક્ષા પ્રશ્નપત્ર</button>
+            <button class="demo-preset-btn" onclick="loadTemplate('resume')">👤 Resume ટેમ્પ્લેટ</button>
+            <button class="demo-preset-btn" style="background:#fee2e2; color:#dc2626; border-color:#fca5a5;" onclick="clearDoc()">🔄 Clear</button>
+          </div>
+        </div>
+
+        <!-- Real A4 Sheet Canvas -->
+        <div class="doc-paper-wrapper">
+          <div class="doc-paper" id="wordCanvas" contenteditable="true" oninput="updateWordCount()">
+            <h2 style="text-align: center; margin-top: 0; color: #1e40af;">સ્માર્ટ ડિજિટલ સ્કૂલ (Smart Digital School)</h2>
+            <p style="text-align: center; font-size: 13px; color: #64748b; margin-top: -8px;">સત્તાવાર પરિપત્ર અને નોટિસ બોર્ડ ૨૦૨૬</p>
+            <hr style="border: 0; border-top: 1.5px solid #cbd5e1; margin: 16px 0;">
+            <p>આ ડોક્યુમેન્ટ કેનવાસમાં તમે <strong>સીધું ટાઈપ કરી શકો છો</strong> અથવા ઉપરના રિબન બટનો વડે લાઈવ ફોર્મેટિંગ (Bold, Italic, Center Align) ટેસ્ટ કરી શકો છો.</p>
+          </div>
+        </div>
+
+        <div class="sandbox-status-bar">
+          <span>📍 લાઈવ સ્ટેટસ: A4 Paper • Normal Margins (1.0") • Words: <span id="wordCount">32</span></span>
+          <span>💡 જરૂર ન હોય ત્યારે 'Hide Lab' કરી શકાય છે</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. SIDE-BY-SIDE PANELS: What is Word? & Why Learn Word? -->
+    <div class="section-header-box">
+      <div class="section-main-title">Word Overview & Benefits</div>
+      <div class="section-sub-text">ડોક્યુમેન્ટેશનનો પાયો અને વ્યવસાયિક જીવનમાં તેની અનિવાર્યતા.</div>
+    </div>
+
+    <div class="overview-side-container">
+      
+      <!-- Panel 1: Word શું છે? -->
+      <div class="overview-panel">
+        <div class="overview-panel-title">🌱 Word શું છે? (Architecture)</div>
+        <div class="overview-panel-desc">
+          Microsoft Word એ એક <strong>વર્ડ પ્રોસેસિંગ</strong> સોફ્ટવેર છે જે પત્રો, પ્રશ્નપત્રો, રિઝ્યુમ, પુસ્તકો અને ઓફિસ દસ્તાવેજો તૈયાર કરવા વપરાય છે.
+        </div>
+        <div class="intro-mini-grid">
+          <div class="intro-mini-box"><strong>📌 Page Margins:</strong> પાનાની ચારેય બાજુ છૂટતી ૧ ઇંચ ખાલી જગ્યા.</div>
+          <div class="intro-mini-box"><strong>📌 Ribbon Bar:</strong> Home, Insert, Layout વગેરે મેનુ ટૂલ્સ.</div>
+          <div class="intro-mini-box"><strong>📌 Alignment:</strong> Left, Center, Right અને Justify લખાણ.</div>
+          <div class="intro-mini-box"><strong>📌 Styles:</strong> Heading 1, 2 વડે પુસ્તક જેવો વ્યાવસાયિક લુક.</div>
+        </div>
+      </div>
+
+      <!-- Panel 2: શા માટે Word શીખવું જોઈએ? -->
+      <div class="overview-panel">
+        <div class="overview-panel-title">💡 શા માટે Word શીખવું જોઈએ?</div>
+        <div class="overview-panel-desc">
+          વિદ્યાર્થી, શિક્ષક કે ઓફિસ એડમિન માટે લેખિત કાર્યને વ્યાવસાયિક બનાવનાર મહત્વપૂર્ણ સ્કિલ:
+        </div>
+        <div class="why-mini-list">
+          <div class="why-mini-item">
+            <h4><span>📑</span> વ્યવસાયિક પત્રવ્યવહાર</h4>
+            <p>સત્તાવાર અરજીઓ, પરિપત્રો કે લેટર્સ સચોટ ફોર્મેટિંગ સાથે બનાવવા.</p>
+          </div>
+          <div class="why-mini-item">
+            <h4><span>🎓</span> પ્રશ્નપત્રો & અસાઇનમેન્ટ્સ</h4>
+            <p>શિક્ષકો અને વિદ્યાર્થીઓ માટે પેપર ટાઈપિંગ, સમીકરણો અને કોષ્ટકો બનાવવા.</p>
+          </div>
+          <div class="why-mini-item">
+            <h4><span>⚡</span> Mail Merge & ઓટોમેશન</h4>
+            <p>માત્ર ૧ ક્લિકમાં સેંકડો વિદ્યાર્થીઓના પત્રો કે આઈ-કાર્ડ એકસાથે બનાવવા.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 3. PART 1: 12 FOUNDATION LESSONS -->
+    <div class="section-header-box">
+      <div class="section-main-title">Level 1: 12 Foundation Lessons</div>
+      <div class="section-sub-text">ટાઈપિંગ પ્રેક્ટિસ, શોર્ટકટ્સ, પેપર સેટિંગ અને વ્યવહારુ ફોર્મેટિંગ.</div>
+    </div>
+
+    <div class="grid-container">
+
+      <!-- L1 -->
+      <div class="lesson-card" id="card_l1">
+        <div>
+          <span class="badge">Lesson 1</span>
+          <div class="lesson-title">ઓટો-ટાઈપિંગ પ્રેક્ટિસ ટ્રીક (=rand)</div>
+          <div class="lesson-desc">હાથેથી લાંબુ ટાઈપ કર્યા વગર પ્રેક્ટિસ માટે ૧ સેકન્ડમાં તૈયાર ફકરા લાવવા.</div>
+          <div class="doc-mini-wrapper">
+            <div class="doc-preview-content">
+              ⌨️ <strong>Word Magic Code:</strong><br>
+              લખો: <span class="doc-highlight">=rand(3,4)</span> અને <code>Enter</code> આપો.<br>
+              ➔ તરત જ ૩ ફકરા (૪-૪ વાક્યોવાળા) સ્ક્રીન પર આવી જશે!
+            </div>
+          </div>
+          <div class="action-badge">📍 કમાન્ડ: <strong>=rand(ફકરા, વાક્યો)</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Instant Code</span><p class="prompt-text">=rand(3,4)</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>નવા કોરા પેજ પર સીધું <code>=rand(3,4)</code> ટાઈપ કરો.</li><li>કીબોર્ડ પરથી <code>Enter</code> દબાવો. પ્રેક્ટિસ માટે રેડી-મેડ ટેક્સ્ટ મળી જશે.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_l1', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L2 -->
+      <div class="lesson-card" id="card_l2">
+        <div>
+          <span class="badge">Lesson 2</span>
+          <div class="lesson-title">ગુજરાતી-અંગ્રેજી ટાઈપિંગ & સ્પેલચેક</div>
+          <div class="lesson-desc">શ્રુતિ/ઇન્ડિક ફોન્ટ સ્વિચિંગ અને લાલ લીટીવાળી જોડણી ભૂલો સુધારવી.</div>
+          <div class="doc-mini-wrapper">
+            <div class="doc-preview-content">
+              • ગુજરાતી: <span class="doc-highlight">Shruti / Gujarati Indic IME (Win + Space)</span><br>
+              • અંગ્રેજી: Times New Roman / Calibri (12pt)<br>
+              • સ્પેલિંગ ભૂલ: <span style="text-decoration:underline wavy #dc2626;">Skool</span> ➔ <span class="doc-highlight">School (F7)</span>
+            </div>
+          </div>
+          <div class="action-badge">📍 શોર્ટકટ: <strong>Win + Space (ભાષા) | F7 (સ્પેલિંગ)</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Shortcut</span><p class="prompt-text">Win + Space (Switch Lang) | F7 (Spelling Check)</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>ગુજરાતી ટાઈપિંગ માટે કીબોર્ડ પરથી <code>Win + Space</code> દબાવો.</li><li>જોડણી સુધારવા માટે <code>F7</code> દબાવો અથવા શબ્દ પર રાઈટ-ક્લિક કરી સાચો શબ્દ પસંદ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_l2', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L3 -->
+      <div class="lesson-card" id="card_l3">
+        <div>
+          <span class="badge">Lesson 3</span>
+          <div class="lesson-title">A4 પેજ સાઇઝ & ૧ ઇંચ માર્જિન</div>
+          <div class="lesson-desc">પ્રિન્ટિંગ માટે સૌથી પહેલું પગલું જેથી લખાણ પેજની બહાર ન જાય.</div>
+          <div class="doc-mini-wrapper">
+            <div class="doc-preview-content">
+              📄 <strong>Standard Print Setup:</strong><br>
+              • Paper: <span class="doc-highlight">A4 (210 × 297 mm)</span><br>
+              • Margins: <span class="doc-highlight">Normal (1.0" Left, Right, Top, Bottom)</span>
+            </div>
+          </div>
+          <div class="action-badge">📍 મેનુ: <strong>Layout -> Size (A4) -> Margins</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Menu Action</span><p class="prompt-text">Layout -> Size: A4 -> Margins: Normal</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li><strong>Layout</strong> ટેબમાં જાઓ.</li><li>Size માં <strong>A4</strong> અને Margins માં <strong>Normal</strong> સેટ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_l3', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L4 -->
+      <div class="lesson-card" id="card_l4">
+        <div>
+          <span class="badge">Lesson 4</span>
+          <div class="lesson-title">ફોર્મેટ પેઇન્ટર (Format Painter - જાદુઈ બ્રશ)</div>
+          <div class="lesson-desc">એક લખાણની ડિઝાઇન, કલર અને સાઇઝ અન્ય લખાણ પર ૧ ક્લિકમાં લાગુ કરવી.</div>
+          <div class="doc-mini-wrapper">
+            <div class="doc-preview-content">
+              ૧. <span style="color:#2563eb; font-weight:800;">હેડિંગ સ્ટાઇલ [Copy Format]</span> 🖌️<br>
+              ૨. સાદું લખાણ ➔ <span class="doc-highlight">હેડિંગ સ્ટાઇલ [Auto Applied]</span>
+            </div>
+          </div>
+          <div class="action-badge">📍 શોર્ટકટ: <strong>Ctrl + Shift + C / V</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Shortcut</span><p class="prompt-text">Ctrl+Shift+C (Copy Format) | Ctrl+Shift+V (Paste Format)</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>જે લખાણની ડિઝાઇન ગમતી હોય તેને સિલેક્ટ કરી <code>Ctrl + Shift + C</code> આપો.</li><li>જેના પર તે ડિઝાઇન લગાવવી હોય તેને સિલેક્ટ કરી <code>Ctrl + Shift + V</code> આપો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_l4', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L5 -->
+      <div class="lesson-card" id="card_l5">
+        <div>
+          <span class="badge">Lesson 5</span>
+          <div class="lesson-title">પેરેગ્રાફ અલાઈનમેન્ટ (Justify)</div>
+          <div class="lesson-desc">પુસ્તકો અને અખબારોની જેમ બંને બાજુથી લખાણ એકસરખી લાઈનમાં રાખવું.</div>
+          <div class="doc-mini-wrapper">
+            <div class="doc-preview-content" style="text-align:justify;">
+              <span class="doc-highlight">Justified Text:</span> શિક્ષણ એ વ્યક્તિના જીવનમાં પરિવર્તન લાવનાર સૌથી શક્તિશાળી સાધન છે, જેનાથી ભવિષ્ય ઉજ્જવળ બને છે.
+            </div>
+          </div>
+          <div class="action-badge">📍 શોર્ટકટ: <strong>Ctrl + J (Justify)</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Shortcut</span><p class="prompt-text">Ctrl + L (Left) | Ctrl + E (Center) | Ctrl + J (Justify)</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>આખો ફકરો સિલેક્ટ કરો.</li><li>કીબોર્ડ પરથી <code>Ctrl + J</code> દબાવો. ડાબી-જમણી બંને કિનારીઓ સરખી થશે.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_l5', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L6 -->
+      <div class="lesson-card" id="card_l6">
+        <div>
+          <span class="badge">Lesson 6</span>
+          <div class="lesson-title">લાઈન સ્પેસિંગ (૧.૧૫ & ૧.૫)</div>
+          <div class="lesson-desc">વાંચવામાં સરળતા રહે તે માટે બે લીટીઓ વચ્ચે યોગ્ય અંતર રાખવું.</div>
+          <div class="doc-mini-wrapper">
+            <div class="doc-preview-content" style="line-height:1.6;">
+              પ્રથમ લીટી (Line 1)<br>
+              <span class="doc-highlight">૧.૧૫ અથવા ૧.૫ સ્પેસિંગ (આદર્શ અંતર)</span><br>
+              બીજી લીટી (Line 2)
+            </div>
+          </div>
+          <div class="action-badge">📍 શોર્ટકટ્સ: <strong>Ctrl + 1 / Ctrl + 5</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Shortcut</span><p class="prompt-text">Ctrl + 1 (Single) | Ctrl + 5 (1.5 Line Spacing)</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>Home ટેબમાં Paragraph વિભાગમાં જાઓ.</li><li>Line Spacing આઈકોન પર ક્લિક કરી <strong>1.15</strong> અથવા <strong>1.5</strong> પસંદ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_l6', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L7 -->
+      <div class="lesson-card" id="card_l7">
+        <div>
+          <span class="badge">Lesson 7</span>
+          <div class="lesson-title">બુલેટ્સ & પ્રશ્નપત્ર MCQ લિસ્ટિંગ</div>
+          <div class="lesson-desc">પરીક્ષા પેપર માટે (A), (B), (C), (D) અથવા મુદ્દાસર યાદી બનાવવી.</div>
+          <div class="doc-mini-wrapper">
+            <div class="doc-preview-content">
+              પ્રશ્ન ૧: કમ્પ્યુટરનું મગજ કોણ છે?<br>
+              (A) <span class="doc-highlight">CPU</span> &nbsp;&nbsp; (B) Mouse &nbsp;&nbsp; (C) Monitor &nbsp;&nbsp; (D) Keyboard
+            </div>
+          </div>
+          <div class="action-badge">📍 મેનુ: <strong>Home -> Bullets / Numbering</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Menu Action</span><p class="prompt-text">Home -> Numbering Library -> (A), (B), (C) Style</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>વિકલ્પો લખ્યા પછી સિલેક્ટ કરો.</li><li>Numbering ડ્રોપડાઉનમાંથી <strong>(A), (B), (C)</strong> સ્ટાઇલ સિલેક્ટ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_l7', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L8 -->
+      <div class="lesson-card" id="card_l8">
+        <div>
+          <span class="badge">Lesson 8</span>
+          <div class="lesson-title">ટેબલ બનાવવું (Insert Table)</div>
+          <div class="lesson-desc">ટાઈમટેબલ, ગુણપત્રક કે યાદી બનાવવા માટે રો અને કોલમ ઉમેરવા.</div>
+          <div class="doc-mini-wrapper">
+            <table style="width:100%; border-collapse:collapse; text-align:center; font-size:12px;">
+              <tr style="background:#e2e8f0; font-weight:700;"><td style="border:1px solid #cbd5e1; padding:4px;">વાર</td><td style="border:1px solid #cbd5e1; padding:4px;">વિષય</td><td style="border:1px solid #cbd5e1; padding:4px;">સમય</td></tr>
+              <tr><td style="border:1px solid #cbd5e1; padding:4px;">સોમવાર</td><td style="border:1px solid #cbd5e1; padding:4px;" class="doc-highlight">ગણિત</td><td style="border:1px solid #cbd5e1; padding:4px;">08:00 AM</td></tr>
+            </table>
+          </div>
+          <div class="action-badge">📍 મેનુ: <strong>Insert -> Table</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Menu Action</span><p class="prompt-text">Insert -> Table -> Select Rows & Columns (e.g. 3x4)</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li><strong>Insert</strong> ટેબ પર ક્લિક કરી <strong>Table</strong> પસંદ કરો.</li><li>જરૂર મુજબના ખાના (દા.ત. 3 Columns × 4 Rows) સિલેક્ટ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_l8', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L9 -->
+      <div class="lesson-card" id="card_l9">
+        <div>
+          <span class="badge">Lesson 9</span>
+          <div class="lesson-title">હેડર, ફૂટર & પેજ નંબરિંગ</div>
+          <div class="lesson-desc">દરેક પાના પર શાળાનું નામ અને નીચે આપોઆપ પેજ નંબર સેટ કરવો.</div>
+          <div class="doc-mini-wrapper">
+            <div class="doc-preview-content" style="border-bottom:1px solid #94a3b8; padding-bottom:4px; margin-bottom:6px;">
+              🔝 Header: <span class="doc-highlight">Smart Digital School | Board Exam Prep</span>
+            </div>
+            <div class="doc-preview-content" style="text-align:right;">
+              🔻 Footer: Page 1 of 10
+            </div>
+          </div>
+          <div class="action-badge">📍 મેનુ: <strong>Insert -> Header / Page Number</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Action</span><p class="prompt-text">Double-Click on Top to Edit Header | Insert -> Page Number</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>પેજના ઉપરના ભાગમાં ડબલ ક્લિક કરી શાળાનું નામ લખો.</li><li><strong>Insert -> Page Number -> Bottom of Page</strong> આપી પેજ નંબર સેટ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_l9', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L10 -->
+      <div class="lesson-card" id="card_l10">
+        <div>
+          <span class="badge">Lesson 10</span>
+          <div class="lesson-title">ફાઇન્ડ & રીપ્લેસ (Find & Replace)</div>
+          <div class="lesson-desc">આખા ડોક્યુમેન્ટમાંથી ખોટો શબ્દ શોધી ૧ ક્લિકમાં સુધારવો.</div>
+          <div class="doc-mini-wrapper">
+            <div class="doc-preview-content">
+              Find: <span style="color:#dc2626;">2025</span> ➔ Replace with: <span class="doc-highlight">2026</span> (All 45 Replaced)
+            </div>
+          </div>
+          <div class="action-badge">📍 શોર્ટકટ: <strong>Ctrl + H</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Shortcut</span><p class="prompt-text">Ctrl + H -> Find what & Replace with -> Replace All</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>કીબોર્ડ પરથી <code>Ctrl + H</code> દબાવો.</li><li>જે શબ્દ બદલવો હોય તે Find માં અને નવો શબ્દ Replace માં લખી <strong>Replace All</strong> આપો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_l10', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L11 -->
+      <div class="lesson-card" id="card_l11">
+        <div>
+          <span class="badge">Lesson 11</span>
+          <div class="lesson-title">ફોટો ઇન્સર્ટ & ટેક્સ્ટ રેપિંગ (Wrap Text)</div>
+          <div class="lesson-desc">ફોટો મુક્તપણે પાના પર ખસેડવા માટે 'Square' સેટિંગ કરવું.</div>
+          <div class="doc-mini-wrapper">
+            <div class="doc-preview-content">
+              🖼️ [Photo] <span class="doc-highlight">Wrap Text: Square (લખાણ ફોટોની આસપાસ ગોઠવાશે)</span>
+            </div>
+          </div>
+          <div class="action-badge">📍 સેટિંગ: <strong>Wrap Text -> Square</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Action</span><p class="prompt-text">Click Picture -> Picture Format -> Wrap Text -> Square</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li><strong>Insert -> Pictures</strong> થી ફોટો લાવો.</li><li>ફોટો પર રાઇટ ક્લિક કરી <strong>Wrap Text -> Square</strong> કરો. હવે ફોટો ગમે ત્યાં ખસેડી શકાશે.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_l11', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L12 -->
+      <div class="lesson-card" id="card_l12">
+        <div>
+          <span class="badge">Lesson 12</span>
+          <div class="lesson-title">પીડીએફ (PDF) સેવ કરવી</div>
+          <div class="lesson-desc">મોબાઈલ કે પ્રિન્ટરમાં ફોર્મેટિંગ બગડ્યા વગર મોકલવા માટે લોક ફોર્મેટ.</div>
+          <div class="doc-mini-wrapper">
+            <div class="doc-preview-content">
+              💾 Document.docx ➔ <span class="doc-highlight">Document.pdf (Lock Format)</span>
+            </div>
+          </div>
+          <div class="action-badge">📍 શોર્ટકટ: <strong>F12 (Save As)</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Shortcut</span><p class="prompt-text">File -> Save As -> Save as type: PDF (*.pdf)</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li><code>F12</code> કી દબાવો અથવા <strong>File -> Save As</strong> માં જાઓ.</li><li>Save as type માં <strong>PDF</strong> પસંદ કરી સેવ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_l12', this)">⚪ Mark as Completed</button>
+      </div>
+
+    </div>
+
+    <!-- 4. PART 2: 9 ADVANCED & CORPORATE LESSONS -->
+    <div class="section-header-box">
+      <div class="section-main-title" style="color:#7c3aed;">Level 2: 9 Corporate & Advanced Lessons</div>
+      <div class="section-sub-text">Mail Merge, Table of Contents, Professional Resume, Watermark અને AI Writing.</div>
+    </div>
+
+    <div class="grid-container">
+
+      <!-- Adv 1 -->
+      <div class="lesson-card" id="card_adv1" style="border-color:#c4b5fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 1</span>
+          <div class="lesson-title">Mail Merge (બલ્ક લેટર/આઈકાર્ડ)</div>
+          <div class="lesson-desc">Excel શીટ જોડીને ૧ ક્લિકમાં ૫૦૦ વિદ્યાર્થીઓના વ્યક્તિગત પત્રો બનાવવા.</div>
+          <div class="doc-mini-wrapper">
+            <div class="doc-preview-content">
+              પ્રિય વાલીશ્રી <span class="doc-highlight-adv">«Student_Name»</span>,<br>
+              તમારા બાળકના માર્ક્સ: <span class="doc-highlight-adv">«Total_Marks»</span> છે.
+            </div>
+          </div>
+          <div class="action-badge" style="color:#7c3aed;">📍 મેનુ: <strong>Mailings -> Start Mail Merge</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Workflow</span><p class="prompt-text">Mailings -> Select Recipients (Excel Sheet) -> Insert Fields</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li><strong>Mailings</strong> માં જઈ <strong>Use an Existing List</strong> થી એક્સેલ ફાઈલ લિંક કરો.</li><li><strong>Insert Merge Field</strong> થી નામ અને માર્ક્સ મૂકો. <strong>Finish & Merge</strong> આપતાં બધા પત્રો બની જશે.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_adv1', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 2 -->
+      <div class="lesson-card" id="card_adv2" style="border-color:#c4b5fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 2</span>
+          <div class="lesson-title">ટેબલ ઓફ કન્ટેન્ટ્સ (અનુક્રમણિકા)</div>
+          <div class="lesson-desc">મોટા પ્રોજેક્ટ કે પુસ્તકમાં પેજ નંબર સાથેની લાઈવ અનુક્રમણિકા બનાવવી.</div>
+          <div class="doc-mini-wrapper">
+            <div class="doc-preview-content">
+              ૧. પ્રસ્તાવના (Heading 1) .................. Page 2<br>
+              ૨. ડિજિટલ શિક્ષણ (Heading 1) ............... <span class="doc-highlight-adv">Page 5</span>
+            </div>
+          </div>
+          <div class="action-badge" style="color:#7c3aed;">📍 મેનુ: <strong>References -> Table of Contents</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Menu Action</span><p class="prompt-text">References -> Table of Contents -> Automatic Table 1</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>દરેક પાઠના ટાઈટલને <strong>Home -> Heading 1</strong> સ્ટાઇલ આપો.</li><li>પ્રથમ પાના પર જઈ <strong>References -> Table of Contents</strong> ક્લિક કરો. આખી અનુક્રમણિકા આપમેળે બની જશે.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_adv2', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 3 -->
+      <div class="lesson-card" id="card_adv3" style="border-color:#c4b5fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 3</span>
+          <div class="lesson-title">કસ્ટમ વોટરમાર્ક (Watermark)</div>
+          <div class="lesson-desc">નોટ્સ કે પેપરમાં પાછળ આછા અક્ષરે શાળાનો લોગો કે 'CONFIDENTIAL' લખવું.</div>
+          <div class="doc-mini-wrapper" style="text-align:center; background:rgba(124,58,237,0.03);">
+            <div class="doc-preview-content" style="font-size:18px; color:#cbd5e1; font-weight:800; transform:rotate(-15deg); padding:10px;">
+              SMART DIGITAL SCHOOL
+            </div>
+          </div>
+          <div class="action-badge" style="color:#7c3aed;">📍 મેનુ: <strong>Design -> Watermark</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Menu Action</span><p class="prompt-text">Design -> Watermark -> Custom Watermark -> Text</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li><strong>Design</strong> ટેબમાં <strong>Watermark</strong> પર જાઓ.</li><li><strong>Custom Watermark</strong> પસંદ કરી Text માં તમારી શાળાનું નામ લખી OK આપો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_adv3', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 4 -->
+      <div class="lesson-card" id="card_adv4" style="border-color:#c4b5fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 4</span>
+          <div class="lesson-title">ટ્રેક ચેન્જિસ (Track Changes)</div>
+          <div class="lesson-desc">બીજી વ્યક્તિએ ડોક્યુમેન્ટમાં કરેલા ફેરફારો અને ભૂલો લાલ કલરમાં પકડવા.</div>
+          <div class="doc-mini-wrapper">
+            <div class="doc-preview-content">
+              આ વર્ષે શાળા <span style="text-decoration:line-through; color:#dc2626;">સોમવારે</span> <span class="doc-highlight-adv">મંગળવારે</span> ખુલશે. (Tracked)
+            </div>
+          </div>
+          <div class="action-badge" style="color:#7c3aed;">📍 શોર્ટકટ: <strong>Ctrl + Shift + E</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Shortcut</span><p class="prompt-text">Review -> Track Changes (Toggle ON)</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li><strong>Review</strong> ટેબમાં જઈ <strong>Track Changes</strong> ચાલુ કરો.</li><li>હવે કોઈપણ નવો શબ્દ લખાશે કે ડીલીટ થશે તે લાલ રંગના માર્કિંગ સાથે રેકોર્ડ થશે.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_adv4', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 5 -->
+      <div class="lesson-card" id="card_adv5" style="border-color:#c4b5fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 5</span>
+          <div class="lesson-title">પ્રોફેશનલ રિઝ્યુમ મેકિંગ (Resume / CV)</div>
+          <div class="lesson-desc">ટેબલ અને કોલમ ગ્રીડનો ઉપયોગ કરીને આધુનિક ૨-કોલમ બાયોડેટા બનાવવો.</div>
+          <div class="doc-mini-wrapper">
+            <div class="doc-preview-content">
+              👤 <strong>Rajesh Patel</strong> | Computer Teacher<br>
+              <span class="doc-highlight-adv">[Left: Skills & Contact] | [Right: Experience & Education]</span>
+            </div>
+          </div>
+          <div class="action-badge" style="color:#7c3aed;">📍 લેઆઉટ: <strong>2-Column Borderless Table</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Tip</span><p class="prompt-text">Insert Table (1 Row, 2 Columns) -> Hide Borders</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>Insert માંથી ૨ કોલમનું ટેબલ બનાવો.</li><li>ડાબી બાજુ સ્કીલ્સ અને જમણી બાજુ અનુભવ લખ્યા બાદ ટેબલની બોર્ડર <strong>No Border</strong> કરી દો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_adv5', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 6 -->
+      <div class="lesson-card" id="card_adv6" style="border-color:#c4b5fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 6</span>
+          <div class="lesson-title">ડોક્યુમેન્ટ પ્રોટેક્શન (Password Lock)</div>
+          <div class="lesson-desc">કોઈપણ વ્યક્તિ તમારી મંજૂરી વગર ફાઈલ ખોલી કે બદલી ન શકે તેવો લોક.</div>
+          <div class="doc-mini-wrapper">
+            <div class="doc-preview-content">
+              🔒 <span class="doc-highlight-adv">Password Protected: Enter password to open file [ ***** ]</span>
+            </div>
+          </div>
+          <div class="action-badge" style="color:#7c3aed;">📍 મેનુ: <strong>File -> Info -> Protect Document</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Security Action</span><p class="prompt-text">File -> Info -> Encrypt with Password</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li><strong>File</strong> મેનુમાં <strong>Info</strong> પર જાઓ.</li><li><strong>Protect Document -> Encrypt with Password</strong> પસંદ કરી મજબૂત પાસવર્ડ સેટ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_adv6', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 7 -->
+      <div class="lesson-card" id="card_adv7" style="border-color:#c4b5fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 7</span>
+          <div class="lesson-title">ગણિતના સમીકરણો (Equation Editor)</div>
+          <div class="lesson-desc">ગણિતના અઘરા સૂત્રો (અપૂર્ણાંક, વર્ગમૂળ, ઘાત) સચોટ ટાઈપ કરવા.</div>
+          <div class="doc-mini-wrapper" style="text-align:center;">
+            <div class="doc-preview-content">
+              📐 <span class="doc-highlight-adv">A = πr² | x = (-b ± √(b² - 4ac)) / 2a</span>
+            </div>
+          </div>
+          <div class="action-badge" style="color:#7c3aed;">📍 શોર્ટકટ: <strong>Alt + = (Insert Equation)</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Shortcut</span><p class="prompt-text">Press 'Alt + =' to type professional math symbols</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>જ્યાં સૂત્ર લખવું હોય ત્યાં <code>Alt + =</code> દબાવો.</li><li>ઉપર Equation ટૂલબારમાંથી Fraction, Radical કે Matrix પસંદ કરી સૂત્ર ટાઈપ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_adv7', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 8 -->
+      <div class="lesson-card" id="card_adv8" style="border-color:#c4b5fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 8</span>
+          <div class="lesson-title">AI Prompting for Word Drafting</div>
+          <div class="lesson-desc">સત્તાવાર અરજી, નોટિસ કે લેટરનું લખાણ AI પાસેથી ૧ મિનિટમાં ડ્રાફ્ટ કરાવવું.</div>
+          <div class="doc-mini-wrapper">
+            <div class="doc-preview-content">
+              🤖 <span class="doc-highlight-adv">AI Draft: "ઔપચારિક રજાની અરજી / સત્તાવાર નોટિસ ડ્રાફ્ટ"</span>
+            </div>
+          </div>
+          <div class="action-badge" style="color:#7c3aed;">📍 AI ટૂલ: <strong>Gemini / ChatGPT</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">AI Prompt</span><p class="prompt-text">"Draft a formal leave application letter in Gujarati for a school teacher requesting 3 days leave for personal work with proper subject, salutation, and placeholders."</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>આ પ્રોમ્પ્ટ ગૂગલ જેમિનીમાં રન કરો.</li><li>જનરેટ થયેલ પત્ર સીધો કોપી કરી MS Word માં પેસ્ટ કરી પ્રિન્ટ લો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_adv8', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 9 -->
+      <div class="lesson-card" id="card_adv9" style="border-color:#c4b5fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 9</span>
+          <div class="lesson-title">ઓટો-સેવ & રિકવરી (AutoRecover)</div>
+          <div class="lesson-desc">લાઈટ જતી રહે કે અચાનક કમ્પ્યુટર બંધ થાય તો અનસેવ્ડ ફાઈલ પાછી મેળવવી.</div>
+          <div class="doc-mini-wrapper">
+            <div class="doc-preview-content">
+              ⚡ <span class="doc-highlight-adv">AutoRecover: Save every 1 minute | Recover Unsaved Documents</span>
+            </div>
+          </div>
+          <div class="action-badge" style="color:#7c3aed;">📍 સેટિંગ: <strong>File -> Options -> Save</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Recovery Action</span><p class="prompt-text">File -> Info -> Manage Document -> Recover Unsaved Documents</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li><strong>File -> Options -> Save</strong> માં જઈ "Save AutoRecover information every" ને <strong>1 minute</strong> કરી દો.</li><li>જો ફાઇલ સેવ કર્યા વગર બંધ થાય, તો <strong>File -> Info -> Manage Document</strong> માંથી પાછી મેળવી શકાય છે.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_adv9', this)">⚪ Mark as Completed</button>
+      </div>
+
+    </div>
+
+    <!-- 5. NEW DIGITAL SKILLS BUTTON -->
+    <div class="next-course-strip">
+      <a href="index.html" class="digital-skills-btn">💻 ડિજિટલ સ્કીલ્સ શીખો, ભવિષ્ય બનાવો! 🚀</a>
+    </div>
+
+  </div>
+
+  <script>
+    // Toggle Hide / Show Lab (Default Hidden)
+    function toggleLab() {
+      const body = document.getElementById('sandboxBody');
+      const btn = document.getElementById('labToggleBtn');
+      if (body.style.display === 'none' || body.style.display === '') {
+        body.style.display = 'block';
+        btn.innerHTML = '👁️ Hide Lab';
+      } else {
+        body.style.display = 'none';
+        btn.innerHTML = '👁️ Open Live Lab';
+      }
+    }
+
+    // Interactive Mark as Completed Tracking Engine
+    let completedCount = 0;
+    function toggleComplete(cardId, btn) {
+      const card = document.getElementById(cardId);
+      const counter = document.getElementById('completedCounter');
+      
+      if (card.classList.contains('is-completed')) {
+        card.classList.remove('is-completed');
+        btn.classList.remove('completed-active');
+        btn.innerHTML = '⚪ Mark as Completed';
+        completedCount = Math.max(0, completedCount - 1);
+      } else {
+        card.classList.add('is-completed');
+        btn.classList.add('completed-active');
+        btn.innerHTML = '✅ Completed';
+        completedCount++;
+      }
+      counter.innerText = completedCount;
+    }
+
+    // Live Canvas Formatting
+    function formatDoc(cmd, val = null) {
+      document.execCommand(cmd, false, val);
+      document.getElementById('wordCanvas').focus();
+    }
+
+    function changeFontSize(size) {
+      document.execCommand("fontSize", false, size);
+      document.getElementById('wordCanvas').focus();
+    }
+
+    function updateWordCount() {
+      const text = document.getElementById('wordCanvas').innerText.trim();
+      const words = text ? text.split(/\s+/).length : 0;
+      document.getElementById('wordCount').innerText = words;
+    }
+
+    function loadTemplate(type) {
+      const canvas = document.getElementById('wordCanvas');
+      if (type === 'leave') {
+        canvas.innerHTML = `
+          <p><strong>તારીખ:</strong> 01-ઓગસ્ટ-2026</p>
+          <p><strong>પ્રતિ,</strong><br>આચાર્યશ્રી,<br>સ્માર્ટ ડિજિટલ સ્કૂલ, ગુજરાત.</p>
+          <p><strong>વિષય:</strong> અંગત કામ અર્થે ૨ દિવસની રજા મંજૂર કરવા બાબત.</p>
+          <p><strong>માનનીય સાહેબશ્રી,</strong></p>
+          <p style="text-indent: 30px;">સવિનય જણાવવાનું કે મારે ઘરકામ અર્થે બહારગામ જવાનું હોવાથી હું તારીખ 02-ઓગસ્ટ થી 03-ઓગસ્ટ સુધી શાળામાં હાજર રહી શકું તેમ નથી. તો મારી આ ૨ દિવસની રજા મંજૂર કરવા નમ્ર વિનંતી છે.</p>
+          <p style="margin-top: 30px;"><strong>આપનો વિશ્વાસુ વિદ્યાર્થી,</strong><br>અમિત પટેલ (ધોરણ ૧૦ - રોલ નં. ૧૫)</p>
+        `;
+      } else if (type === 'paper') {
+        canvas.innerHTML = `
+          <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:10px;">
+            <h2 style="margin:0;">સ્માર્ટ ડિજિટલ સ્કૂલ - પ્રથમ સત્ર પરીક્ષા ૨૦૨૬</h2>
+            <p style="margin:4px 0 0 0;"><strong>ધોરણ:</strong> ૧૦ &nbsp;|&nbsp; <strong>વિષય:</strong> કમ્પ્યુટર અધ્યયન &nbsp;|&nbsp; <strong>કુલ ગુણ:</strong> ૫૦</p>
+          </div>
+          <p style="margin-top:16px;"><strong>વિભાગ A: નીચે આપેલા પ્રશ્નોના યોગ્ય વિકલ્પ પસંદ કરો. (પ્રત્યેકનો ૧ ગુણ)</strong></p>
+          <p><strong>૧.</strong> કમ્પ્યુટરનું મગજ કોને કહેવામાં આવે છે?<br>
+          &nbsp;&nbsp;(A) માઉસ &nbsp;&nbsp;&nbsp;&nbsp;(B) કીબોર્ડ &nbsp;&nbsp;&nbsp;&nbsp;<strong>(C) CPU</strong> &nbsp;&nbsp;&nbsp;&nbsp;(D) મોનિટર</p>
+        `;
+      } else if (type === 'resume') {
+        canvas.innerHTML = `
+          <div style="border-bottom:2px solid #2563eb; padding-bottom:8px;">
+            <h1 style="margin:0; color:#1e40af;">રાજેશ હર્ષદભાઈ પટેલ</h1>
+            <p style="margin:4px 0 0 0; color:#64748b;">Computer Teacher & IT Specialist | 98250xxxxx | rajesh@email.com</p>
+          </div>
+          <h3 style="color:#2563eb; margin-bottom:4px;">🎯 કરિયર ઓબ્જેક્ટિવ (Objective)</h3>
+          <p style="margin-top:0;">વિદ્યાર્થીઓને આધુનિક કમ્પ્યુટર અને AI સ્કિલ્સ શીખવીને શાળાના શૈક્ષણિક સ્તરને વધુ ડિજિટલ બનાવવું.</p>
+        `;
+      }
+      updateWordCount();
+    }
+
+    function clearDoc() {
+      document.getElementById('wordCanvas').innerHTML = "<p>અહીં તમારું લખાણ ટાઈપ કરો...</p>";
+      updateWordCount();
+    }
+
+    function toggleTheme() {
+      const b = document.body, btn = document.getElementById("themeBtn");
+      b.classList.toggle("dark-theme");
+      btn.innerHTML = b.classList.contains("dark-theme") ? "☀️ Light Mode" : "🌙 Dark Mode";
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Excel Course</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --card-bg: #ffffff;
+    --card-border: #cbd5e1;
+    --box-bg: #f1f5f9;
+    --accent: #16a34a;
+    --accent-hover: #15803d;
+    --accent-adv: #2563eb;
+    --toolbar-bg: #f1f5f9;
+    --toolbar-border: #cbd5e1;
+    --sheet-header-bg: #e2e8f0;
+    --sheet-border: #cbd5e1;
+    --highlight-cell: #dcfce7;
+    --highlight-adv: #dbeafe;
+    --completed-bg: #f0fdf4;
+    --completed-border: #86efac;
+  }
+  body.dark-theme {
+    --bg-color: #0f172a;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --card-bg: #1e293b;
+    --card-border: #334155;
+    --box-bg: #0b0f19;
+    --accent: #4ade80;
+    --accent-hover: #22c55e;
+    --accent-adv: #60a5fa;
+    --toolbar-bg: #1e293b;
+    --toolbar-border: #334155;
+    --sheet-header-bg: #334155;
+    --sheet-border: #475569;
+    --highlight-cell: #064e3b;
+    --highlight-adv: #1e3a8a;
+    --completed-bg: #064e3b;
+    --completed-border: #059669;
+  }
+  * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.2s ease; }
+  body { background-color: var(--bg-color); margin: 0; padding: 14px; color: var(--text-main); font-size: 15px; }
+  
+  .container { max-width: 1150px; margin: 0 auto; }
+  
+  .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .back-btn { text-decoration: none; background: var(--card-bg); border: 1.5px solid var(--card-border); color: var(--text-main); padding: 7px 16px; border-radius: 20px; font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+  .back-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .theme-toggle-btn { background: var(--card-bg); border: 1.5px solid var(--card-border); color: var(--text-main); padding: 7px 16px; border-radius: 20px; font-size: 13.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+
+  /* Hero Banner */
+  .header-card { background: linear-gradient(135deg, #15803d, #16a34a); color: white; border-radius: 18px; padding: 26px 18px; text-align: center; margin-bottom: 24px; box-shadow: 0 10px 25px -5px rgba(22, 163, 74, 0.25); }
+  .header-title { font-size: 28px; font-weight: 800; margin: 0 0 8px 0; }
+  .header-sub { font-size: 15.5px; opacity: 0.95; max-width: 750px; margin: auto; line-height: 1.5; }
+  .progress-badge-top { display: inline-block; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); padding: 5px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; margin-top: 10px; }
+
+  /* Section Header */
+  .section-header-box { text-align: center; margin: 34px 0 18px 0; }
+  .section-main-title { font-size: 22px; font-weight: 800; margin: 0 0 6px 0; color: var(--text-main); display: inline-block; position: relative; }
+  .section-main-title::after { content: ''; display: block; width: 50px; height: 3.5px; background: var(--accent); margin: 6px auto 0 auto; border-radius: 2px; }
+  .section-sub-text { font-size: 13.5px; color: var(--text-muted); margin-top: 6px; }
+
+  /* SIDE-BY-SIDE OVERVIEW CONTAINER */
+  .overview-side-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  .overview-panel {
+    background: var(--card-bg);
+    border: 1.5px solid var(--card-border);
+    border-radius: 18px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+  }
+  .overview-panel-title { font-size: 18.5px; font-weight: 800; color: var(--accent); display: flex; align-items: center; gap: 8px; margin: 0 0 10px 0; }
+  .overview-panel-desc { font-size: 14px; color: var(--text-muted); line-height: 1.65; margin-bottom: 14px; }
+  
+  .intro-mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .intro-mini-box { background: var(--box-bg); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--card-border); font-size: 13px; line-height: 1.5; }
+  @media(max-width: 500px) { .intro-mini-grid { grid-template-columns: 1fr; } }
+
+  .why-mini-list { display: flex; flex-direction: column; gap: 10px; }
+  .why-mini-item { background: var(--box-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 10px 12px; }
+  .why-mini-item h4 { margin: 0 0 4px 0; font-size: 14px; color: var(--text-main); font-weight: 800; display: flex; align-items: center; gap: 6px; }
+  .why-mini-item p { margin: 0; font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
+
+  /* Interactive Spreadsheet Studio Sandbox (Default Hidden) */
+  .sandbox-card {
+    background: var(--card-bg);
+    border: 2px solid var(--accent);
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 34px;
+    box-shadow: 0 8px 24px -4px rgba(22, 163, 74, 0.18);
+  }
+  .sandbox-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+  .sandbox-title { font-size: 19px; font-weight: 800; color: var(--text-main); margin: 0; display: flex; align-items: center; gap: 8px; }
+  .toggle-lab-btn {
+    background: var(--box-bg);
+    border: 1.5px solid var(--card-border);
+    color: var(--text-main);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .toggle-lab-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Default Hidden State */
+  #sandboxBody { margin-top: 14px; display: none; }
+
+  /* Formula Bar & Ribbon */
+  .formula-bar-container {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    background: var(--toolbar-bg);
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--toolbar-border);
+    margin-bottom: 14px;
+  }
+  .name-box { background: var(--card-bg); border: 1px solid var(--card-border); padding: 6px 12px; border-radius: 4px; font-family: monospace; font-weight: 800; font-size: 14px; color: var(--accent); width: 60px; text-align: center; }
+  .fx-label { font-weight: 800; font-style: italic; color: var(--accent); font-family: serif; font-size: 18px; }
+  .formula-input { flex: 1; background: var(--card-bg); border: 1px solid var(--card-border); padding: 7px 12px; border-radius: 6px; font-size: 14px; font-family: 'Consolas', monospace; font-weight: 600; color: var(--text-main); outline: none; }
+  .calc-btn { background: var(--accent); color: white; border: none; padding: 7px 18px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 13.5px; }
+  .calc-btn:hover { background: var(--accent-hover); }
+
+  /* Preset Toolbar */
+  .template-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .demo-preset-btn {
+    background: rgba(22,163,74,0.1);
+    border: 1px solid rgba(22,163,74,0.3);
+    color: var(--accent);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .demo-preset-btn:hover { background: var(--accent); color: white; }
+
+  /* Spreadsheet Canvas Table */
+  .sheet-canvas-wrapper {
+    background: var(--card-bg);
+    border: 1px solid var(--sheet-border);
+    border-radius: 8px;
+    overflow-x: auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+  }
+  .sheet-canvas {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+  }
+  .sheet-canvas th, .sheet-canvas td {
+    border: 1px solid var(--sheet-border);
+    padding: 7px 10px;
+    min-width: 85px;
+    outline: none;
+  }
+  .sheet-h-col { background: var(--sheet-header-bg); font-weight: 800; color: var(--text-main); font-size: 12.5px; }
+  .sheet-h-row { background: var(--sheet-header-bg); font-weight: 800; color: var(--text-main); width: 35px; min-width: 35px; }
+  
+  .cell-selected { box-shadow: inset 0 0 0 2px var(--accent) !important; background: rgba(22,163,74,0.06); }
+  .cell-active-result { background: var(--highlight-cell) !important; font-weight: 800; color: var(--accent); animation: pulseCell 0.5s ease; }
+  .cell-fail { background: rgba(239, 68, 68, 0.15) !important; color: #dc2626 !important; font-weight: 800; }
+  .cell-pass { background: rgba(34, 197, 94, 0.15) !important; color: #16a34a !important; font-weight: 800; }
+  @keyframes pulseCell { 0% { transform: scale(0.95); } 100% { transform: scale(1); } }
+
+  .sandbox-status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    font-weight: 600;
+    padding: 0 4px;
+  }
+
+  /* Lessons Grid */
+  .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 30px; }
+  .lesson-card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--card-border);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  }
+  .lesson-card:hover { border-color: var(--accent); box-shadow: 0 6px 15px -3px rgba(0,0,0,0.06); }
+  .lesson-card.is-completed {
+    background: var(--completed-bg);
+    border-color: var(--completed-border);
+  }
+  
+  .badge { font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 6px; background: rgba(22,163,74,0.12); color: var(--accent); display: inline-block; margin-bottom: 8px; }
+  body.dark-theme .badge { color: #4ade80; }
+  .badge-adv { background: rgba(37,99,235,0.12) !important; color: var(--accent-adv) !important; }
+
+  .lesson-title { font-size: 18px; font-weight: 800; color: var(--text-main); margin: 0 0 6px 0; }
+  .lesson-desc { font-size: 13.5px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px; }
+  
+  /* Mini Sheet Mockup in Cards */
+  .sheet-mini-wrapper { overflow-x: auto; margin-bottom: 12px; border: 1px solid var(--sheet-border); border-radius: 6px; }
+  .sheet-mini-table { width: 100%; border-collapse: collapse; font-size: 12.5px; text-align: center; font-family: 'Consolas', monospace; }
+  .sheet-mini-table th, .sheet-mini-table td { border: 1px solid var(--sheet-border); padding: 5px 7px; white-space: nowrap; }
+  .cell-hl { background: var(--highlight-cell); font-weight: 800; color: var(--accent); }
+  .cell-hl-adv { background: var(--highlight-adv); font-weight: 800; color: var(--accent-adv); }
+  
+  /* Target Cell Badges */
+  .target-cell-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(37,99,235,0.1);
+    border: 1px solid rgba(37,99,235,0.25);
+    color: #2563eb;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    font-family: monospace;
+  }
+  body.dark-theme .target-cell-badge { color: #60a5fa; background: rgba(37,99,235,0.2); }
+
+  .prompt-box { background: var(--box-bg); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; border: 1px solid var(--card-border); }
+  .prompt-tag { font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; margin-bottom: 3px; display: block; }
+  .prompt-tag-adv { color: var(--accent-adv) !important; }
+  .prompt-text { font-size: 13.5px; color: var(--text-main); line-height: 1.4; margin: 0; font-family: 'Consolas', monospace; font-weight: 700; }
+  
+  .steps-box { background: rgba(22,163,74,0.06); border-left: 3.5px solid var(--accent); padding: 9px 12px; border-radius: 4px; margin-bottom: 14px; }
+  .steps-box-adv { background: rgba(37,99,235,0.06) !important; border-left: 3.5px solid var(--accent-adv) !important; }
+  .steps-title { font-size: 12.5px; font-weight: 800; color: var(--text-main); margin-bottom: 4px; }
+  .steps-list { margin: 0; padding-left: 16px; font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+  /* Mark as Completed Button */
+  .btn-complete {
+    width: 100%;
+    background: var(--box-bg);
+    border: 1.5px solid var(--card-border);
+    color: var(--text-main);
+    padding: 9px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .btn-complete:hover { border-color: #16a34a; color: #16a34a; }
+  .btn-complete.completed-active { background: #16a34a; border-color: #16a34a; color: white; }
+
+  /* Modified Strip For Next Page Button */
+  .next-course-strip {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .digital-skills-btn {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: #fff !important;
+    text-decoration: none;
+    padding: 16px 28px;
+    border-radius: 14px;
+    font-size: 18px;
+    font-weight: 800;
+    display: inline-block;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+  .digital-skills-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+  
+</style>
+</head>
+<body class="dark-theme">
+
+  <div class="container">
+    
+    <div class="top-bar">
+      <!-- Back to Home Updated to index.html -->
+      <a href="index.html" class="back-btn">← Back to Home</a>
+      <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">☀️ Light Mode</button>
+    </div>
+
+    <!-- Hero Header -->
+    <div class="header-card">
+      <div class="header-title">📊 Microsoft Excel Master Course</div>
+      <div class="header-sub">સ્પ્રેડશીટ પાયો, ૧૨ ફાઉન્ડેશન અને ૯ કોર્પોરેટ એડવાન્સ મોડ્યુલ્સ (કુલ ૨૧ લેસન્સ).</div>
+      <div class="progress-badge-top">🎯 પ્રગતિ: <span id="completedCounter">0</span> / 21 લેસન્સ પૂર્ણ</div>
+    </div>
+
+    <!-- 1. LIVE INTERACTIVE EXCEL SANDBOX (DEFAULT HIDDEN) -->
+    <div class="sandbox-card">
+      <div class="sandbox-header">
+        <div class="sandbox-title">⚡ લાઈવ સ્પ્રેડશીટ ગ્રીડ લેબ (Interactive Formula Studio)</div>
+        <button class="toggle-lab-btn" onclick="toggleLab()" id="labToggleBtn">👁️ Open Live Lab</button>
+      </div>
+
+      <div id="sandboxBody">
+        <!-- Formula Bar -->
+        <div class="formula-bar-container">
+          <div class="name-box" id="activeCellName">E2</div>
+          <span class="fx-label">fx</span>
+          <input type="text" id="liveFormulaInput" class="formula-input" value="=SUM(B2:D2)">
+          <button class="calc-btn" onclick="runLiveEngine()">Run Formula ↵</button>
+        </div>
+
+        <!-- Preset Template Buttons -->
+        <div class="template-bar">
+          <span style="font-size:12.5px; font-weight:800; color:var(--accent); padding-right:4px;">📋 Load Sheet:</span>
+          <button class="demo-preset-btn" onclick="loadGridPreset('result')">🎓 માર્કશીટ & રિઝલ્ટ</button>
+          <button class="demo-preset-btn" onclick="loadGridPreset('sales')">💼 સેલ્સ & બિલિંગ (GST)</button>
+          <button class="demo-preset-btn" onclick="loadGridPreset('vlookup')">🔍 VLOOKUP ડેટાબેઝ</button>
+          <button class="demo-preset-btn" style="background:#fee2e2; color:#dc2626; border-color:#fca5a5; margin-left:auto;" onclick="resetGrid()">🔄 Reset Sheet</button>
+        </div>
+
+        <!-- Real Spreadsheet Table Grid -->
+        <div class="sheet-canvas-wrapper">
+          <table class="sheet-canvas" id="mainGridTable">
+            <thead>
+              <tr>
+                <th class="sheet-h-col" style="width:35px;"></th>
+                <th class="sheet-h-col">A</th>
+                <th class="sheet-h-col">B</th>
+                <th class="sheet-h-col">C</th>
+                <th class="sheet-h-col">D</th>
+                <th class="sheet-h-col">E</th>
+                <th class="sheet-h-col">F</th>
+              </tr>
+            </thead>
+            <tbody id="gridBody">
+              <!-- Dynamic Grid Loaded by JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sandbox-status-bar">
+          <span id="gridOutputMsg">💡 સેલ <strong>E2</strong> માં અમિતના કુલ માર્ક્સ ગણવા માટે 'Run Formula' દબાવો.</span>
+          <span>⚡ In-Cell Engine Ready</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. SIDE-BY-SIDE PANELS: What is Excel? & Why Learn Excel? -->
+    <div class="section-header-box">
+      <div class="section-main-title">Excel Overview & Benefits</div>
+      <div class="section-sub-text">સ્પ્રેડશીટનો પાયો અને જીવન ઉપયોગી કૌશલ્ય તરીકેના ફાયદા.</div>
+    </div>
+
+    <div class="overview-side-container">
+      
+      <!-- Panel 1: Excel શું છે? -->
+      <div class="overview-panel">
+        <div class="overview-panel-title">🌱 Excel શું છે? (Architecture)</div>
+        <div class="overview-panel-desc">
+          Excel એ એક <strong>સ્પ્રેડશીટ</strong> પ્રોગ્રામ છે જે ડેટા સાચવવા, ગણતરી કરવા અને પરિણામો બનાવવા માટે વપરાય છે.
+        </div>
+        <div class="intro-mini-grid">
+          <div class="intro-mini-box"><strong>📌 Columns:</strong> A, B, C, D... ઉભા સ્તંભો.</div>
+          <div class="intro-mini-box"><strong>📌 Rows:</strong> 1, 2, 3, 4... આડી હરોળો.</div>
+          <div class="intro-mini-box"><strong>📌 Cell Address:</strong> રો અને કોલમ જ્યાં ભેગા થાય તે સેલ (દા.ત. A1, B2).</div>
+          <div class="intro-mini-box"><strong>📌 Formula:</strong> ગણતરી હંમેશા <strong>= (બરાબર)</strong> થી શરૂ થાય છે.</div>
+        </div>
+      </div>
+
+      <!-- Panel 2: શા માટે Excel શીખવું જોઈએ? -->
+      <div class="overview-panel">
+        <div class="overview-panel-title">💡 શા માટે Excel શીખવું જોઈએ?</div>
+        <div class="overview-panel-desc">
+          વિદ્યાર્થી, વાલી કે પ્રોફેશનલ માટે સમય બચાવનાર અને કરિયર ગ્રોથ આપતી સૌથી મહત્વપૂર્ણ સ્કિલ:
+        </div>
+        <div class="why-mini-list">
+          <div class="why-mini-item">
+            <h4><span>⏱️</span> કલાકોનું કામ સેકન્ડોમાં</h4>
+            <p>હજારો ડેટાનું ટોટલ, સરેરાશ અને બિલિંગ માત્ર ૧ ક્લિકમાં ગણાઈ જાય છે.</p>
+          </div>
+          <div class="why-mini-item">
+            <h4><span>🎯</span> ૧૦૦% સચોટ ગણતરી</h4>
+            <p>ફોર્મ્યુલા આધારિત ગણતરીથી માનવ ભૂલ વગર સાચા આંકડા મળે છે.</p>
+          </div>
+          <div class="why-mini-item">
+            <h4><span>💼</span> ટોપ કરિયર & જોબ સ્કિલ</h4>
+            <p>ઓફિસ, શાળા કે કોર્પોરેટ ક્ષેત્રમાં એક્સેલ જાણનારની હંમેશા પ્રથમ માંગ રહે છે.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 3. PART 1: 12 FOUNDATION LESSONS -->
+    <div class="section-header-box">
+      <div class="section-main-title">Level 1: 12 Foundation Lessons</div>
+      <div class="section-sub-text">દરેક લેસનમાં વાસ્તવિક શીટ ઉદાહરણ, Target Cell અને સ્ટેપ-બાય-સ્ટેપ રીત.</div>
+    </div>
+
+    <div class="grid-container">
+
+      <!-- L1 -->
+      <div class="lesson-card" id="card_ex_l1">
+        <div>
+          <span class="badge">Lesson 1</span>
+          <div class="lesson-title">કુલ સરવાળો કરવો (SUM)</div>
+          <div class="lesson-desc">માર્કશીટ કે બિલિંગમાં અલગ-અલગ વિષયોનો કુલ સરવાળો કાઢવા માટે.</div>
+          <div class="sheet-mini-wrapper">
+            <table class="sheet-mini-table">
+              <tr><th class="sheet-h-col"></th><th class="sheet-h-col">A</th><th class="sheet-h-col">B</th><th class="sheet-h-col">C</th><th class="sheet-h-col">D</th><th class="sheet-h-col">E</th></tr>
+              <tr><th class="sheet-h-row">1</th><td>નામ</td><td>ગણિત</td><td>વિજ્ઞાન</td><td>અંગ્રેજી</td><td>કુલ ગુણ</td></tr>
+              <tr><th class="sheet-h-row">2</th><td>અમિત</td><td>85</td><td>78</td><td>92</td><td class="cell-hl">255</td></tr>
+              <tr><th class="sheet-h-row">3</th><td>પ્રિયા</td><td>65</td><td>70</td><td>58</td><td class="cell-hl">193</td></tr>
+              <tr><th class="sheet-h-row">4</th><td>રાહુલ</td><td>28</td><td>34</td><td>30</td><td class="cell-hl">92</td></tr>
+            </table>
+          </div>
+          <div class="target-cell-badge">📍 ફોર્મ્યુલા લખવાનો સેલ: <strong>E2</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Formula</span><p class="prompt-text">=SUM(B2:D2)</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>સેલ <strong>E2</strong> પર ક્લિક કરો.</li><li>તેમાં <code>=SUM(B2:D2)</code> લખી કીબોર્ડ પરથી <code>Enter</code> આપો અને નીચે સુધી ડ્રેગ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ex_l1', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L2 -->
+      <div class="lesson-card" id="card_ex_l2">
+        <div>
+          <span class="badge">Lesson 2</span>
+          <div class="lesson-title">સરેરાશ ટકાવારી (AVERAGE)</div>
+          <div class="lesson-desc">વિદ્યાર્થીઓની ટકાવારી કે માસિક સરેરાશ વેચાણ શોધવા માટે.</div>
+          <div class="sheet-mini-wrapper">
+            <table class="sheet-mini-table">
+              <tr><th class="sheet-h-col"></th><th class="sheet-h-col">A</th><th class="sheet-h-col">B</th><th class="sheet-h-col">C</th><th class="sheet-h-col">D</th><th class="sheet-h-col">E</th></tr>
+              <tr><th class="sheet-h-row">1</th><td>નામ</td><td>વિષય ૧</td><td>વિષય ૨</td><td>વિષય ૩</td><td>ટકા (%)</td></tr>
+              <tr><th class="sheet-h-row">2</th><td>અમિત</td><td>85</td><td>78</td><td>92</td><td class="cell-hl">85.0%</td></tr>
+              <tr><th class="sheet-h-row">3</th><td>પ્રિયા</td><td>65</td><td>70</td><td>58</td><td class="cell-hl">64.3%</td></tr>
+              <tr><th class="sheet-h-row">4</th><td>રાહુલ</td><td>28</td><td>34</td><td>30</td><td class="cell-hl">30.6%</td></tr>
+            </table>
+          </div>
+          <div class="target-cell-badge">📍 ફોર્મ્યુલા લખવાનો સેલ: <strong>E2</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Formula</span><p class="prompt-text">=AVERAGE(B2:D2)</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>સેલ <strong>E2</strong> પસંદ કરો.</li><li>તેમાં <code>=AVERAGE(B2:D2)</code> લખી <code>Enter</code> દબાવો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ex_l2', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L3 -->
+      <div class="lesson-card" id="card_ex_l3">
+        <div>
+          <span class="badge">Lesson 3</span>
+          <div class="lesson-title">ગુણાકાર & GST બિલિંગ (Qty × Rate)</div>
+          <div class="lesson-desc">દુકાન કે વ્યવસાયમાં આઇટમનો જથ્થો, ભાવ અને ૧૮% GST ગણતરી.</div>
+          <div class="sheet-mini-wrapper">
+            <table class="sheet-mini-table">
+              <tr><th class="sheet-h-col"></th><th class="sheet-h-col">A</th><th class="sheet-h-col">B</th><th class="sheet-h-col">C</th><th class="sheet-h-col">D</th><th class="sheet-h-col">E</th></tr>
+              <tr><th class="sheet-h-row">1</th><td>આઇટમ</td><td>Qty</td><td>Rate ₹</td><td>Amount ₹</td><td>18% GST ₹</td></tr>
+              <tr><th class="sheet-h-row">2</th><td>લેપટોપ</td><td>5</td><td>30000</td><td class="cell-hl">150000</td><td class="cell-hl">27000</td></tr>
+              <tr><th class="sheet-h-row">3</th><td>પ્રિન્ટર</td><td>3</td><td>8000</td><td class="cell-hl">24000</td><td class="cell-hl">4320</td></tr>
+              <tr><th class="sheet-h-row">4</th><td>માઉસ</td><td>20</td><td>350</td><td class="cell-hl">7000</td><td class="cell-hl">1260</td></tr>
+            </table>
+          </div>
+          <div class="target-cell-badge">📍 Amount: <strong>D2</strong> | GST: <strong>E2</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Formula</span><p class="prompt-text">=B2*C2 (D2 માં) | =D2*0.18 (E2 માં)</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>પહેલા સેલ <strong>D2</strong> માં <code>=B2*C2</code> લખી રકમ શોધો.</li><li>ત્યારબાદ સેલ <strong>E2</strong> માં <code>=D2*0.18</code> લખી ૧૮% GST ગણો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ex_l3', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L4 -->
+      <div class="lesson-card" id="card_ex_l4">
+        <div>
+          <span class="badge">Lesson 4</span>
+          <div class="lesson-title">શરતી પરિણામ (IF Condition)</div>
+          <div class="lesson-desc">જો માર્ક્સ ૩૫ કે તેથી વધુ હોય તો Pass, અન્યથા Fail ઓટોમેટિક દર્શાવો.</div>
+          <div class="sheet-mini-wrapper">
+            <table class="sheet-mini-table">
+              <tr><th class="sheet-h-col"></th><th class="sheet-h-col">A</th><th class="sheet-h-col">B</th><th class="sheet-h-col">C</th><th class="sheet-h-col">D</th></tr>
+              <tr><th class="sheet-h-row">1</th><td>વિદ્યાર્થી</td><td>માર્ક્સ</td><td>શરત</td><td>પરિણામ</td></tr>
+              <tr><th class="sheet-h-row">2</th><td>અમિત</td><td>85</td><td>>= 35</td><td class="cell-hl">Pass</td></tr>
+              <tr><th class="sheet-h-row">3</th><td>પ્રિયા</td><td>65</td><td>>= 35</td><td class="cell-hl">Pass</td></tr>
+              <tr><th class="sheet-h-row">4</th><td>રાહુલ</td><td>28</td><td>< 35</td><td class="cell-fail">Fail</td></tr>
+            </table>
+          </div>
+          <div class="target-cell-badge">📍 ફોર્મ્યુલા લખવાનો સેલ: <strong>D2</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Formula</span><p class="prompt-text">=IF(B2>=35, "Pass", "Fail")</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>પરિણામના પહેલા ખાના <strong>D2</strong> પર ક્લિક કરો.</li><li>તેમાં <code>=IF(B2>=35, "Pass", "Fail")</code> લખી <code>Enter</code> આપો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ex_l4', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L5 -->
+      <div class="lesson-card" id="card_ex_l5">
+        <div>
+          <span class="badge">Lesson 5</span>
+          <div class="lesson-title">Flash Fill જાદુ (Ctrl + E)</div>
+          <div class="lesson-desc">પહેલા નામ, છેલ્લા નામ કે ઈમેલ આઈડી આપોઆપ અલગ કરવા.</div>
+          <div class="sheet-mini-wrapper">
+            <table class="sheet-mini-table">
+              <tr><th class="sheet-h-col"></th><th class="sheet-h-col">A</th><th class="sheet-h-col">B</th><th class="sheet-h-col">C</th></tr>
+              <tr><th class="sheet-h-row">1</th><td>પૂરું નામ</td><td>પહેલું નામ</td><td>સરનેમ</td></tr>
+              <tr><th class="sheet-h-row">2</th><td>રાજેશ પટેલ</td><td>રાજેશ</td><td>પટેલ</td></tr>
+              <tr><th class="sheet-h-row">3</th><td>હિતેશ શાહ</td><td class="cell-hl">હિતેશ</td><td class="cell-hl">શાહ</td></tr>
+              <tr><th class="sheet-h-row">4</th><td>અલ્પેશ જોષી</td><td class="cell-hl">અલ્પેશ</td><td class="cell-hl">જોષી</td></tr>
+            </table>
+          </div>
+          <div class="target-cell-badge">📍 ટાઈપ: <strong>B2</strong> | શોર્ટકટ: <strong>B3</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Shortcut</span><p class="prompt-text">Ctrl + E (Flash Fill Shortcut)</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>સેલ <strong>B2</strong> માં જાતે 'રાજેશ' લખો.</li><li>તેની નીચેના સેલ <strong>B3</strong> પર ક્લિક કરી કીબોર્ડ પરથી <code>Ctrl + E</code> દબાવો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ex_l5', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L6 -->
+      <div class="lesson-card" id="card_ex_l6">
+        <div>
+          <span class="badge">Lesson 6</span>
+          <div class="lesson-title">સૌથી વધુ & ઓછા (MAX / MIN)</div>
+          <div class="lesson-desc">હજારો ડેટામાંથી ટોપર માર્ક્સ કે લઘુત્તમ સ્કોર શોધવા.</div>
+          <div class="sheet-mini-wrapper">
+            <table class="sheet-mini-table">
+              <tr><th class="sheet-h-col"></th><th class="sheet-h-col">A</th><th class="sheet-h-col">B</th><th class="sheet-h-col">C</th></tr>
+              <tr><th class="sheet-h-row">1</th><td>રોલ નં.</td><td>વિદ્યાર્થી</td><td>ગણિત ગુણ</td></tr>
+              <tr><th class="sheet-h-row">2</th><td>101</td><td>અમિત</td><td>85</td></tr>
+              <tr><th class="sheet-h-row">3</th><td>102</td><td>પ્રિયા</td><td>92</td></tr>
+              <tr><th class="sheet-h-row">4</th><td>103</td><td>રાહુલ</td><td>28</td></tr>
+              <tr><th class="sheet-h-row">5</th><td colspan="2">સૌથી વધુ (MAX)</td><td class="cell-hl">92</td></tr>
+              <tr><th class="sheet-h-row">6</th><td colspan="2">સૌથી ઓછા (MIN)</td><td class="cell-hl">28</td></tr>
+            </table>
+          </div>
+          <div class="target-cell-badge">📍 MAX: <strong>C5</strong> | MIN: <strong>C6</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Formula</span><p class="prompt-text">=MAX(C2:C4) | =MIN(C2:C4)</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>સેલ <strong>C5</strong> માં <code>=MAX(C2:C4)</code> લખો.</li><li>સેલ <strong>C6</strong> માં <code>=MIN(C2:C4)</code> લખી સૌથી ઓછા ગુણ મેળવો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ex_l6', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L7 -->
+      <div class="lesson-card" id="card_ex_l7">
+        <div>
+          <span class="badge">Lesson 7</span>
+          <div class="lesson-title">શરતી ગણતરી (COUNTIF)</div>
+          <div class="lesson-desc">ચોક્કસ કેટેગરી કે પરિણામ ધરાવતા લોકોની ચોક્કસ સંખ્યા ગણવી.</div>
+          <div class="sheet-mini-wrapper">
+            <table class="sheet-mini-table">
+              <tr><th class="sheet-h-col"></th><th class="sheet-h-col">A</th><th class="sheet-h-col">B</th><th class="sheet-h-col">C</th><th class="sheet-h-col">D</th></tr>
+              <tr><th class="sheet-h-row">1</th><td>રોલ નં.</td><td>વિદ્યાર્થી</td><td>ધોરણ</td><td>સ્ટેટસ</td></tr>
+              <tr><th class="sheet-h-row">2</th><td>101</td><td>અમિત</td><td>Std 10</td><td>Pass</td></tr>
+              <tr><th class="sheet-h-row">3</th><td>102</td><td>પ્રિયા</td><td>Std 10</td><td>Pass</td></tr>
+              <tr><th class="sheet-h-row">4</th><td>103</td><td>રાહુલ</td><td>Std 9</td><td>Fail</td></tr>
+              <tr><th class="sheet-h-row">5</th><td>104</td><td>પૂજા</td><td>Std 10</td><td>Pass</td></tr>
+              <tr><th class="sheet-h-row">6</th><td colspan="3">કુલ Pass વિદ્યાર્થી (COUNTIF)</td><td class="cell-hl">3</td></tr>
+            </table>
+          </div>
+          <div class="target-cell-badge">📍 ફોર્મ્યુલા સેલ: <strong>D6</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Formula</span><p class="prompt-text">=COUNTIF(D2:D5, "Pass")</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>સેલ <strong>D6</strong> પર ક્લિક કરો.</li><li>તેમાં <code>=COUNTIF(D2:D5, "Pass")</code> લખી <code>Enter</code> આપો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ex_l7', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L8 -->
+      <div class="lesson-card" id="card_ex_l8">
+        <div>
+          <span class="badge">Lesson 8</span>
+          <div class="lesson-title">ડ્રોપડાઉન લિસ્ટ (Data Validation)</div>
+          <div class="lesson-desc">ક્લિક કરતાં જ લિસ્ટ ખુલે જેથી ડેટા એન્ટ્રીમાં સ્પેલિંગ ભૂલ ન થાય.</div>
+          <div class="sheet-mini-wrapper">
+            <table class="sheet-mini-table">
+              <tr><th class="sheet-h-col"></th><th class="sheet-h-col">A</th><th class="sheet-h-col">B</th><th class="sheet-h-col">C</th></tr>
+              <tr><th class="sheet-h-row">1</th><td>તારીખ</td><td>કર્મચારી</td><td>હાજરી (Dropdown List ▼)</td></tr>
+              <tr><th class="sheet-h-row">2</th><td>01-Aug</td><td>અમિત</td><td class="cell-hl">Present ▼</td></tr>
+              <tr><th class="sheet-h-row">3</th><td>01-Aug</td><td>પ્રિયા</td><td class="cell-hl">Leave ▼</td></tr>
+              <tr><th class="sheet-h-row">4</th><td>01-Aug</td><td>રાહુલ</td><td class="cell-hl">Absent ▼</td></tr>
+            </table>
+          </div>
+          <div class="target-cell-badge">📍 સેલ રેન્જ: <strong>C2:C4</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Menu Navigation</span><p class="prompt-text">Data -> Data Validation -> Allow: List -> Source</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>સેલ <strong>C2:C4</strong> સિલેક્ટ કરો.</li><li><strong>Data -> Data Validation</strong> માં List પસંદ કરી Source માં <code>Present, Absent, Leave</code> લખો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ex_l8', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L9 -->
+      <div class="lesson-card" id="card_ex_l9">
+        <div>
+          <span class="badge">Lesson 9</span>
+          <div class="lesson-title">કલર હાઇલાઇટ (Conditional Formatting)</div>
+          <div class="lesson-desc">૩૫ થી ઓછા ગુણ લાલ રંગમાં અને ૮૦+ ગુણ લીલા રંગમાં ઓટો-હાઇલાઇટ થાય.</div>
+          <div class="sheet-mini-wrapper">
+            <table class="sheet-mini-table">
+              <tr><th class="sheet-h-col"></th><th class="sheet-h-col">A</th><th class="sheet-h-col">B</th><th class="sheet-h-col">C</th></tr>
+              <tr><th class="sheet-h-row">1</th><td>વિદ્યાર્થી</td><td>ગણિત</td><td>વિજ્ઞાન</td></tr>
+              <tr><th class="sheet-h-row">2</th><td>અમિત</td><td class="cell-hl">85 (Green)</td><td>78</td></tr>
+              <tr><th class="sheet-h-row">3</th><td>પ્રિયા</td><td>65</td><td class="cell-hl">92 (Green)</td></tr>
+              <tr><th class="sheet-h-row">4</th><td>રાહુલ</td><td class="cell-fail">28 (Red)</td><td class="cell-fail">32 (Red)</td></tr>
+            </table>
+          </div>
+          <div class="target-cell-badge">📍 સેલ રેન્જ: <strong>B2:C4</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Shortcut</span><p class="prompt-text">Home -> Conditional Formatting -> Highlight Rules</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>માર્ક્સવાળા સેલ સિલેક્ટ કરો.</li><li>Less Than: 35 માં Red અને Greater Than: 80 માં Green સેટ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ex_l9', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L10 -->
+      <div class="lesson-card" id="card_ex_l10">
+        <div>
+          <span class="badge">Lesson 10</span>
+          <div class="lesson-title">VLOOKUP (મોટા ડેટાબેઝમાંથી સર્ચ)</div>
+          <div class="lesson-desc">હજારો ડેટામાંથી માત્ર ID કે રોલ નંબર નાખતાં જ નામ, શહેર કે માર્ક્સ શોધવા.</div>
+          <div class="sheet-mini-wrapper">
+            <table class="sheet-mini-table">
+              <tr><th class="sheet-h-col"></th><th class="sheet-h-col">A</th><th class="sheet-h-col">B</th><th class="sheet-h-col">C</th><th class="sheet-h-col">D</th><th class="sheet-h-col">E</th></tr>
+              <tr><th class="sheet-h-row">1</th><td>ID</td><td>નામ</td><td>શહેર</td><td>મોબાઈલ</td><td>માર્ક્સ</td></tr>
+              <tr><th class="sheet-h-row">2</th><td>1001</td><td>રાજેશ પટેલ</td><td>અમદાવાદ</td><td>98250xxxxx</td><td>88</td></tr>
+              <tr><th class="sheet-h-row">3</th><td>1002</td><td>પ્રિયા શાહ</td><td>વડોદરા</td><td>94260xxxxx</td><td>94</td></tr>
+              <tr><th class="sheet-h-row">4</th><td>1003</td><td>સંજય મહેતા</td><td>રાજકોટ</td><td>98980xxxxx</td><td>76</td></tr>
+              <tr><th class="sheet-h-row">5</th><td colspan="2">સર્ચ ID: <strong>1002</strong></td><td colspan="3">VLOOKUP પરિણામ: <span class="cell-hl">પ્રિયા શાહ (કોલમ 2)</span></td></tr>
+            </table>
+          </div>
+          <div class="target-cell-badge">📍 સર્ચ ID: <strong>G2</strong> | ફોર્મ્યુલા સેલ: <strong>H2</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Formula</span><p class="prompt-text">=VLOOKUP(1002, A2:E4, 2, FALSE)</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>G2 માં ID <code>1002</code> લખો.</li><li>H2 માં ફોર્મ્યુલા લખી <code>Enter</code> આપતાં બીજા કોલમનું નામ આવશે.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ex_l10', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L11 -->
+      <div class="lesson-card" id="card_ex_l11">
+        <div>
+          <span class="badge">Lesson 11</span>
+          <div class="lesson-title">SUMIF (ચોક્કસ કેટેગરી સરવાળો)</div>
+          <div class="lesson-desc">મોટા બિઝનેસ સેલ્સ લિસ્ટમાંથી ફક્ત ચોક્કસ પ્રોડક્ટનું જ કુલ વેચાણ શોધવું.</div>
+          <div class="sheet-mini-wrapper">
+            <table class="sheet-mini-table">
+              <tr><th class="sheet-h-col"></th><th class="sheet-h-col">A</th><th class="sheet-h-col">B</th><th class="sheet-h-col">C</th></tr>
+              <tr><th class="sheet-h-row">1</th><td>બિલ નં.</td><td>પ્રોડક્ટનું નામ</td><td>વેચાણ રકમ ₹</td></tr>
+              <tr><th class="sheet-h-row">2</th><td>B-01</td><td>લેપટોપ</td><td>30000</td></tr>
+              <tr><th class="sheet-h-row">3</th><td>B-02</td><td>માઉસ</td><td>350</td></tr>
+              <tr><th class="sheet-h-row">4</th><td>B-03</td><td>લેપટોપ</td><td>32000</td></tr>
+              <tr><th class="sheet-h-row">5</th><td colspan="2">ફક્ત 'લેપટોપ' નું કુલ સેલ્સ (SUMIF)</td><td class="cell-hl">₹62,000</td></tr>
+            </table>
+          </div>
+          <div class="target-cell-badge">📍 ફોર્મ્યુલા સેલ: <strong>C5</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Formula</span><p class="prompt-text">=SUMIF(B2:B4, "લેપટોપ", C2:C4)</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>સેલ <strong>C5</strong> પર ક્લિક કરો.</li><li>તેમાં <code>=SUMIF(B2:B4, "લેપટોપ", C2:C4)</code> લખી <code>Enter</code> આપો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ex_l11', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L12 -->
+      <div class="lesson-card" id="card_ex_l12">
+        <div>
+          <span class="badge">Lesson 12</span>
+          <div class="lesson-title">Filter & Sort (ડેટા વર્ગીકરણ)</div>
+          <div class="lesson-desc">હજારો એન્ટ્રીઓમાંથી ચોક્કસ શહેર કે ગ્રેડના આધારે ડેટા ફિલ્ટર કરવો.</div>
+          <div class="sheet-mini-wrapper">
+            <table class="sheet-mini-table">
+              <tr><th class="sheet-h-col"></th><th class="sheet-h-col">A</th><th class="sheet-h-col">B</th><th class="sheet-h-col">C</th></tr>
+              <tr><th class="sheet-h-row">1</th><td>નામ ▼</td><td>શહેર ▼</td><td>સ્કોર ▼</td></tr>
+              <tr><th class="sheet-h-row">2</th><td>રાજેશ પટેલ</td><td>અમદાવાદ</td><td>88</td></tr>
+              <tr><th class="sheet-h-row">3</th><td>પ્રિયા શાહ</td><td>વડોદરા</td><td>94</td></tr>
+              <tr><th class="sheet-h-row">4</th><td colspan="3" class="cell-hl">Filter Applied: [શહેર = અમદાવાદ]</td></tr>
+            </table>
+          </div>
+          <div class="target-cell-badge">📍 હેડિંગ સેલ: <strong>A1:C1</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Shortcut</span><p class="prompt-text">Ctrl + Shift + L (Toggle Filter)</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>હેડિંગ સિલેક્ટ કરી <code>Ctrl + Shift + L</code> આપો.</li><li>શહેર ડ્રોપડાઉનમાંથી ફક્ત 'અમદાવાદ' સિલેક્ટ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ex_l12', this)">⚪ Mark as Completed</button>
+      </div>
+
+    </div>
+
+    <!-- 4. PART 2: 9 ADVANCED & CORPORATE LESSONS (12 + 9 = 21) -->
+    <div class="section-header-box">
+      <div class="section-main-title" style="color:#2563eb;">Level 2: 9 Corporate & Advanced Lessons</div>
+      <div class="section-sub-text">XLOOKUP, Pivot Slicers, INDEX+MATCH, Automation અને AI Formula Prompting.</div>
+    </div>
+
+    <div class="grid-container">
+
+      <!-- Adv 1 -->
+      <div class="lesson-card" id="card_ex_adv1" style="border-color:#93c5fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 1</span>
+          <div class="lesson-title">XLOOKUP (આધુનિક સુપર લુકઅપ)</div>
+          <div class="lesson-desc">VLOOKUP ની તમામ મર્યાદા દૂર કરીને ડાબી-જમણી બંને તરફ ઝડપી સર્ચ કરનાર.</div>
+          <div class="sheet-mini-wrapper">
+            <table class="sheet-mini-table">
+              <tr><th class="sheet-h-col"></th><th class="sheet-h-col">A</th><th class="sheet-h-col">B</th><th class="sheet-h-col">C</th></tr>
+              <tr><th class="sheet-h-row">1</th><td>મોબાઈલ નં.</td><td>કર્મચારી</td><td>પગાર ₹</td></tr>
+              <tr><th class="sheet-h-row">2</th><td>98250xxxxx</td><td>અલ્પેશ પટેલ</td><td>45000</td></tr>
+              <tr><th class="sheet-h-row">3</th><td>94260xxxxx</td><td>દિવ્યા વ્યાસ</td><td>52000</td></tr>
+              <tr><th class="sheet-h-row">4</th><td colspan="2">સર્ચ: દિવ્યા વ્યાસ</td><td class="cell-hl-adv">94260xxxxx (ડાબી બાજુ)</td></tr>
+            </table>
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 ફોર્મ્યુલા સેલ: <strong>D4</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Formula</span><p class="prompt-text">=XLOOKUP("દિવ્યા વ્યાસ", B2:B3, A2:A3)</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>ખાલી સેલમાં ફોર્મ્યુલા લખો.</li><li>XLOOKUP ડાબી બાજુ રહેલો મોબાઈલ નંબર શોધી આપશે.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ex_adv1', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 2 -->
+      <div class="lesson-card" id="card_ex_adv2" style="border-color:#93c5fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 2</span>
+          <div class="lesson-title">Pivot Table & Interactive Slicers</div>
+          <div class="lesson-desc">હજારો ડેટામાંથી બટન ક્લિક સાથે લાઈવ ડેશબોર્ડ અને સમરી તૈયાર કરવી.</div>
+          <div class="sheet-mini-wrapper">
+            <table class="sheet-mini-table">
+              <tr><th class="sheet-h-col"></th><th class="sheet-h-col">A</th><th class="sheet-h-col">B</th><th class="sheet-h-col">C</th></tr>
+              <tr><th class="sheet-h-row">1</th><td>ઝોન [Slicer: North | West]</td><td>કુલ સેલ્સ ₹</td><td>ટકાવારી</td></tr>
+              <tr><th class="sheet-h-row">2</th><td>Gujarat (West)</td><td>1,50,000</td><td>65%</td></tr>
+              <tr><th class="sheet-h-row">3</th><td>Delhi (North)</td><td>80,000</td><td>35%</td></tr>
+              <tr><th class="sheet-h-row">4</th><td>Total Summary</td><td class="cell-hl-adv">₹2,30,000</td><td>100%</td></tr>
+            </table>
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 મેનુ શોર્ટકટ: <strong>Alt + N + V</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Shortcut</span><p class="prompt-text">Alt + N + V (Pivot) -> Insert Slicer</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>ડેટા સિલેક્ટ કરી <strong>Insert -> Pivot Table</strong> આપો.</li><li>Pivot Analyze માં જઈ <strong>Insert Slicer</strong> પર ક્લિક કરી બટન દબાવી ડેટા ફિલ્ટર કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ex_adv2', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 3 -->
+      <div class="lesson-card" id="card_ex_adv3" style="border-color:#93c5fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 3</span>
+          <div class="lesson-title">INDEX + MATCH Combo</div>
+          <div class="lesson-desc">પ્રોફેશનલ ડેટા એનાલિસ્ટ્સ માટે VLOOKUP કરતાં પણ વધુ ઝડપી અને સુરક્ષિત લુકઅપ.</div>
+          <div class="sheet-mini-wrapper">
+            <table class="sheet-mini-table">
+              <tr><th class="sheet-h-col"></th><th class="sheet-h-col">A</th><th class="sheet-h-col">B</th><th class="sheet-h-col">C</th></tr>
+              <tr><th class="sheet-h-row">1</th><td>પ્રોડક્ટ કોડ</td><td>પ્રોડક્ટ</td><td>સ્ટોક (Qty)</td></tr>
+              <tr><th class="sheet-h-row">2</th><td>PRD-101</td><td>લેપટોપ</td><td>24</td></tr>
+              <tr><th class="sheet-h-row">3</th><td>PRD-102</td><td>પ્રિન્ટર</td><td>12</td></tr>
+              <tr><th class="sheet-h-row">4</th><td colspan="2">કોડ <strong>PRD-102</strong> નો સ્ટોક:</td><td class="cell-hl-adv">12</td></tr>
+            </table>
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 ફોર્મ્યુલા સેલ: <strong>D4</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Formula</span><p class="prompt-text">=INDEX(C2:C3, MATCH("PRD-102", A2:A3, 0))</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>INDEX માં પરિણામ કોલમ (C2:C3) આપો.</li><li>MATCH માં સર્ચ વેલ્યુ શોધીને રો નંબર મેળવો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ex_adv3', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 4 -->
+      <div class="lesson-card" id="card_ex_adv4" style="border-color:#93c5fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 4</span>
+          <div class="lesson-title">SUMIFS & COUNTIFS (મલ્ટિપલ શરતો)</div>
+          <div class="lesson-desc">એક કરતાં વધુ શરતો સાથે (દા.ત. શહેર=અમદાવાદ AND પ્રોડક્ટ=લેપટોપ) સરવાળો.</div>
+          <div class="sheet-mini-wrapper">
+            <table class="sheet-mini-table">
+              <tr><th class="sheet-h-col"></th><th class="sheet-h-col">A</th><th class="sheet-h-col">B</th><th class="sheet-h-col">C</th></tr>
+              <tr><th class="sheet-h-row">1</th><td>શહેર</td><td>પ્રોડક્ટ</td><td>સેલ્સ ₹</td></tr>
+              <tr><th class="sheet-h-row">2</th><td>અમદાવાદ</td><td>લેપટોપ</td><td>30000</td></tr>
+              <tr><th class="sheet-h-row">3</th><td>વડોદરા</td><td>લેપટોપ</td><td>30000</td></tr>
+              <tr><th class="sheet-h-row">4</th><td>અમદાવાદ</td><td>લેપટોપ</td><td>32000</td></tr>
+              <tr><th class="sheet-h-row">5</th><td colspan="2">અમદાવાદ + લેપટોપ સેલ્સ:</td><td class="cell-hl-adv">₹62,000</td></tr>
+            </table>
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 ફોર્મ્યુલા સેલ: <strong>C5</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Formula</span><p class="prompt-text">=SUMIFS(C2:C4, A2:A4, "અમદાવાદ", B2:B4, "લેપટોપ")</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>સેલ <strong>C5</strong> માં ફોર્મ્યુલા લખો.</li><li>બંને શરતો સાચી પડશે તેવા જ સેલનો સરવાળો આવશે.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ex_adv4', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 5 -->
+      <div class="lesson-card" id="card_ex_adv5" style="border-color:#93c5fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 5</span>
+          <div class="lesson-title">Text-to-Columns (ડેટા અલગ કરવો)</div>
+          <div class="lesson-desc">સિંગલ ખાનામાં લખેલ "નામ, શહેર" ને ૨ અલગ ખાનામાં વહેંચવા.</div>
+          <div class="sheet-mini-wrapper">
+            <table class="sheet-mini-table">
+              <tr><th class="sheet-h-col"></th><th class="sheet-h-col">A (Raw)</th><th class="sheet-h-col">B (નામ)</th><th class="sheet-h-col">C (શહેર)</th></tr>
+              <tr><th class="sheet-h-row">1</th><td>રાજેશ,અમદાવાદ</td><td class="cell-hl-adv">રાજેશ</td><td class="cell-hl-adv">અમદાવાદ</td></tr>
+              <tr><th class="sheet-h-row">2</th><td>પ્રિયા,વડોદરા</td><td class="cell-hl-adv">પ્રિયા</td><td class="cell-hl-adv">વડોદરા</td></tr>
+            </table>
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 મેનુ: <strong>Data -> Text to Columns</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Shortcut</span><p class="prompt-text">Alt + A + E -> Delimited -> Comma (,)</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>કોલમ A સિલેક્ટ કરી <code>Alt + A + E</code> આપો.</li><li>Delimited પસંદ કરી <strong>Comma</strong> પર ટીક કરો અને Finish આપો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ex_adv5', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 6 -->
+      <div class="lesson-card" id="card_ex_adv6" style="border-color:#93c5fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 6</span>
+          <div class="lesson-title">Remove Duplicates & UNIQUE()</div>
+          <div class="lesson-desc">બેવડાતી એન્ટ્રીઓ દૂર કરવી અથવા ૧ સેકન્ડમાં યુનિક આઇટમ્સનું લિસ્ટ કાઢવું.</div>
+          <div class="sheet-mini-wrapper">
+            <table class="sheet-mini-table">
+              <tr><th class="sheet-h-col"></th><th class="sheet-h-col">A (મૂળ ડેટા)</th><th class="sheet-h-col">B (UNIQUE લિસ્ટ)</th></tr>
+              <tr><th class="sheet-h-row">1</th><td>શહેર</td><td>યુનિક લિસ્ટ</td></tr>
+              <tr><th class="sheet-h-row">2</th><td>દ્વારકા</td><td class="cell-hl-adv">દ્વારકા</td></tr>
+              <tr><th class="sheet-h-row">3</th><td>જામનગર</td><td class="cell-hl-adv">જામનગર</td></tr>
+              <tr><th class="sheet-h-row">4</th><td>દ્વારકા (Duplicate)</td><td class="cell-hl-adv">- (Auto Remove)</td></tr>
+            </table>
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 ફોર્મ્યુલા સેલ: <strong>B2</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Formula / Shortcut</span><p class="prompt-text">=UNIQUE(A2:A4) | Shortcut: Alt + A + M</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>સેલ <strong>B2</strong> માં <code>=UNIQUE(A2:A4)</code> લખતાં ડુપ્લિકેટ વગરનું લિસ્ટ આવી જશે.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ex_adv6', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 7 -->
+      <div class="lesson-card" id="card_ex_adv7" style="border-color:#93c5fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 7</span>
+          <div class="lesson-title">IFERROR Wrapper (એરર છુપાવવી)</div>
+          <div class="lesson-desc">જ્યારે કોઈ ડેટા ન મળે ત્યારે <code>#N/A</code> ના બદલે સ્વચ્છ લખાણ બતાવવું.</div>
+          <div class="sheet-mini-wrapper">
+            <table class="sheet-mini-table">
+              <tr><th class="sheet-h-col"></th><th class="sheet-h-col">A</th><th class="sheet-h-col">B (Normal Error)</th><th class="sheet-h-col">C (IFERROR)</th></tr>
+              <tr><th class="sheet-h-row">1</th><td>સર્ચ ID</td><td>સામાન્ય ફોર્મ્યુલા</td><td>IFERROR ફોર્મ્યુલા</td></tr>
+              <tr><th class="sheet-h-row">2</th><td>9999 (ખોટો ID)</td><td class="cell-fail">#N/A</td><td class="cell-hl-adv">ડેટા મળ્યો નથી</td></tr>
+            </table>
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 ફોર્મ્યુલા સેલ: <strong>C2</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Formula</span><p class="prompt-text">=IFERROR(VLOOKUP(A2, D:E, 2, FALSE), "ડેટા મળ્યો નથી")</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>કોઈપણ ફોર્મ્યુલાને <code>=IFERROR(તમારી_ફોર્મ્યુલા, "કસ્ટમ મેસેજ")</code> ની અંદર મૂકી દો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ex_adv7', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 8 -->
+      <div class="lesson-card" id="card_ex_adv8" style="border-color:#93c5fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 8</span>
+          <div class="lesson-title">AI Excel Formula Generator Prompting</div>
+          <div class="lesson-desc">જટિલ કેલ્ક્યુલેશન માટે ગૂગલ જેમિની પાસેથી ગુજરાતીમાં ફોર્મ્યુલા તૈયાર કરાવો.</div>
+          <div class="sheet-mini-wrapper">
+            <table class="sheet-mini-table">
+              <tr><th class="sheet-h-col"></th><th class="sheet-h-col">Input (AI ને આપવાનો પ્રશ્ન)</th><th class="sheet-h-col">AI જનરેટેડ ફોર્મ્યુલા</th></tr>
+              <tr><th class="sheet-h-row">1</th><td>"જો A2 ખાલી હોય તો B2 લો, નહિતર C2 લો"</td><td class="cell-hl-adv">=IF(ISBLANK(A2), B2, C2)</td></tr>
+            </table>
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 AI ટૂલ: <strong>Gemini / ChatGPT</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">AI Prompt</span><p class="prompt-text">"Act as an Excel Expert. Write an Excel formula: [તમારી શરત અહીં લખો]. Give only formula with 1 example."</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>પ્રોમ્પ્ટ Gemini માં રન કરી ફોર્મ્યુલા મેળવી સીધી વાપરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ex_adv8', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 9 (New 9th Advanced Lesson for Excel) -->
+      <div class="lesson-card" id="card_ex_adv9" style="border-color:#93c5fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 9</span>
+          <div class="lesson-title">Macro & Automation (રોજિંદા કામનું રેકોર્ડિંગ)</div>
+          <div class="lesson-desc">રોજિંદા રીપીટ થતા ફોર્મેટિંગ અને રિપોર્ટ્સને ૧ બટન ક્લિકમાં ઓટોમેટ કરવું.</div>
+          <div class="sheet-mini-wrapper">
+            <table class="sheet-mini-table">
+              <tr><th class="sheet-h-col"></th><th class="sheet-h-col">A (Action)</th><th class="sheet-h-col">B (Macro Outcome)</th></tr>
+              <tr><th class="sheet-h-row">1</th><td>Record Macro</td><td>Ctrl + Shift + R</td></tr>
+              <tr><th class="sheet-h-row">2</th><td>One-Click Format</td><td class="cell-hl-adv">✅ ૧ સેકન્ડમાં આખો રિપોર્ટ રેડી!</td></tr>
+            </table>
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 મેનુ: <strong>Developer -> Record Macro</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Shortcut</span><p class="prompt-text">Developer / View -> Record Macro -> Assign Shortcut</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li><strong>View -> Macros -> Record Macro</strong> પર ક્લિક કરો.</li><li>તમારું ફોર્મેટિંગ કરો અને <strong>Stop Recording</strong> આપો. હવે શોર્ટકટ દબાવતાં જ તે કામ આપમેળે થઈ જશે.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ex_adv9', this)">⚪ Mark as Completed</button>
+      </div>
+
+    </div>
+
+    <!-- 5. NEW DIGITAL SKILLS BUTTON -->
+    <div class="next-course-strip">
+      <a href="index.html" class="digital-skills-btn">💻 ડિજિટલ સ્કીલ્સ શીખો, ભવિષ્ય બનાવો! 🚀</a>
+    </div>
+
+  </div>
+
+  <script>
+    // Toggle Hide / Show Lab (Default Hidden)
+    function toggleLab() {
+      const body = document.getElementById('sandboxBody');
+      const btn = document.getElementById('labToggleBtn');
+      if (body.style.display === 'none' || body.style.display === '') {
+        body.style.display = 'block';
+        btn.innerHTML = '👁️ Hide Lab';
+      } else {
+        body.style.display = 'none';
+        btn.innerHTML = '👁️ Open Live Lab';
+      }
+    }
+
+    // Interactive Mark as Completed Tracking Engine
+    let completedCount = 0;
+    function toggleComplete(cardId, btn) {
+      const card = document.getElementById(cardId);
+      const counter = document.getElementById('completedCounter');
+      
+      if (card.classList.contains('is-completed')) {
+        card.classList.remove('is-completed');
+        btn.classList.remove('completed-active');
+        btn.innerHTML = '⚪ Mark as Completed';
+        completedCount = Math.max(0, completedCount - 1);
+      } else {
+        card.classList.add('is-completed');
+        btn.classList.add('completed-active');
+        btn.innerHTML = '✅ Completed';
+        completedCount++;
+      }
+      counter.innerText = completedCount;
+    }
+
+    // Live Spreadsheet Engine
+    let currentPreset = 'result';
+    let selectedCellId = 'c_E2';
+
+    const presetData = {
+      result: {
+        headers: ['વિદ્યાર્થી', 'ગણિત', 'વિજ્ઞાન', 'અંગ્રેજી', 'કુલ (Total)', 'ટકા (%)'],
+        rows: [
+          ['અમિત', '85', '78', '92', '-', '-'],
+          ['પ્રિયા', '65', '70', '58', '-', '-'],
+          ['રાહુલ', '28', '34', '30', '-', '-']
+        ],
+        defaultFormula: '=SUM(B2:D2)',
+        targetCell: 'E2'
+      },
+      sales: {
+        headers: ['આઇટમ', 'જથ્થો (Qty)', 'ભાવ (Rate ₹)', 'રકમ (Amount ₹)', '18% GST ₹', 'નેટ બિલ ₹'],
+        rows: [
+          ['લેપટોપ', '5', '30000', '-', '-', '-'],
+          ['પ્રિન્ટર', '3', '8000', '-', '-', '-'],
+          ['માઉસ', '20', '350', '-', '-', '-']
+        ],
+        defaultFormula: '=B2*C2',
+        targetCell: 'D2'
+      },
+      vlookup: {
+        headers: ['ID', 'કર્મચારીનું નામ', 'શહેર', 'વિભાગ', 'પગાર ₹', 'સર્ચ આઉટપુટ'],
+        rows: [
+          ['1001', 'રાજેશ પટેલ', 'અમદાવાદ', 'IT Support', '45000', '-'],
+          ['1002', 'પ્રિયા શાહ', 'વડોદરા', 'HR Admin', '52000', '-'],
+          ['1003', 'દિવ્યા વ્યાસ', 'રાજકોટ', 'Finance', '48000', '-']
+        ],
+        defaultFormula: '=VLOOKUP(1002, A2:E4, 2, FALSE)',
+        targetCell: 'F2'
+      }
+    };
+
+    function loadGridPreset(type) {
+      currentPreset = type;
+      const data = presetData[type];
+      const tbody = document.getElementById('gridBody');
+      tbody.innerHTML = '';
+
+      let hRow = `<tr style="background:#f1f5f9; font-weight:700;"><th class="sheet-h-row">1</th>`;
+      data.headers.forEach(h => { hRow += `<td>${h}</td>`; });
+      hRow += `</tr>`;
+      tbody.innerHTML += hRow;
+
+      const cols = ['A', 'B', 'C', 'D', 'E', 'F'];
+      data.rows.forEach((row, rIdx) => {
+        const rowNum = rIdx + 2;
+        let rHtml = `<tr><th class="sheet-h-row">${rowNum}</th>`;
+        row.forEach((val, cIdx) => {
+          const cellId = `c_${cols[cIdx]}${rowNum}`;
+          rHtml += `<td id="${cellId}" onclick="selectCell('${cellId}', '${cols[cIdx]}${rowNum}')">${val}</td>`;
+        });
+        rHtml += `</tr>`;
+        tbody.innerHTML += rHtml;
+      });
+
+      document.getElementById('liveFormulaInput').value = data.defaultFormula;
+      document.getElementById('activeCellName').innerText = data.targetCell;
+      document.getElementById('gridOutputMsg').innerHTML = `💡 <strong>${type.toUpperCase()} ટેમ્પ્લેટ લોડ થયું:</strong> ફોર્મ્યુલા રન કરવા 'Run Formula' દબાવો.`;
+      selectCell(`c_${data.targetCell}`, data.targetCell);
+    }
+
+    function selectCell(id, name) {
+      const allCells = document.querySelectorAll('.sheet-canvas td');
+      allCells.forEach(c => c.classList.remove('cell-selected'));
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.add('cell-selected');
+        selectedCellId = id;
+        document.getElementById('activeCellName').innerText = name;
+      }
+    }
+
+    function runLiveEngine() {
+      const f = document.getElementById('liveFormulaInput').value.trim();
+      const msg = document.getElementById('gridOutputMsg');
+
+      if (currentPreset === 'result') {
+        if (f.includes('SUM')) {
+          const t2 = 85 + 78 + 92;
+          const t3 = 65 + 70 + 58;
+          const t4 = 28 + 34 + 30;
+          setCellVal('c_E2', t2);
+          setCellVal('c_E3', t3);
+          setCellVal('c_E4', t4);
+          msg.innerHTML = `✅ <strong>E2 સેલમાં SUM સફળ:</strong> અમિતના કુલ માર્ક્સ (85+78+92) = <strong>${t2}</strong> ગણાઈ ગયા!`;
+        } else if (f.includes('AVERAGE')) {
+          const a2 = ((85 + 78 + 92) / 3).toFixed(1) + '%';
+          const a3 = ((65 + 70 + 58) / 3).toFixed(1) + '%';
+          const a4 = ((28 + 34 + 30) / 3).toFixed(1) + '%';
+          setCellVal('c_F2', a2);
+          setCellVal('c_F3', a3);
+          setCellVal('c_F4', a4);
+          msg.innerHTML = `✅ <strong>F2 સેલમાં AVERAGE સફળ:</strong> અમિતની સરેરાશ ટકાવારી = <strong>${a2}</strong>!`;
+        } else if (f.includes('IF')) {
+          setCellVal('c_F2', 'Pass', 'cell-pass');
+          setCellVal('c_F3', 'Pass', 'cell-pass');
+          setCellVal('c_F4', 'Fail', 'cell-fail');
+          msg.innerHTML = `✅ <strong>IF કન્ડિશન લાગુ:</strong> રાહુલના ૨૮ ગુણ હોવાથી Fail અને બાકીના Pass થયા!`;
+        }
+      } else if (currentPreset === 'sales') {
+        if (f.includes('B2*C2')) {
+          const a2 = 5 * 30000;
+          const a3 = 3 * 8000;
+          const a4 = 20 * 350;
+          setCellVal('c_D2', '₹' + a2.toLocaleString());
+          setCellVal('c_D3', '₹' + a3.toLocaleString());
+          setCellVal('c_D4', '₹' + a4.toLocaleString());
+          msg.innerHTML = `✅ <strong>D2 માં રકમ કેલ્ક્યુલેટ:</strong> 5 Qty × ₹30,000 = <strong>₹${a2.toLocaleString()}</strong>!`;
+        } else if (f.includes('0.18') || f.includes('GST')) {
+          const g2 = 150000 * 0.18;
+          setCellVal('c_E2', '₹' + g2.toLocaleString());
+          msg.innerHTML = `✅ <strong>E2 માં ૧૮% GST સફળ:</strong> ₹1,50,000 × 18% = <strong>₹${g2.toLocaleString()}</strong>!`;
+        }
+      } else if (currentPreset === 'vlookup') {
+        setCellVal('c_F2', 'પ્રિયા શાહ (કોલમ 2)');
+        msg.innerHTML = `✅ <strong>VLOOKUP પરિણામ:</strong> ID 1002 સર્ચ કરતાં નામ <strong>પ્રિયા શાહ</strong> મળ્યું!`;
+      }
+    }
+
+    function setCellVal(id, val, customClass = 'cell-active-result') {
+      const el = document.getElementById(id);
+      if (el) {
+        el.innerText = val;
+        el.className = '';
+        el.classList.add(customClass);
+      }
+    }
+
+    function resetGrid() {
+      loadGridPreset(currentPreset);
+      document.getElementById('gridOutputMsg').innerHTML = `🔄 <strong>ગ્રીડ રીસેટ:</strong> તમામ ગણતરી ક્લીયર થઈ ગઈ છે.`;
+    }
+
+    function toggleTheme() {
+      const b = document.body, btn = document.getElementById("themeBtn");
+      b.classList.toggle("dark-theme");
+      btn.innerHTML = b.classList.contains("dark-theme") ? "☀️ Light Mode" : "🌙 Dark Mode";
+    }
+
+    window.onload = function() {
+      loadGridPreset('result');
+    };
+  </script>
+</body>
+</html>

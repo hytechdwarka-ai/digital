@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PowerPoint Course</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --card-bg: #ffffff;
+    --card-border: #cbd5e1;
+    --box-bg: #f1f5f9;
+    --accent: #ea580c;
+    --accent-hover: #c2410c;
+    --accent-adv: #c2410c;
+    --toolbar-bg: #f1f5f9;
+    --toolbar-border: #cbd5e1;
+    --slide-bg: #ffffff;
+    --slide-shadow: rgba(0, 0, 0, 0.12);
+    --highlight-cell: #ffedd5;
+    --highlight-adv: #fed7aa;
+    --completed-bg: #f0fdf4;
+    --completed-border: #86efac;
+  }
+  body.dark-theme {
+    --bg-color: #0f172a;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --card-bg: #1e293b;
+    --card-border: #334155;
+    --box-bg: #0b0f19;
+    --accent: #fb923c;
+    --accent-hover: #f97316;
+    --accent-adv: #fdba74;
+    --toolbar-bg: #1e293b;
+    --toolbar-border: #334155;
+    --slide-bg: #0f172a;
+    --slide-shadow: rgba(0, 0, 0, 0.5);
+    --highlight-cell: #7c2d12;
+    --highlight-adv: #9a3412;
+    --completed-bg: #064e3b;
+    --completed-border: #059669;
+  }
+  * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.2s ease; }
+  body { background-color: var(--bg-color); margin: 0; padding: 14px; color: var(--text-main); font-size: 15px; }
+  
+  .container { max-width: 1150px; margin: 0 auto; }
+  
+  .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .back-btn { text-decoration: none; background: var(--card-bg); border: 1.5px solid var(--card-border); color: var(--text-main); padding: 7px 16px; border-radius: 20px; font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+  .back-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .theme-toggle-btn { background: var(--card-bg); border: 1.5px solid var(--card-border); color: var(--text-main); padding: 7px 16px; border-radius: 20px; font-size: 13.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+
+  /* Hero Banner */
+  .header-card { background: linear-gradient(135deg, #c2410c, #ea580c); color: white; border-radius: 18px; padding: 26px 18px; text-align: center; margin-bottom: 24px; box-shadow: 0 10px 25px -5px rgba(234, 88, 12, 0.25); }
+  .header-title { font-size: 28px; font-weight: 800; margin: 0 0 8px 0; }
+  .header-sub { font-size: 15.5px; opacity: 0.95; max-width: 750px; margin: auto; line-height: 1.5; }
+  .progress-badge-top { display: inline-block; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); padding: 5px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; margin-top: 10px; }
+
+  /* Section Header */
+  .section-header-box { text-align: center; margin: 34px 0 18px 0; }
+  .section-main-title { font-size: 22px; font-weight: 800; margin: 0 0 6px 0; color: var(--text-main); display: inline-block; position: relative; }
+  .section-main-title::after { content: ''; display: block; width: 50px; height: 3.5px; background: var(--accent); margin: 6px auto 0 auto; border-radius: 2px; }
+  .section-sub-text { font-size: 13.5px; color: var(--text-muted); margin-top: 6px; }
+
+  /* SIDE-BY-SIDE OVERVIEW CONTAINER */
+  .overview-side-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  .overview-panel {
+    background: var(--card-bg);
+    border: 1.5px solid var(--card-border);
+    border-radius: 18px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+  }
+  .overview-panel-title { font-size: 18.5px; font-weight: 800; color: var(--accent); display: flex; align-items: center; gap: 8px; margin: 0 0 10px 0; }
+  .overview-panel-desc { font-size: 14px; color: var(--text-muted); line-height: 1.65; margin-bottom: 14px; }
+  
+  .intro-mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .intro-mini-box { background: var(--box-bg); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--card-border); font-size: 13px; line-height: 1.5; }
+  @media(max-width: 500px) { .intro-mini-grid { grid-template-columns: 1fr; } }
+
+  .why-mini-list { display: flex; flex-direction: column; gap: 10px; }
+  .why-mini-item { background: var(--box-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 10px 12px; }
+  .why-mini-item h4 { margin: 0 0 4px 0; font-size: 14px; color: var(--text-main); font-weight: 800; display: flex; align-items: center; gap: 6px; }
+  .why-mini-item p { margin: 0; font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
+
+  /* Interactive Slide Studio Sandbox (Default Hidden) */
+  .sandbox-card {
+    background: var(--card-bg);
+    border: 2px solid var(--accent);
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 34px;
+    box-shadow: 0 8px 24px -4px rgba(234, 88, 12, 0.18);
+  }
+  .sandbox-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+  .sandbox-title { font-size: 19px; font-weight: 800; color: var(--text-main); margin: 0; display: flex; align-items: center; gap: 8px; }
+  .toggle-lab-btn {
+    background: var(--box-bg);
+    border: 1.5px solid var(--card-border);
+    color: var(--text-main);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .toggle-lab-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Default Hidden State */
+  #sandboxBody { margin-top: 14px; display: none; }
+
+  /* PPT Ribbon Toolbar */
+  .ribbon-bar {
+    background: var(--toolbar-bg);
+    border: 1px solid var(--toolbar-border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .ribbon-btn-group { display: flex; align-items: center; gap: 4px; background: var(--card-bg); border: 1px solid var(--card-border); padding: 4px; border-radius: 6px; }
+  .ribbon-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 5px 9px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .ribbon-btn:hover { background: rgba(234,88,12,0.15); color: var(--accent); }
+  .ribbon-select {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-main);
+    padding: 5px 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    outline: none;
+  }
+  .demo-preset-btn {
+    background: rgba(234,88,12,0.1);
+    border: 1px solid rgba(234,88,12,0.3);
+    color: var(--accent);
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .demo-preset-btn:hover { background: var(--accent); color: white; }
+
+  /* Real 16:9 Slide Canvas */
+  .slide-stage-wrapper {
+    background: #475569;
+    padding: 24px 16px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: auto;
+  }
+  body.dark-theme .slide-stage-wrapper { background: #020617; }
+  
+  .slide-canvas {
+    background: var(--slide-bg);
+    color: var(--text-main);
+    width: 100%;
+    max-width: 760px;
+    aspect-ratio: 16 / 9;
+    padding: 34px 40px;
+    box-shadow: 0 12px 28px var(--slide-shadow);
+    border-radius: 8px;
+    outline: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Live CSS Keyframe Animations */
+  @keyframes animFadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes animFlyIn { from { transform: translateY(60px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  @keyframes animZoomIn { from { transform: scale(0.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  @keyframes animPulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+  
+  .play-fade { animation: animFadeIn 0.8s ease forwards; }
+  .play-fly { animation: animFlyIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  .play-zoom { animation: animZoomIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  .play-pulse { animation: animPulse 0.5s ease; }
+
+  .sandbox-status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    font-weight: 600;
+    padding: 0 4px;
+  }
+
+  /* Fullscreen Presentation Mode */
+  .slide-canvas:fullscreen {
+    max-width: 100vw;
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+    padding: 60px 80px;
+    font-size: 24px;
+  }
+
+  /* Lessons Grid */
+  .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 30px; }
+  .lesson-card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--card-border);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  }
+  .lesson-card:hover { border-color: var(--accent); box-shadow: 0 6px 15px -3px rgba(0,0,0,0.06); }
+  .lesson-card.is-completed {
+    background: var(--completed-bg);
+    border-color: var(--completed-border);
+  }
+  
+  .badge { font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 6px; background: rgba(234,88,12,0.12); color: var(--accent); display: inline-block; margin-bottom: 8px; }
+  body.dark-theme .badge { color: #fb923c; }
+  .badge-adv { background: rgba(194,65,12,0.15) !important; color: var(--accent-adv) !important; }
+
+  .lesson-title { font-size: 18px; font-weight: 800; color: var(--text-main); margin: 0 0 6px 0; }
+  .lesson-desc { font-size: 13.5px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px; }
+  
+  /* Mini Slide Mockup in Cards */
+  .slide-mini-wrapper { overflow-x: auto; margin-bottom: 12px; border: 1.5px solid var(--card-border); background: var(--box-bg); padding: 12px; border-radius: 6px; aspect-ratio: 16/7; display: flex; flex-direction: column; justify-content: center; }
+  .slide-preview-content { font-size: 13px; line-height: 1.55; }
+  .slide-highlight { background: var(--highlight-cell); padding: 2px 6px; border-radius: 4px; font-weight: 700; color: var(--accent); }
+  .slide-highlight-adv { background: var(--highlight-adv); padding: 2px 6px; border-radius: 4px; font-weight: 700; color: var(--accent-adv); }
+  
+  /* Action Badge */
+  .action-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(234,88,12,0.1);
+    border: 1px solid rgba(234,88,12,0.25);
+    color: #ea580c;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    font-family: monospace;
+  }
+  body.dark-theme .action-badge { color: #fb923c; background: rgba(234,88,12,0.2); }
+
+  .prompt-box { background: var(--box-bg); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; border: 1px solid var(--card-border); }
+  .prompt-tag { font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; margin-bottom: 3px; display: block; }
+  .prompt-tag-adv { color: var(--accent-adv) !important; }
+  .prompt-text { font-size: 13.5px; color: var(--text-main); line-height: 1.4; margin: 0; font-family: 'Consolas', monospace; font-weight: 700; }
+  
+  .steps-box { background: rgba(234,88,12,0.06); border-left: 3.5px solid var(--accent); padding: 9px 12px; border-radius: 4px; margin-bottom: 14px; }
+  .steps-box-adv { background: rgba(194,65,12,0.08) !important; border-left: 3.5px solid var(--accent-adv) !important; }
+  .steps-title { font-size: 12.5px; font-weight: 800; color: var(--text-main); margin-bottom: 4px; }
+  .steps-list { margin: 0; padding-left: 16px; font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+  /* Mark as Completed Button */
+  .btn-complete {
+    width: 100%;
+    background: var(--box-bg);
+    border: 1.5px solid var(--card-border);
+    color: var(--text-main);
+    padding: 9px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .btn-complete:hover { border-color: #16a34a; color: #16a34a; }
+  .btn-complete.completed-active { background: #16a34a; border-color: #16a34a; color: white; }
+
+  /* Modified Strip For Next Page Button */
+  .next-course-strip {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .digital-skills-btn {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: #fff !important;
+    text-decoration: none;
+    padding: 16px 28px;
+    border-radius: 14px;
+    font-size: 18px;
+    font-weight: 800;
+    display: inline-block;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+  .digital-skills-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+  
+</style>
+</head>
+<body class="dark-theme">
+
+  <div class="container">
+    
+    <div class="top-bar">
+      <!-- Back to Home Updated to index.html -->
+      <a href="index.html" class="back-btn">← Back to Home</a>
+      <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">☀️ Light Mode</button>
+    </div>
+
+    <!-- Hero Header -->
+    <div class="header-card">
+      <div class="header-title">📽️ Microsoft PowerPoint Master Course</div>
+      <div class="header-sub">પ્રેઝન્ટેશન પાયો, ૧૨ ફાઉન્ડેશન અને ૯ કોર્પોરેટ એડવાન્સ મોડ્યુલ્સ (કુલ ૨૧ લેસન્સ).</div>
+      <div class="progress-badge-top">🎯 પ્રગતિ: <span id="completedCounter">0</span> / 21 લેસન્સ પૂર્ણ</div>
+    </div>
+
+    <!-- 1. LIVE INTERACTIVE PPT SANDBOX (DEFAULT HIDDEN) -->
+    <div class="sandbox-card">
+      <div class="sandbox-header">
+        <div class="sandbox-title">⚡ લાઈવ સ્લાઇડ કેનવાસ સ્ટુડિયો (Interactive Slide Studio)</div>
+        <button class="toggle-lab-btn" onclick="toggleLab()" id="labToggleBtn">👁️ Open Live Lab</button>
+      </div>
+
+      <div id="sandboxBody">
+        <!-- PPT Ribbon Toolbar -->
+        <div class="ribbon-bar">
+          <div class="ribbon-btn-group">
+            <span style="font-size:12px; font-weight:800; color:var(--accent); padding:0 4px;">🎬 Animations:</span>
+            <button class="ribbon-btn" onclick="playAnimation('play-fade')" title="Fade Animation">Fade</button>
+            <button class="ribbon-btn" onclick="playAnimation('play-fly')" title="Fly In Animation">Fly In</button>
+            <button class="ribbon-btn" onclick="playAnimation('play-zoom')" title="Zoom Animation">Zoom</button>
+            <button class="ribbon-btn" onclick="playAnimation('play-pulse')" title="Pulse">Pulse</button>
+          </div>
+
+          <select class="ribbon-select" onchange="changeTheme(this.value)">
+            <option value="modern">🎨 Modern Dark Blue</option>
+            <option value="minimal">⚪ Clean Minimalist</option>
+            <option value="gradient">🔥 Orange Vibrant</option>
+          </select>
+
+          <div style="display:flex; gap:6px; margin-left:auto; flex-wrap:wrap;">
+            <button class="demo-preset-btn" onclick="loadSlideTemplate('edu')">🏫 ક્લાસરૂમ લેસન</button>
+            <button class="demo-preset-btn" onclick="loadSlideTemplate('business')">📊 પ્રોજેક્ટ પિચ</button>
+            <button class="demo-preset-btn" onclick="loadSlideTemplate('quiz')">❓ લાઈવ ક્વિઝ</button>
+            <button class="demo-preset-btn" style="background:#16a34a; color:white; border-color:#15803d;" onclick="fullscreenSlide()">▶ Play Full Show</button>
+          </div>
+        </div>
+
+        <!-- 16:9 Interactive Slide Canvas -->
+        <div class="slide-stage-wrapper">
+          <div class="slide-canvas" id="slideCanvas" contenteditable="true" style="background: linear-gradient(135deg, #0f172a, #1e3a8a); color: white;">
+            <div id="slideAnimTarget" class="play-fly">
+              <span style="background:rgba(234,88,12,0.25); color:#fb923c; padding:4px 12px; border-radius:20px; font-size:13px; font-weight:800; text-transform:uppercase;">
+                Digital Presentation Studio
+              </span>
+              <h1 style="font-size: 32px; font-weight: 800; margin: 12px 0 8px 0; letter-spacing: 0.5px;">
+                સ્માર્ટ ક્લાસરૂમ પ્રેઝન્ટેશન ૨૦૨૬
+              </h1>
+              <p style="font-size: 16px; opacity: 0.9; margin: 0 0 18px 0; max-width: 600px;">
+                અહીં તમે લખાણ એડિટ કરી શકો છો અને ઉપર આપેલા <strong>Animations</strong> બટનો વડે સ્લાઇડના તત્વોને લાઈવ ગતિ આપી શકો છો.
+              </p>
+              <div style="display:flex; gap:12px; font-size:13.5px; font-weight:700;">
+                <span style="background:rgba(255,255,255,0.15); padding:6px 14px; border-radius:6px;">🎯 16:9 Ratio</span>
+                <span style="background:rgba(255,255,255,0.15); padding:6px 14px; border-radius:6px;">🎬 Live Animation</span>
+                <span style="background:rgba(255,255,255,0.15); padding:6px 14px; border-radius:6px;">💡 F5 Slide Show</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sandbox-status-bar">
+          <span>📍 લાઈવ સ્ટેટસ: Slide 1 of 1 • 16:9 Widescreen Canvas • Editable Text</span>
+          <span>💡 'Play Full Show' થી ફુલસ્ક્રીન મોડમાં જુઓ (Esc થી બહાર નીકળો)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. SIDE-BY-SIDE PANELS: What is PPT? & Why Learn PPT? -->
+    <div class="section-header-box">
+      <div class="section-main-title">PowerPoint Overview & Benefits</div>
+      <div class="section-sub-text">વિઝ્યુઅલ પ્રેઝન્ટેશનનો પાયો અને જાહેર રજૂઆતમાં તેની શક્તિ.</div>
+    </div>
+
+    <div class="overview-side-container">
+      
+      <!-- Panel 1: PPT શું છે? -->
+      <div class="overview-panel">
+        <div class="overview-panel-title">🌱 PPT શું છે? (Architecture)</div>
+        <div class="overview-panel-desc">
+          PowerPoint એ એક <strong>વિઝ્યુઅલ પ્રેઝન્ટેશન</strong> સોફ્ટવેર છે જે સ્લાઇડ્સ, એનિમેશન અને ચાર્ટ્સ દ્વારા વિચારોને રજૂ કરવા વપરાય છે.
+        </div>
+        <div class="intro-mini-grid">
+          <div class="intro-mini-box"><strong>📌 16:9 Ratio:</strong> LED ટીવી અને પ્રોજેક્ટરનું વાઇડસ્ક્રીન માપ.</div>
+          <div class="intro-mini-box"><strong>📌 Slide Master:</strong> તમામ સ્લાઇડ્સ પર લોગો સેટ કરવાનું સેન્ટ્રલ ડેસ્ક.</div>
+          <div class="intro-mini-box"><strong>📌 Transitions:</strong> આખી સ્લાઇડ બદલાય તે ઈફેક્ટ.</div>
+          <div class="intro-mini-box"><strong>📌 6 × 6 Rule:</strong> મહત્તમ ૬ બુલેટ પોઇન્ટ્સ અને ૬ શબ્દો.</div>
+        </div>
+      </div>
+
+      <!-- Panel 2: શા માટે PPT શીખવું જોઈએ? -->
+      <div class="overview-panel">
+        <div class="overview-panel-title">💡 શા માટે PPT શીખવું જોઈએ?</div>
+        <div class="overview-panel-desc">
+          વિદ્યાર્થી, શિક્ષક કે ઉદ્યોગસાહસિક માટે પોતાની વાત પ્રભાવશાળી રીતે રજૂ કરવાનું ઉત્તમ સાધન:
+        </div>
+        <div class="why-mini-list">
+          <div class="why-mini-item">
+            <h4><span>🎯</span> ૧૦ ગણો વધુ વિઝ્યુઅલ ઈમ્પેક્ટ</h4>
+            <p>આંખે જોયેલી સ્લાઇડ્સ અને એનિમેશન લાંબા સમય સુધી યાદ રહે છે.</p>
+          </div>
+          <div class="why-mini-item">
+            <h4><span>🏫</span> સ્માર્ટ ક્લાસરૂમ શિક્ષણ</h4>
+            <p>વિજ્ઞાનના પ્રયોગો, ઇતિહાસ અને ગણિત પ્રોજેક્ટર પર જીવંત કરવા.</p>
+          </div>
+          <div class="why-mini-item">
+            <h4><span>🎬</span> વિડિયો એક્સપોર્ટ & પિચિંગ</h4>
+            <p>સીધો જ Full HD વિડિયો (MP4) બનાવી શેર કરવાની સુવિધા.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 3. PART 1: 12 FOUNDATION LESSONS -->
+    <div class="section-header-box">
+      <div class="section-main-title">Level 1: 12 Foundation Lessons</div>
+      <div class="section-sub-text">સ્લાઇડ સાઇઝ, સ્માર્ટઆર્ટ, કસ્ટમ એનિમેશન અને વિડિયો એક્સપોર્ટ.</div>
+    </div>
+
+    <div class="grid-container">
+
+      <!-- L1 -->
+      <div class="lesson-card" id="card_ppt_l1">
+        <div>
+          <span class="badge">Lesson 1</span>
+          <div class="lesson-title">૧૬:૯ વાઇડસ્ક્રીન સ્લાઇડ સાઇઝ</div>
+          <div class="lesson-desc">પ્રોજેક્ટર કે ટીવી પર સ્લાઇડ બંને બાજુ કાળી પટ્ટી વગર ફુલસ્ક્રીન દેખાય તે માટે.</div>
+          <div class="slide-mini-wrapper">
+            <div class="slide-preview-content">
+              🖥️ <strong>Slide Canvas:</strong><br>
+              • Ratio: <span class="slide-highlight">Widescreen (16:9) Standard</span><br>
+              • Screen: Full HD LED / Smart Board Ready
+            </div>
+          </div>
+          <div class="action-badge">📍 મેનુ: <strong>Design -> Slide Size -> 16:9</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Menu Action</span><p class="prompt-text">Design -> Slide Size -> Widescreen (16:9)</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>પ્રેઝન્ટેશન શરૂ કરતાં જ <strong>Design</strong> ટેબમાં જાઓ.</li><li><strong>Slide Size</strong> માં જઈ હંમેશા <strong>Widescreen (16:9)</strong> પસંદ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ppt_l1', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L2 -->
+      <div class="lesson-card" id="card_ppt_l2">
+        <div>
+          <span class="badge">Lesson 2</span>
+          <div class="lesson-title">સ્લાઇડ માસ્ટર (Slide Master જાદુ)</div>
+          <div class="lesson-desc">માત્ર ૧ સ્લાઇડમાં લોગો કે હેડિંગ મૂકો, તે બાકીની તમામ ૫૦ સ્લાઇડ્સમાં આપોઆપ આવી જશે.</div>
+          <div class="slide-mini-wrapper">
+            <div class="slide-preview-content">
+              🏫 <span class="slide-highlight">[Master Slide Edit: Logo & School Name]</span><br>
+              ➔ તમામ Slide 1, Slide 2, Slide 50 માં લોગો ઓટોમેટિક લોક થઈ જશે.
+            </div>
+          </div>
+          <div class="action-badge">📍 મેનુ: <strong>View -> Slide Master</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Menu Action</span><p class="prompt-text">View -> Slide Master -> Edit Top Slide -> Close Master</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li><strong>View</strong> ટેબમાંથી <strong>Slide Master</strong> ખોલો.</li><li>સૌથી ઉપરની માસ્ટર સ્લાઇડમાં તમારો લોગો મૂકી <strong>Close Master View</strong> આપો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ppt_l2', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L3 -->
+      <div class="lesson-card" id="card_ppt_l3">
+        <div>
+          <span class="badge">Lesson 3</span>
+          <div class="lesson-title">૬ × ૬ પ્રેઝન્ટેશન ગોલ્ડન રૂલ</div>
+          <div class="lesson-desc">સ્લાઇડ પર અક્ષરોનો ઢગલો ન કરવો; સ્માર્ટ રીતે બુલેટ પોઇન્ટ્સ ગોઠવવા.</div>
+          <div class="slide-mini-wrapper">
+            <div class="slide-preview-content">
+              ✔ સ્લાઇડ પર વધુમાં વધુ <span class="slide-highlight">૬ મુદ્દાઓ (Bullets)</span><br>
+              ✔ દરેક મુદ્દામાં વધુમાં વધુ <span class="slide-highlight">૬ શબ્દો (Words)</span><br>
+              ✔ ફોન્ટ સાઇઝ: Title (36pt), Body (24pt)
+            </div>
+          </div>
+          <div class="action-badge">📍 ડિઝાઇન રૂલ: <strong>Maximum 6 Bullets × 6 Words</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Design Guideline</span><p class="prompt-text">Keep Text Minimum, Use Big Bold Fonts & Icons</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>ફકરાના બદલે ફક્ત કી-વર્ડ્સ (Key-words) જ લખો.</li><li>બોડી ટેક્સ્ટની ફોન્ટ સાઇઝ ઓછામાં ઓછી <strong>24pt</strong> રાખો જેથી પાછળ સુધી વંચાય.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ppt_l3', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L4 -->
+      <div class="lesson-card" id="card_ppt_l4">
+        <div>
+          <span class="badge">Lesson 4</span>
+          <div class="lesson-title">સ્માર્ટઆર્ટ (SmartArt Graphics)</div>
+          <div class="lesson-desc">સાદા બોરિંગ લિસ્ટને ૧ સેકન્ડમાં આકર્ષક કલરફુલ ફ્લોચાર્ટ કે પ્રોસેસ સાયકલમાં બદલવું.</div>
+          <div class="slide-mini-wrapper">
+            <div class="slide-preview-content" style="text-align:center;">
+              [ઇનપુટ] ➔ <span class="slide-highlight">[પ્રોસેસિંગ CPU]</span> ➔ [આઉટપુટ]
+            </div>
+          </div>
+          <div class="action-badge">📍 શોર્ટકટ: <strong>Home -> Convert to SmartArt</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Shortcut Action</span><p class="prompt-text">Right Click Text -> Convert to SmartArt Graphics</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>તમારા ૩-૪ બુલેટ પોઇન્ટ્સ સિલેક્ટ કરો.</li><li>રાઇટ-ક્લિક કરી <strong>Convert to SmartArt</strong> માંથી Process કે Cycle પસંદ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ppt_l4', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L5 -->
+      <div class="lesson-card" id="card_ppt_l5">
+        <div>
+          <span class="badge">Lesson 5</span>
+          <div class="lesson-title">કસ્ટમ એનિમેશન (Entrance Effects)</div>
+          <div class="lesson-desc">એક પછી એક લાઈન કે પોઇન્ટ ક્લિક કરતાં જ સ્ક્રીન પર ફ્લાય થઈને આવે.</div>
+          <div class="slide-mini-wrapper">
+            <div class="slide-preview-content">
+              ૧. પ્રશ્ન ૧ [Screen Ready]<br>
+              ૨. જવાબ: <span class="slide-highlight">[Fade / Fly In Effect on Click]</span>
+            </div>
+          </div>
+          <div class="action-badge">📍 મેનુ: <strong>Animations -> Fade / Wipe</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Menu Action</span><p class="prompt-text">Select Object -> Animations -> Wipe / Fly In -> Start: On Click</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>ટેક્સ્ટ બોક્સ સિલેક્ટ કરી <strong>Animations</strong> માં જાઓ.</li><li>Entrance માંથી <strong>Wipe</strong> કે <strong>Fly In</strong> પસંદ કરો. <strong>Animation Pane</strong> ખોલી સમય સેટ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ppt_l5', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L6 -->
+      <div class="lesson-card" id="card_ppt_l6">
+        <div>
+          <span class="badge">Lesson 6</span>
+          <div class="lesson-title">સ્લાઇડ ટ્રાન્ઝિશન (Slide Transitions)</div>
+          <div class="lesson-desc">એક સ્લાઇડમાંથી બીજી સ્લાઇડમાં જતી વખતે સ્મૂધ પુશ કે ફેડ ઈફેક્ટ આપવી.</div>
+          <div class="slide-mini-wrapper">
+            <div class="slide-preview-content">
+              Slide 1 ➔ <span class="slide-highlight">[Smooth Push / Fade Transition (1.0s)]</span> ➔ Slide 2
+            </div>
+          </div>
+          <div class="action-badge">📍 મેનુ: <strong>Transitions -> Push / Fade</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Menu Action</span><p class="prompt-text">Transitions -> Push -> Duration: 01.00 -> Apply To All</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li><strong>Transitions</strong> ટેબમાં જઈ <strong>Push</strong> કે <strong>Fade</strong> પસંદ કરો.</li><li>બધી સ્લાઇડમાં એકસરખો લુક રાખવા <strong>Apply to All</strong> પર ક્લિક કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ppt_l6', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L7 -->
+      <div class="lesson-card" id="card_ppt_l7">
+        <div>
+          <span class="badge">Lesson 7</span>
+          <div class="lesson-title">શેપ્સ અને આઈકોન્સ (Shapes & Icons)</div>
+          <div class="lesson-desc">લખાણના બદલે પ્રોફેશનલ વેક્ટર આઈકોન્સ (Computer, Brain, Books) વાપરવા.</div>
+          <div class="slide-mini-wrapper">
+            <div class="slide-preview-content">
+              💻 [Laptop Icon] &nbsp;&nbsp; 📚 [Books Icon] &nbsp;&nbsp; 🧠 [AI Brain Icon]
+            </div>
+          </div>
+          <div class="action-badge">📍 મેનુ: <strong>Insert -> Icons / Shapes</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Menu Action</span><p class="prompt-text">Insert -> Icons -> Search keyword (e.g. Education, Tech)</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li><strong>Insert</strong> ટેબમાંથી <strong>Icons</strong> ખોલો.</li><li>શૈક્ષણિક કે બિઝનેસ આઈકોન શોધી સ્લાઇડ પર મૂકો અને Theme Color આપો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ppt_l7', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L8 -->
+      <div class="lesson-card" id="card_ppt_l8">
+        <div>
+          <span class="badge">Lesson 8</span>
+          <div class="lesson-title">ઓડિયો & વિડિયો ઇન્સર્ટ (Insert Media)</div>
+          <div class="lesson-desc">સ્લાઇડની અંદર જ વિડિયો પ્લે થાય અથવા બેકગ્રાઉન્ડ સંગીત વાગે તે સેટ કરવું.</div>
+          <div class="slide-mini-wrapper">
+            <div class="slide-preview-content">
+              ▶️ [Science Experiment Video.mp4: Play Automatically Full Screen]
+            </div>
+          </div>
+          <div class="action-badge">📍 મેનુ: <strong>Insert -> Video / Audio</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Menu Action</span><p class="prompt-text">Insert -> Video -> From Device -> Playback: Automatically</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li><strong>Insert -> Video -> This Device</strong> થી વિડિયો લાવો.</li><li>Playback ટેબમાં જઈ <strong>Start: Automatically</strong> પસંદ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ppt_l8', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L9 -->
+      <div class="lesson-card" id="card_ppt_l9">
+        <div>
+          <span class="badge">Lesson 9</span>
+          <div class="lesson-title">લાઈવ સ્લાઇડશો શોર્ટકટ્સ (F5 & Pen Tool)</div>
+          <div class="lesson-desc">પ્રેઝન્ટેશન આપતી વખતે સ્ક્રીન પર પેનથી ગોળ કુંડાળા કરવા કે બ્લેક સ્ક્રીન કરવી.</div>
+          <div class="slide-mini-wrapper">
+            <div class="slide-preview-content">
+              • Start: <span class="slide-highlight">F5</span> | Current: <span class="slide-highlight">Shift + F5</span><br>
+              • Pen Tool: <span class="slide-highlight">Ctrl + P</span> | Eraser: <span class="slide-highlight">E</span> | Black Screen: <span class="slide-highlight">B</span>
+            </div>
+          </div>
+          <div class="action-badge">📍 શોર્ટકટ્સ: <strong>F5 / Shift+F5 / Ctrl+P</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Live Shortcuts</span><p class="prompt-text">F5 (Show) | Ctrl+P (Pen) | B (Black Out) | Esc (Exit)</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>સ્લાઇડશો શરૂ કરવા <code>F5</code> દબાવો.</li><li>ચાલુ શોમાં અગત્યના શબ્દ નીચે લીટી કરવા <code>Ctrl + P</code> દબાવી પેન ચાલુ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ppt_l9', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L10 -->
+      <div class="lesson-card" id="card_ppt_l10">
+        <div>
+          <span class="badge">Lesson 10</span>
+          <div class="lesson-title">ટેબલ & એક્સેલ ચાર્ટ લિંકિંગ</div>
+          <div class="lesson-desc">એક્સેલનો રિઝલ્ટ ચાર્ટ પીપીટીમાં લાવવો; એક્સેલમાં બદલાય તો પીપીટીમાં ઓટો-અપડેટ થાય.</div>
+          <div class="slide-mini-wrapper">
+            <div class="slide-preview-content">
+              📊 [Bar Chart: Class 10 Board Result 2026] ➔ <span class="slide-highlight">Linked to Excel</span>
+            </div>
+          </div>
+          <div class="action-badge">📍 મેનુ: <strong>Insert -> Chart</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Menu Action</span><p class="prompt-text">Insert -> Chart -> Column/Pie -> Edit Data in Excel</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li><strong>Insert -> Chart</strong> થી Bar કે Pie ચાર્ટ પસંદ કરો.</li><li>સ્ક્રીન પર ખુલેલી નાની એક્સેલ શીટમાં માર્ક્સ નાખતાં જ ચાર્ટ આપમેળે બની જશે.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ppt_l10', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L11 -->
+      <div class="lesson-card" id="card_ppt_l11">
+        <div>
+          <span class="badge">Lesson 11</span>
+          <div class="lesson-title">પીપીટીમાંથી વિડિયો બનાવવો (Export MP4)</div>
+          <div class="lesson-desc">આખી પ્રેઝન્ટેશનને Full HD વિડિયોમાં કન્વર્ટ કરી YouTube કે WhatsApp પર મોકલવી.</div>
+          <div class="slide-mini-wrapper">
+            <div class="slide-preview-content">
+              📽️ Lesson.pptx ➔ <span class="slide-highlight">Lesson_Video.mp4 (1080p Full HD)</span>
+            </div>
+          </div>
+          <div class="action-badge">📍 મેનુ: <strong>File -> Export -> Create a Video</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Menu Action</span><p class="prompt-text">File -> Export -> Create a Video -> Full HD (1080p)</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li><strong>File -> Export -> Create a Video</strong> પર ક્લિક કરો.</li><li>Full HD (1080p) પસંદ કરી <strong>Create Video</strong> આપો. સેકન્ડોમાં MP4 ફાઇલ તૈયાર થશે.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ppt_l11', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L12 -->
+      <div class="lesson-card" id="card_ppt_l12">
+        <div>
+          <span class="badge">Lesson 12</span>
+          <div class="lesson-title">પીપીટી ટુ પીડીએફ હેન્ડઆઉટ્સ (Handouts)</div>
+          <div class="lesson-desc">વિદ્યાર્થીઓને વાંચવા આપવા માટે એક પેજ પર ૩ સ્લાઇડ્સ અને નોટ્સ સાથે પ્રિન્ટ લેવી.</div>
+          <div class="slide-mini-wrapper">
+            <div class="slide-preview-content">
+              📄 Print Setup: <span class="slide-highlight">Handouts (3 Slides Per Page with Lines for Notes)</span>
+            </div>
+          </div>
+          <div class="action-badge">📍 શોર્ટકટ: <strong>Ctrl + P -> Handouts</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Print Setting</span><p class="prompt-text">Print -> Print Layout -> 3 Slides Handout</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li><code>Ctrl + P</code> દબાવો.</li><li>Full Page Slides ના બદલે <strong>3 Slides Handout</strong> સિલેક્ટ કરી પ્રિન્ટ લો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ppt_l12', this)">⚪ Mark as Completed</button>
+      </div>
+
+    </div>
+
+    <!-- 4. PART 2: 9 ADVANCED & CORPORATE LESSONS (12 + 9 = 21) -->
+    <div class="section-header-box">
+      <div class="section-main-title" style="color:#c2410c;">Level 2: 9 Corporate & Advanced Lessons</div>
+      <div class="section-sub-text">Morph Magic, AI Slide Creation, Presenter View, Hyperlink Quiz અને Font Packaging.</div>
+    </div>
+
+    <div class="grid-container">
+
+      <!-- Adv 1 -->
+      <div class="lesson-card" id="card_ppt_adv1" style="border-color:#fed7aa;">
+        <div>
+          <span class="badge badge-adv">Advanced 1</span>
+          <div class="lesson-title">Morph Transition (Apple સ્ટાઇલ જાદુ)</div>
+          <div class="lesson-desc">કોઈપણ ઓબ્જેક્ટ કે શબ્દ આપોઆપ મોટો થાય કે સિનેમેટિક રીતે બીજી સ્લાઇડમાં રૂપાંતરિત થાય.</div>
+          <div class="slide-mini-wrapper">
+            <div class="slide-preview-content">
+              Slide 1: નાનો ફોટો ➔ <span class="slide-highlight-adv">[Morph Magic: ઓટોમેટિક સ્મૂધ ઝૂમ]</span> ➔ Slide 2: ફુલસ્ક્રીન વિઝ્યુઅલ
+            </div>
+          </div>
+          <div class="action-badge">📍 મેનુ: <strong>Transitions -> Morph</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Transition Action</span><p class="prompt-text">Duplicate Slide -> Move/Resize Object -> Apply 'Morph'</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>પહેલી સ્લાઇડને રાઇટ-ક્લિક કરી <strong>Duplicate Slide</strong> કરો.</li><li>બીજી સ્લાઇડમાં ફોટો કે લખાણને મોટું કરી બીજી જગ્યાએ મૂકો.</li><li>Transitions ટેબમાંથી <strong>Morph</strong> આપો. અદ્ભુત ૩D સ્મૂધ એનિમેશન બનશે!</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ppt_adv1', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 2 -->
+      <div class="lesson-card" id="card_ppt_adv2" style="border-color:#fed7aa;">
+        <div>
+          <span class="badge badge-adv">Advanced 2</span>
+          <div class="lesson-title">ઈન્ટરેક્ટિવ ક્વિઝ & હાયપરલિંક્સ</div>
+          <div class="lesson-desc">ક્લાસરૂમ ક્વિઝમાં સાચા જવાબ પર ક્લિક કરતાં 'Right' સ્લાઇડ અને ખોટા પર 'Wrong' સ્લાઇડ ખુલે.</div>
+          <div class="slide-mini-wrapper">
+            <div class="slide-preview-content">
+              [બટન: વિકલ્પ A] ➔ <span class="slide-highlight-adv">Hyperlink: Jump to Slide 5 (Correct Answer ✅)</span>
+            </div>
+          </div>
+          <div class="action-badge">📍 શોર્ટકટ: <strong>Ctrl + K (Insert Link)</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Shortcut</span><p class="prompt-text">Select Shape -> Ctrl + K -> Place in This Document -> Select Slide</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>કોઈપણ શેપ કે બટન સિલેક્ટ કરી <code>Ctrl + K</code> દબાવો.</li><li><strong>Place in This Document</strong> પસંદ કરી જે સ્લાઇડ પર કૂદકો મારવો હોય તે સ્લાઇડ નંબર આપી દો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ppt_adv2', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 3 -->
+      <div class="lesson-card" id="card_ppt_adv3" style="border-color:#fed7aa;">
+        <div>
+          <span class="badge badge-adv">Advanced 3</span>
+          <div class="lesson-title">પ્રેઝન્ટર વ્યુ (Presenter View Secret)</div>
+          <div class="lesson-desc">પ્રોજેક્ટર પર માત્ર સ્લાઇડ દેખાય, જ્યારે તમારા લેપટોપ પર તમારા સિક્રેટ સ્પીકર નોટ્સ અને ટાઈમર દેખાય!</div>
+          <div class="slide-mini-wrapper">
+            <div class="slide-preview-content">
+              • Projector: ફક્ત સ્લાઇડ &nbsp;&nbsp; • Laptop: <span class="slide-highlight-adv">[તમારી ખાનગી નોટ્સ + Next Slide Preview]</span>
+            </div>
+          </div>
+          <div class="action-badge">📍 શોર્ટકટ: <strong>Alt + F5</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Shortcut</span><p class="prompt-text">Alt + F5 (Start Show in Presenter View Mode)</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>લેપટોપને પ્રોજેક્ટર સાથે જોડી કીબોર્ડ પરથી <code>Alt + F5</code> દબાવો.</li><li>સામે બેઠેલા લોકોને માત્ર સ્લાઇડ દેખાશે, જ્યારે તમને આગળની સ્લાઇડ અને તમારી નોટ્સ દેખાશે.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ppt_adv3', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 4 -->
+      <div class="lesson-card" id="card_ppt_adv4" style="border-color:#fed7aa;">
+        <div>
+          <span class="badge badge-adv">Advanced 4</span>
+          <div class="lesson-title">કમ્પ્યુટર સ્ક્રીન રેકોર્ડિંગ (Screen Recorder)</div>
+          <div class="lesson-desc">કોઈપણ સોફ્ટવેર વગર સીધા પીપીટીમાંથી કમ્પ્યુટર સ્ક્રીનનો વિડિયો રેકોર્ડ કરી સ્લાઇડમાં મૂકવો.</div>
+          <div class="slide-mini-wrapper">
+            <div class="slide-preview-content">
+              🎥 <span class="slide-highlight-adv">[Recording: Excel Tutorial Demo Screen directly into PPT]</span>
+            </div>
+          </div>
+          <div class="action-badge">📍 મેનુ: <strong>Insert -> Screen Recording</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Menu Action</span><p class="prompt-text">Insert -> Screen Recording -> Select Area -> Record (Win+Shift+R)</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li><strong>Insert</strong> ટેબમાંથી છેલ્લે રહેલા <strong>Screen Recording</strong> પર ક્લિક કરો.</li><li>સ્ક્રીનનો ભાગ સિલેક્ટ કરી Record બટન દબાવો. વિડિયો સીધો સ્લાઇડમાં આવી જશે.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ppt_adv4', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 5 -->
+      <div class="lesson-card" id="card_ppt_adv5" style="border-color:#fed7aa;">
+        <div>
+          <span class="badge badge-adv">Advanced 5</span>
+          <div class="lesson-title">ફોટોનું બેકગ્રાઉન્ડ દૂર કરવું (Remove BG)</div>
+          <div class="lesson-desc">કોઈપણ ફોટોનું બેકગ્રાઉન્ડ ફોટોશોપ વગર પાવરપોઇન્ટમાં ૧ સેકન્ડમાં ટ્રાન્સપરન્ટ બનાવવું.</div>
+          <div class="slide-mini-wrapper">
+            <div class="slide-preview-content">
+              🖼️ ફોટો [સફેદ બેકગ્રાઉન્ડ] ➔ <span class="slide-highlight-adv">[Remove Background: ૧૦૦% પારદર્શક PNG લુક]</span>
+            </div>
+          </div>
+          <div class="action-badge">📍 મેનુ: <strong>Picture Format -> Remove Background</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Picture Tool</span><p class="prompt-text">Double-Click Picture -> Remove Background -> Keep Changes</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>ફોટો પર ડબલ-ક્લિક કરો.</li><li>ડાબી બાજુ સૌથી પહેલું બટન <strong>Remove Background</strong> દબાવી <strong>Keep Changes</strong> આપો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ppt_adv5', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 6 -->
+      <div class="lesson-card" id="card_ppt_adv6" style="border-color:#fed7aa;">
+        <div>
+          <span class="badge badge-adv">Advanced 6</span>
+          <div class="lesson-title">ઓટો-લૂપ કિયોસ્ક શો (Exhibition Mode)</div>
+          <div class="lesson-desc">વિજ્ઞાન મેળો કે શાળાના વાર્ષિક ઉત્સવમાં કોઈના અડ્યા વગર આપોઆપ સતત ફરતી પ્રેઝન્ટેશન.</div>
+          <div class="slide-mini-wrapper">
+            <div class="slide-preview-content">
+              🔄 Auto Loop: <span class="slide-highlight-adv">Slide 1 ➔ 10 ➔ Restart Slide 1 Automatically (Continuous)</span>
+            </div>
+          </div>
+          <div class="action-badge">📍 સેટિંગ: <strong>Slide Show -> Set Up Slide Show</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Kiosk Setting</span><p class="prompt-text">Set Up Show -> Browsed at a kiosk (full screen) -> Loop continuously</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li><strong>Slide Show -> Set Up Slide Show</strong> માં જાઓ.</li><li><strong>Browsed at a kiosk (full screen)</strong> પસંદ કરો. સ્લાઇડ્સ જાતે ૫-૫ સેકન્ડે બદલાતી રહેશે.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ppt_adv6', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 7 -->
+      <div class="lesson-card" id="card_ppt_adv7" style="border-color:#fed7aa;">
+        <div>
+          <span class="badge badge-adv">Advanced 7</span>
+          <div class="lesson-title">ઝૂમ સ્લાઇડ્સ (Prezi જેવો ડેશબોર્ડ લુક)</div>
+          <div class="lesson-desc">મુખ્ય પેજ પરથી જે પ્રકરણ પર ક્લિક કરો તે સ્લાઇડ ઝૂમ થઈને બહાર આવે!</div>
+          <div class="slide-mini-wrapper">
+            <div class="slide-preview-content">
+              [Main Menu Dashboard] ➔ Click Module 2 ➔ <span class="slide-highlight-adv">[Dynamic 3D Zoom In]</span>
+            </div>
+          </div>
+          <div class="action-badge">📍 મેનુ: <strong>Insert -> Zoom -> Slide Zoom</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Menu Action</span><p class="prompt-text">Insert -> Zoom -> Summary Zoom / Slide Zoom</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li><strong>Insert -> Zoom -> Summary Zoom</strong> પસંદ કરો.</li><li>મુખ્ય સ્લાઇડ્સ સિલેક્ટ કરતાં જ Prezi જેવો આધુનિક ક્લિકેબલ ડેશબોર્ડ બની જશે.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ppt_adv7', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 8 -->
+      <div class="lesson-card" id="card_ppt_adv8" style="border-color:#fed7aa;">
+        <div>
+          <span class="badge badge-adv">Advanced 8</span>
+          <div class="lesson-title">AI Slide Maker Prompting (Gamma & Gemini)</div>
+          <div class="lesson-desc">માત્ર ટોપિકનું નામ આપો અને AI પાસેથી આખું ૮ સ્લાઇડનું કન્ટેન્ટ અને ડિઝાઇન તૈયાર કરાવો.</div>
+          <div class="slide-mini-wrapper">
+            <div class="slide-preview-content">
+              🤖 <span class="slide-highlight-adv">AI Prompt: "ધોરણ ૧૦ વિજ્ઞાન - પ્રકાશનું પરાવર્તન ૮ સ્લાઇડ PPT આઉટલાઇન"</span>
+            </div>
+          </div>
+          <div class="action-badge">📍 AI ટૂલ: <strong>Gemini / Gamma.app</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">AI Prompt</span><p class="prompt-text">"Act as a Master Educator. Create a structured 8-slide presentation outline on '[ટોપિકનું નામ]'. For each slide, provide: Slide Title, 3 concise bullet points (max 6 words each), and 1 visual suggestion for an image/icon."</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>આ પ્રોમ્પ્ટ ગૂગલ જેમિનીમાં રન કરી કન્ટેન્ટ મેળવો.</li><li>તે આઉટલાઇન સીધી <strong>Gamma.app</strong> માં પેસ્ટ કરતાં સેકન્ડોમાં પ્રોફેશનલ સ્લાઇડ્સ બની જશે.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ppt_adv8', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 9 (New 9th Advanced Lesson for PPT) -->
+      <div class="lesson-card" id="card_ppt_adv9" style="border-color:#fed7aa;">
+        <div>
+          <span class="badge badge-adv">Advanced 9</span>
+          <div class="lesson-title">Font Embedding & Packaging (ફોન્ટ્સ લોક કરવા)</div>
+          <div class="lesson-desc">બીજા કમ્પ્યુટરમાં પ્રેઝન્ટેશન ચલાવતી વખતે ગુજરાતી કે ખાસ ફોન્ટ્સ બગડે નહીં તે સેટિંગ.</div>
+          <div class="slide-mini-wrapper">
+            <div class="slide-preview-content">
+              🔒 <span class="slide-highlight-adv">Embed Fonts in File: તમારા ફોન્ટ્સ ફાઈલમાં પેક થઈ જશે (100% Safe)</span>
+            </div>
+          </div>
+          <div class="action-badge">📍 સેટિંગ: <strong>File -> Options -> Save -> Embed Fonts</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Font Packaging</span><p class="prompt-text">File -> Options -> Save -> Check 'Embed fonts in the file'</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li><strong>File -> Options -> Save</strong> ટેબમાં જાઓ.</li><li>સૌથી નીચે રહેલા <strong>Embed fonts in the file</strong> પર ટીક માર્ક કરી OK આપો. હવે કોઈપણ કમ્પ્યુટરમાં ફોન્ટ્સ એવા ને એવા જ રહેશે.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ppt_adv9', this)">⚪ Mark as Completed</button>
+      </div>
+
+    </div>
+
+    <!-- 5. NEW DIGITAL SKILLS BUTTON -->
+    <div class="next-course-strip">
+      <a href="index.html" class="digital-skills-btn">💻 ડિજિટલ સ્કીલ્સ શીખો, ભવિષ્ય બનાવો! 🚀</a>
+    </div>
+
+  </div>
+
+  <script>
+    // Toggle Hide / Show Lab (Default Hidden)
+    function toggleLab() {
+      const body = document.getElementById('sandboxBody');
+      const btn = document.getElementById('labToggleBtn');
+      if (body.style.display === 'none' || body.style.display === '') {
+        body.style.display = 'block';
+        btn.innerHTML = '👁️ Hide Lab';
+      } else {
+        body.style.display = 'none';
+        btn.innerHTML = '👁️ Open Live Lab';
+      }
+    }
+
+    // Interactive Mark as Completed Tracking Engine
+    let completedCount = 0;
+    function toggleComplete(cardId, btn) {
+      const card = document.getElementById(cardId);
+      const counter = document.getElementById('completedCounter');
+      
+      if (card.classList.contains('is-completed')) {
+        card.classList.remove('is-completed');
+        btn.classList.remove('completed-active');
+        btn.innerHTML = '⚪ Mark as Completed';
+        completedCount = Math.max(0, completedCount - 1);
+      } else {
+        card.classList.add('is-completed');
+        btn.classList.add('completed-active');
+        btn.innerHTML = '✅ Completed';
+        completedCount++;
+      }
+      counter.innerText = completedCount;
+    }
+
+    // Live Slide Animation Engine
+    function playAnimation(animClass) {
+      const target = document.getElementById('slideAnimTarget');
+      target.className = '';
+      void target.offsetWidth;
+      target.className = animClass;
+    }
+
+    // Change Canvas Color Theme
+    function changeTheme(theme) {
+      const canvas = document.getElementById('slideCanvas');
+      if (theme === 'modern') {
+        canvas.style.background = 'linear-gradient(135deg, #0f172a, #1e3a8a)';
+        canvas.style.color = '#ffffff';
+      } else if (theme === 'minimal') {
+        canvas.style.background = '#ffffff';
+        canvas.style.color = '#0f172a';
+      } else if (theme === 'gradient') {
+        canvas.style.background = 'linear-gradient(135deg, #c2410c, #ea580c)';
+        canvas.style.color = '#ffffff';
+      }
+    }
+
+    // Load Live Slide Templates
+    function loadSlideTemplate(type) {
+      const target = document.getElementById('slideAnimTarget');
+      if (type === 'edu') {
+        target.innerHTML = `
+          <span style="background:rgba(234,88,12,0.3); color:#fb923c; padding:4px 12px; border-radius:20px; font-size:13px; font-weight:800;">ધોરણ ૧૦ વિજ્ઞાન • પાઠ ૧૦</span>
+          <h1 style="font-size: 32px; font-weight: 800; margin: 12px 0 8px 0;">પ્રકાશનું પરાવર્તન અને વક્રીભવન</h1>
+          <ul style="font-size: 16px; line-height: 1.8; margin-top: 8px;">
+            <li>આપાતકોણ અને પરાવર્તનકોણ હંમેશા સમાન હોય છે ($∠i = ∠r$).</li>
+            <li>અંતર્ગોળ અરીસો વાસ્તવિક અને ઊલટું પ્રતિબિંબ રચે છે.</li>
+          </ul>
+        `;
+      } else if (type === 'business') {
+        target.innerHTML = `
+          <span style="background:rgba(37,99,235,0.3); color:#60a5fa; padding:4px 12px; border-radius:20px; font-size:13px; font-weight:800;">Business Pitch 2026</span>
+          <h1 style="font-size: 32px; font-weight: 800; margin: 12px 0 8px 0;">Smart Digital Learning Portal</h1>
+          <p style="font-size: 16px; opacity: 0.9;">ગુજરાતના ૧૦ લાખ વિદ્યાર્થીઓ માટે ૧૦૦% મફત AI અને ડિજિટલ શિક્ષણ.</p>
+          <div style="display:flex; gap:16px; margin-top:16px; font-weight:800;">
+            <div style="background:rgba(255,255,255,0.1); padding:10px 18px; border-radius:8px;">🚀 100K+ Learners</div>
+            <div style="background:rgba(255,255,255,0.1); padding:10px 18px; border-radius:8px;">💡 100% Practical</div>
+          </div>
+        `;
+      } else if (type === 'quiz') {
+        target.innerHTML = `
+          <span style="background:rgba(22,163,74,0.3); color:#4ade80; padding:4px 12px; border-radius:20px; font-size:13px; font-weight:800;">Interactive Live Quiz</span>
+          <h1 style="font-size: 28px; font-weight: 800; margin: 12px 0 16px 0;">પ્રશ્ન: PPT માં સ્લાઇડશો શરૂ કરવાનો શોર્ટકટ કયો છે?</h1>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:15px; font-weight:700;">
+            <div style="background:rgba(255,255,255,0.15); padding:10px; border-radius:6px; cursor:pointer;" onclick="alert('ખોટો જવાબ!')">❌ A) Ctrl + S</div>
+            <div style="background:rgba(34,197,94,0.3); border:1px solid #22c55e; padding:10px; border-radius:6px; cursor:pointer;" onclick="alert('સાચો જવાબ! F5 થી સ્લાઇડશો શરૂ થાય.')">✅ B) F5 (Correct)</div>
+          </div>
+        `;
+      }
+      playAnimation('play-zoom');
+    }
+
+    // Fullscreen Slide Presentation Mode
+    function fullscreenSlide() {
+      const elem = document.getElementById('slideCanvas');
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) {
+        elem.webkitRequestFullscreen();
+      }
+      playAnimation('play-fade');
+    }
+
+    function toggleTheme() {
+      const b = document.body, btn = document.getElementById("themeBtn");
+      b.classList.toggle("dark-theme");
+      btn.innerHTML = b.classList.contains("dark-theme") ? "☀️ Light Mode" : "🌙 Dark Mode";
+    }
+  </script>
+</body>
+</html>

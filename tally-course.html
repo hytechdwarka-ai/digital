@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tally Prime & Accounting Master Course - Smart Digital School</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --card-bg: #ffffff;
+    --card-border: #cbd5e1;
+    --box-bg: #f1f5f9;
+    --accent: #0d9488;
+    --accent-hover: #0f766e;
+    --accent-adv: #0284c7;
+    --toolbar-bg: #f1f5f9;
+    --toolbar-border: #cbd5e1;
+    --tally-screen-bg: #1e1e2f;
+    --tally-screen-text: #00ffcc;
+    --highlight-cell: #ccfbf1;
+    --highlight-adv: #e0f2fe;
+    --completed-bg: #f0fdf4;
+    --completed-border: #86efac;
+  }
+  body.dark-theme {
+    --bg-color: #0f172a;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --card-bg: #1e293b;
+    --card-border: #334155;
+    --box-bg: #0b0f19;
+    --accent: #2dd4bf;
+    --accent-hover: #14b8a6;
+    --accent-adv: #38bdf8;
+    --toolbar-bg: #1e293b;
+    --toolbar-border: #334155;
+    --tally-screen-bg: #09090b;
+    --tally-screen-text: #22d3ee;
+    --highlight-cell: #134e4a;
+    --highlight-adv: #0369a1;
+    --completed-bg: #064e3b;
+    --completed-border: #059669;
+  }
+  * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.2s ease; }
+  body { background-color: var(--bg-color); margin: 0; padding: 14px; color: var(--text-main); font-size: 15px; }
+  
+  .container { max-width: 1150px; margin: 0 auto; }
+  
+  .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .back-btn { text-decoration: none; background: var(--card-bg); border: 1.5px solid var(--card-border); color: var(--text-main); padding: 7px 16px; border-radius: 20px; font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+  .back-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .theme-toggle-btn { background: var(--card-bg); border: 1.5px solid var(--card-border); color: var(--text-main); padding: 7px 16px; border-radius: 20px; font-size: 13.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+
+  /* Hero Banner */
+  .header-card { background: linear-gradient(135deg, #0f766e, #0d9488); color: white; border-radius: 18px; padding: 26px 18px; text-align: center; margin-bottom: 24px; box-shadow: 0 10px 25px -5px rgba(13, 148, 136, 0.25); }
+  .header-title { font-size: 28px; font-weight: 800; margin: 0 0 8px 0; }
+  .header-sub { font-size: 15.5px; opacity: 0.95; max-width: 750px; margin: auto; line-height: 1.5; }
+  .progress-badge-top { display: inline-block; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); padding: 5px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; margin-top: 10px; }
+
+  /* Section Header */
+  .section-header-box { text-align: center; margin: 34px 0 18px 0; }
+  .section-main-title { font-size: 22px; font-weight: 800; margin: 0 0 6px 0; color: var(--text-main); display: inline-block; position: relative; }
+  .section-main-title::after { content: ''; display: block; width: 50px; height: 3.5px; background: var(--accent); margin: 6px auto 0 auto; border-radius: 2px; }
+  .section-sub-text { font-size: 13.5px; color: var(--text-muted); margin-top: 6px; }
+
+  /* SIDE-BY-SIDE OVERVIEW CONTAINER */
+  .overview-side-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  .overview-panel {
+    background: var(--card-bg);
+    border: 1.5px solid var(--card-border);
+    border-radius: 18px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+  }
+  .overview-panel-title { font-size: 18.5px; font-weight: 800; color: var(--accent); display: flex; align-items: center; gap: 8px; margin: 0 0 10px 0; }
+  .overview-panel-desc { font-size: 14px; color: var(--text-muted); line-height: 1.65; margin-bottom: 14px; }
+  
+  .intro-mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .intro-mini-box { background: var(--box-bg); padding: 10px 12px; border-radius: 8px; border: 1.px solid var(--card-border); font-size: 13px; line-height: 1.5; border: 1px solid var(--card-border); }
+  @media(max-width: 500px) { .intro-mini-grid { grid-template-columns: 1fr; } }
+
+  .why-mini-list { display: flex; flex-direction: column; gap: 10px; }
+  .why-mini-item { background: var(--box-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 10px 12px; }
+  .why-mini-item h4 { margin: 0 0 4px 0; font-size: 14px; color: var(--text-main); font-weight: 800; display: flex; align-items: center; gap: 6px; }
+  .why-mini-item p { margin: 0; font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
+
+  /* Interactive Tally Gateway Sandbox (Default Hidden) */
+  .sandbox-card {
+    background: var(--card-bg);
+    border: 2px solid var(--accent);
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 34px;
+    box-shadow: 0 8px 24px -4px rgba(13, 148, 136, 0.18);
+  }
+  .sandbox-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+  .sandbox-title { font-size: 19px; font-weight: 800; color: var(--text-main); margin: 0; display: flex; align-items: center; gap: 8px; }
+  .toggle-lab-btn {
+    background: var(--box-bg);
+    border: 1.5px solid var(--card-border);
+    color: var(--text-main);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .toggle-lab-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Default Hidden State */
+  #sandboxBody { margin-top: 14px; display: none; }
+
+  /* Tally Gateway Screen Simulation */
+  .tally-screen-wrapper {
+    background: var(--tally-screen-bg);
+    color: var(--tally-screen-text);
+    border-radius: 10px;
+    padding: 24px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+    border: 1px solid #334155;
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .tally-top-nav { display: flex; justify-content: space-between; border-bottom: 1px dashed #334155; padding-bottom: 8px; font-size: 13px; margin-bottom: 14px; }
+  .tally-body-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media(max-width: 700px) { .tally-body-grid { grid-template-columns: 1fr; } }
+  .tally-box { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 6px; }
+  .tally-box-title { font-weight: 800; color: #fbbf24; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px; font-size: 14px; }
+  .tally-menu-item { padding: 4px 0; cursor: pointer; font-size: 13.5px; }
+  .tally-menu-item:hover { color: #ffffff; background: rgba(255,255,255,0.1); padding-left: 4px; }
+  
+  /* Preset Toolbar */
+  .template-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .demo-preset-btn {
+    background: rgba(13,148,136,0.1);
+    border: 1px solid rgba(13,148,136,0.3);
+    color: var(--accent);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .demo-preset-btn:hover { background: var(--accent); color: white; }
+
+  .sandbox-status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    font-weight: 600;
+    padding: 0 4px;
+  }
+
+  /* Lessons Grid */
+  .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 30px; }
+  .lesson-card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--card-border);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  }
+  .lesson-card:hover { border-color: var(--accent); box-shadow: 0 6px 15px -3px rgba(0,0,0,0.06); }
+  .lesson-card.is-completed {
+    background: var(--completed-bg);
+    border-color: var(--completed-border);
+  }
+  
+  .badge { font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 6px; background: rgba(13,148,136,0.12); color: var(--accent); display: inline-block; margin-bottom: 8px; }
+  body.dark-theme .badge { color: #2dd4bf; }
+  .badge-adv { background: rgba(2,132,199,0.12) !important; color: var(--accent-adv) !important; }
+
+  .lesson-title { font-size: 18px; font-weight: 800; color: var(--text-main); margin: 0 0 6px 0; }
+  .lesson-desc { font-size: 13.5px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px; }
+  
+  /* Mini Mockup in Cards */
+  .tally-mini-wrapper { overflow-x: auto; margin-bottom: 12px; border: 1px solid var(--card-border); border-radius: 6px; background: #0f172a; color: #38bdf8; padding: 10px; font-family: monospace; font-size: 12.5px; }
+  .cell-hl { background: rgba(13,148,136,0.2); padding: 2px 6px; border-radius: 4px; font-weight: 700; color: #2dd4bf; }
+  .cell-hl-adv { background: rgba(2,132,199,0.2); padding: 2px 6px; border-radius: 4px; font-weight: 700; color: #38bdf8; }
+  
+  /* Target Badge */
+  .target-cell-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(13,148,136,0.1);
+    border: 1px solid rgba(13,148,136,0.25);
+    color: #0f766e;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    font-family: monospace;
+  }
+  body.dark-theme .target-cell-badge { color: #2dd4bf; background: rgba(13,148,136,0.2); }
+
+  .prompt-box { background: var(--box-bg); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; border: 1px solid var(--card-border); }
+  .prompt-tag { font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; margin-bottom: 3px; display: block; }
+  .prompt-tag-adv { color: var(--accent-adv) !important; }
+  .prompt-text { font-size: 13.5px; color: var(--text-main); line-height: 1.4; margin: 0; font-family: 'Consolas', monospace; font-weight: 700; }
+  
+  .steps-box { background: rgba(13,148,136,0.06); border-left: 3.5px solid var(--accent); padding: 9px 12px; border-radius: 4px; margin-bottom: 14px; }
+  .steps-box-adv { background: rgba(2,132,199,0.06) !important; border-left: 3.5px solid var(--accent-adv) !important; }
+  .steps-title { font-size: 12.5px; font-weight: 800; color: var(--text-main); margin-bottom: 4px; }
+  .steps-list { margin: 0; padding-left: 16px; font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+  /* Mark as Completed Button */
+  .btn-complete {
+    width: 100%;
+    background: var(--box-bg);
+    border: 1.5px solid var(--card-border);
+    color: var(--text-main);
+    padding: 9px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .btn-complete:hover { border-color: #0d9488; color: #0d9488; }
+  .btn-complete.completed-active { background: #0d9488; border-color: #0d9488; color: white; }
+
+  /* Modified Strip For Next Page Button */
+  .next-course-strip {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .digital-skills-btn {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: #fff !important;
+    text-decoration: none;
+    padding: 16px 28px;
+    border-radius: 14px;
+    font-size: 18px;
+    font-weight: 800;
+    display: inline-block;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+  .digital-skills-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+
+</style>
+</head>
+<body class="dark-theme">
+
+  <div class="container">
+    
+    <div class="top-bar">
+      <!-- Back to Home Updated to index.html -->
+      <a href="index.html" class="back-btn">← Back to Home</a>
+      <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">☀️ Light Mode</button>
+    </div>
+
+    <!-- Hero Header -->
+    <div class="header-card">
+      <div class="header-title">📊 Tally Prime & Accounting Master Course</div>
+      <div class="header-sub">નાણાકીય એકાઉન્ટિંગ પાયો, ૧૨ ફાઉન્ડેશન અને ૯ કોર્પોરેટ એડવાન્સ મોડ્યુલ્સ (GST, TDS, Payroll સહિત કુલ ૨૧ લેસન્સ).</div>
+      <div class="progress-badge-top">🎯 પ્રગતિ: <span id="completedCounter">0</span> / 21 લેસન્સ પૂર્ણ</div>
+    </div>
+
+    <!-- 1. LIVE INTERACTIVE TALLY GATEWAY SANDBOX (DEFAULT HIDDEN) -->
+    <div class="sandbox-card">
+      <div class="sandbox-header">
+        <div class="sandbox-title">⚡ લાઈવ ટેલી ગેટવે લેબ (Interactive Tally Prime Studio)</div>
+        <button class="toggle-lab-btn" onclick="toggleLab()" id="labToggleBtn">👁️ Open Live Lab</button>
+      </div>
+
+      <div id="sandboxBody">
+        <!-- Preset Template Buttons -->
+        <div class="template-bar">
+          <span style="font-size:12.5px; font-weight:800; color:var(--accent); padding-right:4px;">📋 Menu Select:</span>
+          <button class="demo-preset-btn" onclick="loadTallyScreen('gateway')">🏠 Gateway of Tally</button>
+          <button class="demo-preset-btn" onclick="loadTallyScreen('masters')">📁 Accounts Masters (Ledgers)</button>
+          <button class="demo-preset-btn" onclick="loadTallyScreen('vouchers')">💼 Voucher Entry (Transactions)</button>
+          <button class="demo-preset-btn" onclick="loadTallyScreen('reports')">📊 Financial Reports (P&L / Balance Sheet)</button>
+          <button class="demo-preset-btn" style="background:#fee2e2; color:#dc2626; border-color:#fca5a5; margin-left:auto;" onclick="resetTallyLab()">🔄 Reset Lab</button>
+        </div>
+
+        <!-- Real Tally Simulated Screen -->
+        <div class="tally-screen-wrapper" id="tallyScreenContainer">
+          <div class="tally-top-nav">
+            <span id="tallyScreenTitle">TallyPrime | Company: Smart Digital School (2026-27)</span>
+            <span>Ctrl+A: Accept | Esc: Quit</span>
+          </div>
+          <div class="tally-body-grid" id="tallyScreenBody">
+            <!-- Dynamically Loaded by JS -->
+          </div>
+          <div style="border-top: 1px dashed #334155; margin-top: 14px; padding-top: 8px; font-size: 12px; color: #94a3b8;" id="tallyStatusMsg">
+            💡 માર્ગદર્શન: ઉપર આપેલા મેનુ બટનો પર ક્લિક કરીને ટેલી પ્રાઇમનું લાઈવ નેવિગેશન સમજો.
+          </div>
+        </div>
+
+        <div class="sandbox-status-bar">
+          <span id="tallySubStatus">⚡ Tally Prime In-Memory Engine Active</span>
+          <span>Educational Mode v3.0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. SIDE-BY-SIDE PANELS: What is Tally? & Why Learn Tally? -->
+    <div class="section-header-box">
+      <div class="section-main-title">Tally Overview & Benefits</div>
+      <div class="section-sub-text">કમ્પ્યુટરાઇઝ્ડ એકાઉન્ટિંગનો પાયો અને બિઝનેસ જગતમાં તેનું મહત્ત્વ.</div>
+    </div>
+
+    <div class="overview-side-container">
+      
+      <!-- Panel 1: Tally શું છે? -->
+      <div class="overview-panel">
+        <div class="overview-panel-title">🌱 Tally શું છે? (Architecture)</div>
+        <div class="overview-panel-desc">
+          Tally Prime એ દુનિયાનું અગ્રણી <strong>એકાઉન્ટિંગ અને ટેક્સેશન</strong> સોફ્ટવેર છે જે વ્યવસાયના હિસાબો સાચવવા વપરાય છે.
+        </div>
+        <div class="intro-mini-grid">
+          <div class="intro-mini-box"><strong>📌 Company Creation:</strong> બિઝનેસનું નાણાકીય વર્ષ સેટ કરવું.</div>
+          <div class="intro-mini-box"><strong>📌 Ledgers:</strong> ગ્રાહક, વેપારી અને બેંકના ખાતા બનાવવા.</div>
+          <div class="intro-mini-box"><strong>📌 Vouchers:</strong> ખરીદી, વેચાણ અને લેવડ-દેવડની એન્ટ્રી.</div>
+          <div class="intro-mini-box"><strong>📌 GST & TDS:</strong> સરકારી કરવેરા અને જીએસટી રિપોર્ટ્સ.</div>
+        </div>
+      </div>
+
+      <!-- Panel 2: શા માટે Tally શીખવું જોઈએ? -->
+      <div class="overview-panel">
+        <div class="overview-panel-title">💡 શા માટે Tally શીખવું જોઈએ?</div>
+        <div class="overview-panel-desc">
+          કોમર્સ વિદ્યાર્થી, એકાઉન્ટન્ટ કે વેપારી માટે રોજિંદા વ્યવહારો અને જોબ મેળવવાની ઉત્તમ તક:
+        </div>
+        <div class="why-mini-list">
+          <div class="why-mini-item">
+            <h4><span>⏱️</span> ૧૦૦% સચોટ નાણાકીય હિસાબો</h4>
+            <p>જમા (Credit) અને ઉધાર (Debit) ના નિયમો સાથે ભૂલ વગરનું બુકકીપિંગ.</p>
+          </div>
+          <div class="why-mini-item">
+            <h4><span>💼</span> GST અને ઇનવોઇસિંગ</h4>
+            <p>પ્રોડક્ટ વેચાણ પર ઓટોમેટિક CGST, SGST અને IGST ની ગણતરી.</p>
+          </div>
+          <div class="why-mini-item">
+            <h4><span>🎯</span> હાઇ-ડિમાન્ડ જોબ સ્કિલ</h4>
+            <p>દરેક કંપની, દુકાન અને કોર્પોરેટ સેક્ટરમાં ટેલી ઓપરેટરની કાયમી માંગ.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 3. PART 1: 12 FOUNDATION LESSONS -->
+    <div class="section-header-box">
+      <div class="section-main-title">Level 1: 12 Foundation Lessons</div>
+      <div class="section-sub-text">કંપની ક્રિએશન, લેજર ગ્રૂપ્સ, વોચર એન્ટ્રી અને બેંક રિકન્સિલિએશન.</div>
+    </div>
+
+    <div class="grid-container">
+
+      <!-- L1 -->
+      <div class="lesson-card" id="card_t_l1">
+        <div>
+          <span class="badge">Lesson 1</span>
+          <div class="lesson-title">કંપની ક્રિએશન (Company Creation)</div>
+          <div class="lesson-desc">ટેલીમાં નવા બિઝનેસ કે શાળાનું નામ, એડ્રેસ અને નાણાકીય વર્ષ (Financial Year) સેટ કરવું.</div>
+          <div class="tally-mini-wrapper">
+            Company: Smart Digital School<br>
+            Financial Year: 01-04-2026 to 31-03-2027<br>
+            State: Gujarat | Country: India <span class="cell-hl">[Accept: Yes]</span>
+          </div>
+          <div class="target-cell-badge">📍 શોર્ટકટ: <strong>Alt + K (Company) -> Create</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Navigation</span><p class="prompt-text">Gateway of Tally -> Alt + K -> Create Company</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>ટેલી ઓપન કરી <code>Alt + K</code> દબાવો.</li><li><strong>Create</strong> પસંદ કરી કંપનીનું નામ, રાજ્ય (Gujarat) અને નાણાકીય વર્ષ ભરી સેવ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_t_l1', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L2 -->
+      <div class="lesson-card" id="card_t_l2">
+        <div>
+          <span class="badge">Lesson 2</span>
+          <div class="lesson-title">એકાઉન્ટિંગ લેજર્સ (Ledger Creation)</div>
+          <div class="lesson-desc">ગ્રાહકો, સપ્લાયર્સ અને ખર્ચના ખાતા (Capital, Sales, Purchase) બનાવવા.</div>
+          <div class="tally-mini-wrapper">
+            Name: Rajesh Patel (Customer)<br>
+            Under: <span class="cell-hl">Sundry Debtors</span><br>
+            Maintain balance bill-by-bill: Yes
+          </div>
+          <div class="target-cell-badge">📍 મેનુ: <strong>Create -> Ledger</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Navigation</span><p class="prompt-text">Gateway of Tally -> Create -> Ledger -> Select Group</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>Gateway of Tally માંથી <strong>Create -> Ledger</strong> માં જાઓ.</li><li>લેજરનું નામ લખી યોગ્ય ગ્રૂપ (દા.ત. Sales માટે Sales Account) સિલેક્ટ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_t_l2', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L3 -->
+      <div class="lesson-card" id="card_t_l3">
+        <div>
+          <span class="badge">Lesson 3</span>
+          <div class="lesson-title">ઉધાર અને જમાના નિયમો (Golden Rules)</div>
+          <div class="lesson-desc">નાણાકીય એન્ટ્રી કરતી વખતે Debit (Dr) અને Credit (Cr) નક્કી કરવાનો પાયો.</div>
+          <div class="tally-mini-wrapper">
+            • Personal: Receiver Dr, Giver Cr<br>
+            • Real: What comes in Dr, What goes out Cr<br>
+            • Nominal: Expenses Dr, Income <span class="cell-hl">Cr</span>
+          </div>
+          <div class="target-cell-badge">📍 એકાઉન્ટિંગ પાયો: <strong>Dr & Cr Concept</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Accounting Rule</span><p class="prompt-text">Debit the Receiver, Credit the Giver</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>જે વસ્તુ કે રોકડ ધંધામાં આવે તેને <strong>Debit (Dr)</strong> કરો.</li><li>જે વ્યક્તિ કે ખાતામાંથી રકમ જાય તેને <strong>Credit (Cr)</strong> કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_t_l3', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L4 -->
+      <div class="lesson-card" id="card_t_l4">
+        <div>
+          <span class="badge">Lesson 4</span>
+          <div class="lesson-title">રિસીપ્ટ અને પેમેન્ટ વોચર (Receipt / Payment)</div>
+          <div class="lesson-desc">ધંધામાં રોકડ કે ચેક મળે તેની એન્ટ્રી (Receipt) અને ચૂકવણી માટે (Payment).</div>
+          <div class="tally-mini-wrapper">
+            Voucher Type: <span class="cell-hl">Payment (F5)</span><br>
+            Dr: Rent Expense A/c : ₹10,000<br>
+            Cr: Bank / Cash A/c : ₹10,000
+          </div>
+          <div class="target-cell-badge">📍 શોર્ટકટ: <strong>F6 (Receipt) | F5 (Payment)</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Voucher Keys</span><p class="prompt-text">Vouchers -> F5 (Payment) or F6 (Receipt)</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>Vouchers માં જઈ <code>F5</code> દબાવો.</li><li>ખર્ચનું ખાતું Debit કરી બેંક કે રોકડ Credit કરી સેવ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_t_l4', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L5 -->
+      <div class="lesson-card" id="card_t_l5">
+        <div>
+          <span class="badge">Lesson 5</span>
+          <div class="lesson-title">કોન્ટ્રા અને જર્નલ વોચર (Contra / Journal)</div>
+          <div class="lesson-desc">બેંકમાંથી રોકડ ઉપાડવી, બેંકમાં જમા કરવા (F4) અને અદલાબદલી એન્ટ્રીઓ (F7).</div>
+          <div class="tally-mini-wrapper">
+            Voucher Type: <span class="cell-hl">Contra (F4)</span><br>
+            Dr: SBI Bank A/c : ₹25,000<br>
+            Cr: Cash A/c : ₹25,000 (Cash deposited)
+          </div>
+          <div class="target-cell-badge">📍 શોર્ટકટ: <strong>F4 (Contra) | F7 (Journal)</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Voucher Keys</span><p class="prompt-text">Vouchers -> F4 (Contra) | F7 (Journal)</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>રોકડ બેંકમાં ભરીએ ત્યારે <code>F4</code> Contra વોચર વાપરો.</li><li>બિન-રોકડ એન્ટ્રીઓ માટે <code>F7</code> Journal વોચર વાપરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_t_l5', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L6 -->
+      <div class="lesson-card" id="card_t_l6">
+        <div>
+          <span class="badge">Lesson 6</span>
+          <div class="lesson-title">ખરીદી અને વેચાણ વોચર (Purchase / Sales)</div>
+          <div class="lesson-desc">સ્ટોક ખરીદવા (F9) અને માલ વેચવા (F8) માટેની ઇનવોઇસ એન્ટ્રી.</div>
+          <div class="tally-mini-wrapper">
+            Voucher Type: <span class="cell-hl">Sales (F8)</span><br>
+            Party: Rajesh Patel | Item: Laptop (5 Pcs)<br>
+            Total Amount: ₹1,50,000
+          </div>
+          <div class="target-cell-badge">📍 શોર્ટકટ: <strong>F9 (Purchase) | F8 (Sales)</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Voucher Keys</span><p class="prompt-text">Vouchers -> F8 (Sales) / F9 (Purchase)</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>Sales વોચર ખોલી પાર્ટીનું નામ અને વેચેલ વસ્તુની વિગત નાખો.</li><li>ઇનવોઇસ પ્રિન્ટ અથવા સેવ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_t_l6', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L7 -->
+      <div class="lesson-card" id="card_t_l7">
+        <div>
+          <span class="badge">Lesson 7</span>
+          <div class="lesson-title">ઇન્વેન્ટરી અને સ્ટોક માસ્ટર્સ (Inventory)</div>
+          <div class="lesson-desc">સ્ટોક આઇટમ્સ, ગ્રૂપ (Electronics/Stationery) અને યુનિટ્સ (Pcs/Nos/Kg) બનાવવા.</div>
+          <div class="tally-mini-wrapper">
+            Stock Item: Dell Laptop<br>
+            Under: Electronics Group<br>
+            Units: <span class="cell-hl">Nos (Numbers)</span>
+          </div>
+          <div class="target-cell-badge">📍 મેનુ: <strong>Create -> Stock Item / Units</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Navigation</span><p class="prompt-text">Gateway of Tally -> Create -> Stock Item</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>Units માં <strong>Nos</strong> અથવા <strong>Pcs</strong> ક્રિએટ કરો.</li><li>Stock Item માં વસ્તુનું નામ અને ઓપનિંગ સ્ટોક દાખલ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_t_l7', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L8 -->
+      <div class="lesson-card" id="card_t_l8">
+        <div>
+          <span class="badge">Lesson 8</span>
+          <div class="lesson-title">બેંક રિકન્સિલિએશન (Bank Reconciliation - BRS)</div>
+          <div class="lesson-desc">બેંક પાસબુક અને ટેલીના બેંક બેલેન્સ વચ્ચેની તફાવત તપાસી સરભર કરવું.</div>
+          <div class="tally-mini-wrapper">
+            Bank: SBI Current A/c<br>
+            Compare: Tally Records vs Bank Statement<br>
+            Status: <span class="cell-hl">Reconciled (Date Matching)</span>
+          </div>
+          <div class="target-cell-badge">📍 મેનુ: <strong>Banking -> Bank Reconciliation</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Navigation</span><p class="prompt-text">Gateway of Tally -> Utilities -> Bank Reconciliation</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>Banking મેનુમાંથી Bank Reconciliation ઓપન કરો.</li><li>બેંક સ્ટેટસ મુજબ ક્લિયરન્સ તારીખ નાખી મેચ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_t_l8', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L9 -->
+      <div class="lesson-card" id="card_t_l9">
+        <div>
+          <span class="badge">Lesson 9</span>
+          <div class="lesson-title">ડેબિટ અને ક્રેડિટ નોટ (Debit / Credit Note)</div>
+          <div class="lesson-desc">ખરીદેલ માલ પરત કરવા માટે (Purchase Return / Debit Note) અને વેચેલ માલ પરત માટે (Sales Return).</div>
+          <div class="tally-mini-wrapper">
+            Voucher: <span class="cell-hl">Debit Note (Alt + F5)</span><br>
+            Reason: Defective goods returned to supplier.<br>
+            Ledger Adjustment: Automatic.
+          </div>
+          <div class="target-cell-badge">📍 શોર્ટકટ: <strong>Alt + F5 (Debit) | Alt + F6 (Credit)</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Shortcut keys</span><p class="prompt-text">Vouchers -> Other Vouchers -> Alt + F5 (Debit Note)</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>Vouchers ઓપન કરી <code>Alt + F5</code> (Debit Note) દબાવો.</li><li>પરત કરેલ માલની વિગત ભરી સપ્લાયરનું ખાતું એડજસ્ટ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_t_l9', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L10 -->
+      <div class="lesson-card" id="card_t_l10">
+        <div>
+          <span class="badge">Lesson 10</span>
+          <div class="lesson-title">નાણાકીય અહેવાલો (Balance Sheet & P&L)</div>
+          <div class="lesson-desc">વર્ષના અંતે નફો-નુકસાન (Profit & Loss A/c) અને પાકું સરવૈયું (Balance Sheet) જોવું.</div>
+          <div class="tally-mini-wrapper">
+            • Profit & Loss: Net Profit ₹2,40,000<br>
+            • Balance Sheet: Assets = Liabilities <span class="cell-hl">(Matched)</span>
+          </div>
+          <div class="target-cell-badge">📍 મેનુ: <strong>Gateway of Tally -> Balance Sheet</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Navigation</span><p class="prompt-text">Gateway of Tally -> Balance Sheet / Profit & Loss A/c</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>Gateway પરથી <strong>Balance Sheet</strong> અથવા <strong>P&L A/c</strong> પસંદ કરો.</li><li>ડિટેઇલ જોવા માટે <code>Alt + F1</code> (Detailed view) દબાવો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_t_l10', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L11 -->
+      <div class="lesson-card" id="card_t_l11">
+        <div>
+          <span class="badge">Lesson 11</span>
+          <div class="lesson-title">ડેટા બેકઅપ અને રિસ્ટोर (Backup & Restore)</div>
+          <div class="lesson-desc">મહત્વના એકાઉન્ટિંગ ડેટા સુરક્ષિત રાખવા માટે પેનડ્રાઈવ કે પીસીમાં બેકઅપ લેવો.</div>
+          <div class="tally-mini-wrapper">
+            Backup Path: C:\TallyPrime\Data\<br>
+            Destination: <span class="cell-hl">D:\Backup_2026\ (Secured)</span>
+          </div>
+          <div class="target-cell-badge">📍 મેનુ: <strong>Alt + Y (Data) -> Backup</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Navigation</span><p class="prompt-text">Alt + Y -> Data -> Backup / Restore</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li><code>Alt + Y</code> દબાવી Data મેનુમાં જાઓ.</li><li><strong>Backup</strong> સિલેક્ટ કરી પાથ આપી ડેટા સેફ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_t_l11', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L12 -->
+      <div class="lesson-card" id="card_t_l12">
+        <div>
+          <span class="badge">Lesson 12</span>
+          <div class="lesson-title">ચેક પ્રિન્ટિંગ સેટિંગ (Cheque Printing)</div>
+          <div class="lesson-desc">ટેલીમાંથી જ ડાયરેક્ટ બેંક ચેક પર નામ અને રકમ પ્રિન્ટ કરવી.</div>
+          <div class="tally-mini-wrapper">
+            Bank Ledger: SBI Current A/c<br>
+            Set/Alter Cheque Printing: <span class="cell-hl">Yes (Dimensions Configured)</span>
+          </div>
+          <div class="target-cell-badge">📍 સેટિંગ: <strong>Alter -> Ledger -> Enable Cheque Printing</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Configuration</span><p class="prompt-text">Ledger Alteration -> Set Cheque Printing = Yes</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>બેંકના લેજરમાં જઈ <strong>Set Cheque Printing</strong> યસ કરો.</li><li>પેમેન્ટ એન્ટ્રી વખતે પ્રિન્ટ કમાન્ડ આપો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_t_l12', this)">⚪ Mark as Completed</button>
+      </div>
+
+    </div>
+
+    <!-- 4. PART 2: 9 ADVANCED & CORPORATE LESSONS -->
+    <div class="section-header-box">
+      <div class="section-main-title" style="color:#0284c7;">Level 2: 9 Corporate & Advanced Lessons</div>
+      <div class="section-sub-text">GST Configuration, TDS/TCS, Payroll Salary Processing, Cost Centres અને AI Accounting.</div>
+    </div>
+
+    <div class="grid-container">
+
+      <!-- Adv 1 -->
+      <div class="lesson-card" id="card_t_adv1" style="border-color:#bae6fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 1</span>
+          <div class="lesson-title">GST કન્ફિગરેશન અને ઇનવોઇસ (GST Setup)</div>
+          <div class="lesson-desc">કંપનીમાં GSTIN નંબર નાખવો અને સેલ્સ ઇનવોઇસમાં CGST, SGST ઓટોમેટિક કેલ્ક્યુલેટ કરવા.</div>
+          <div class="tally-mini-wrapper">
+            GSTIN: 24AAAAA0000A1Z5 | State: Gujarat<br>
+            Tax Rate: <span class="cell-hl-adv">18% GST (CGST 9% + SGST 9%)</span>
+          </div>
+          <div class="target-cell-badge" style="color:#0284c7;">📍 ફિચર: <strong>F11 -> Enable GST = Yes</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Configuration</span><p class="prompt-text">F11 (Features) -> Taxation -> Enable Goods and Services Tax = Yes</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li><code>F11</code> દબાવી GST ઓપ્શન યસ કરો.</li><li>સેલ્સ લેજરમાં GST ટકાવારી સેટ કરી બિલ બનાવો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_t_adv1', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 2 -->
+      <div class="lesson-card" id="card_t_adv2" style="border-color:#bae6fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 2</span>
+          <div class="lesson-title">GSTR-1 અને GSTR-3B રિપોર્ટ્સ (GST Returns)</div>
+          <div class="lesson-desc">માસિક કે ત્રિમાસિક જીએસટી રિટર્ન ફાઇલ કરવા માટે ટેલીમાંથી સીધા રિપોર્ટ કાઢવા.</div>
+          <div class="tally-mini-wrapper">
+            Display More Reports -> GST Reports:<br>
+            • <span class="cell-hl-adv">GSTR-1 (Outward Supplies Summary)</span><br>
+            • GSTR-3B (Tax Liability & ITC Setoff)
+          </div>
+          <div class="target-cell-badge" style="color:#0284c7;">📍 મેનુ: <strong>Display More Reports -> GST Reports</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Navigation</span><p class="prompt-text">Gateway of Tally -> Display -> GST Reports -> GSTR-1</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>Display Reports માંથી GST Reports ઓપન કરો.</li><li>GSTR-1 ચેક કરી JSON ફાઈલ એક્સપોર્ટ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_t_adv2', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 3 -->
+      <div class="lesson-card" id="card_t_adv3" style="border-color:#bae6fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 3</span>
+          <div class="lesson-title">TDS અને TCS કપાત (Tax Deducted at Source)</div>
+          <div class="lesson-desc">કર્મચારી કે વેન્ડરને પેમેન્ટ આપતી વખતે સરકાર વતી TDS (Tax) કાપવાની એન્ટ્રી.</div>
+          <div class="tally-mini-wrapper">
+            TDS Nature of Payment: Rent / Professional Fees<br>
+            Rate: <span class="cell-hl-adv">10% TDS Deducted on Voucher Entry</span>
+          </div>
+          <div class="target-cell-badge" style="color:#0284c7;">📍 ફિચર: <strong>F11 -> Enable TDS = Yes</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Configuration</span><p class="prompt-text">F11 -> Taxation -> Enable Tax Deducted at Source (TDS) = Yes</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>F11 માં TDS ઓપ્શન યસ કરો.</li><li>ખર્ચના લેજરમાં TDS Applicable યસ કરી પાર્ટી લેજર સાથે લિંક કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_t_adv3', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 4 -->
+      <div class="lesson-card" id="card_t_adv4" style="border-color:#bae6fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 4</span>
+          <div class="lesson-title">પેરોલ અને સેલેરી પ્રોસેસિંગ (Payroll Management)</div>
+          <div class="lesson-desc">કર્મચારીઓની હાજરી, બેઝિક સેલેરી, PF, ESI અને પ્રોફેશનલ ટેક્સ સાથે સેલેરી સ્લિપ બનાવી.</div>
+          <div class="tally-mini-wrapper">
+            Employee: Rajesh (Teacher) | Attendance: 30 Days<br>
+            Pay Heads: Basic, DA, PF Deduction <br>
+            Net Salary: <span class="cell-hl-adv">₹35,000 (Payslip Ready)</span>
+          </div>
+          <div class="target-cell-badge" style="color:#0284c7;">📍 ફિચર: <strong>F11 -> Maintain Payroll = Yes</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Configuration</span><p class="prompt-text">F11 -> Enable Payroll = Yes -> Create Employee Masters</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>Payroll Features ઓપન કરી Employee અને Pay Heads (Earnings/Deductions) બનાવો.</li><li>Attendance વોચર નાખી Pay Sheet જનરેટ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_t_adv4', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 5 -->
+      <div class="lesson-card" id="card_t_adv5" style="border-color:#bae6fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 5</span>
+          <div class="lesson-title">કોસ્ટ સેન્ટર્સ અને કેટેગરી (Cost Centres)</div>
+          <div class="lesson-desc">વ્યવસાયના અલગ-અલગ પ્રોજેક્ટ કે ડિપાર્ટમેન્ટ (દા.ત. Branch A, Branch B) મુજબ ખર્ચ અને આવકનું વિશ્લેષણ.</div>
+          <div class="tally-mini-wrapper">
+            Cost Category: Branches<br>
+            Cost Centres: <span class="cell-hl-adv">Ahmedabad Branch / Vadodara Branch</span><br>
+            Allocation: 50% - 50% Expense Split
+          </div>
+          <div class="target-cell-badge" style="color:#0284c7;">📍 ફિચર: <strong>F11 -> Cost Centres = Yes</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Configuration</span><p class="prompt-text">F11 -> Enable Cost Centres = Yes -> Create Centers</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>F11 માં Cost Centres યસ કરો.</li><li>ખર્ચની એન્ટ્રી કરતી વખતે યોગ્ય બ્રાન્ચ કે ડિપાર્ટમેન્ટ ફાળવો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_t_adv5', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 6 -->
+      <div class="lesson-card" id="card_t_adv6" style="border-color:#bae6fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 6</span>
+          <div class="lesson-title">મલ્ટી-કરન્સી વ્યવહારો (Multi-Currency)</div>
+          <div class="lesson-desc">વિદેશી ગ્રાહકો સાથે ડોલર ($) કે યુરો (€) માં થતા વ્યવહારો અને કરન્સી રેટ ફેરફારની નોંધ કરવી.</div>
+          <div class="tally-mini-wrapper">
+            Currency Symbol: $ (USD) | Formal Name: US Dollar<br>
+            Exchange Rate: <span class="cell-hl-adv">1 USD = ₹83.50 (Auto Converted)</span>
+          </div>
+          <div class="target-cell-badge" style="color:#0284c7;">📍 મેનુ: <strong>Create -> Currency</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Navigation</span><p class="prompt-text">Gateway of Tally -> Create -> Currency -> Enter Exchange Rate</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>Create માંથી Currency સિમ્બોલ અને રેટ ઉમેરો.</li><li>વિદેશી ઇનવોઇસ બનાવતી વખતે કરન્સી પસંદ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_t_adv6', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 7 -->
+      <div class="lesson-card" id="card_t_adv7" style="border-color:#bae6fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 7</span>
+          <div class="lesson-title">બજેટ અને કંટ્રોલ (Budget & Controls)</div>
+          <div class="lesson-desc">માસિક કે વાર્ષિક ખર્ચ માટે બજેટ લિમિટ નક્કી કરવી જેથી ઓવર-સ્પેન્ડિંગ અટકાવી શકાય.</div>
+          <div class="tally-mini-wrapper">
+            Budget Name: Office Expenses 2026<br>
+            Limit Assigned: ₹50,000 | Actual Spent: <span class="cell-hl-adv">₹42,000 (Within Limit)</span>
+          </div>
+          <div class="target-cell-badge" style="color:#0284c7;">📍 મેનુ: <span>Create -> Budget</span></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Navigation</span><p class="prompt-text">Gateway of Tally -> Create -> Budget -> Set Ledger Limits</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>Create મેનુમાંથી Budget ઓપન કરો.</li><li>લેજર્સ સિલેક્ટ કરી મહત્તમ રકમની મર્યાદા સેટ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_t_adv7', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 8 -->
+      <div class="lesson-card" id="card_t_adv8" style="border-color:#bae6fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 8</span>
+          <div class="lesson-title">ઇન્વોઇસ કસ્ટમાઇઝેશન & લોગો (Company Logo)</div>
+          <div class="lesson-desc">ટેલીના સેલ્સ બિલ કે ઇનવોઇસ પર તમારી શાળા કે કંપનીનો સત્તાવાર લોગો પ્રિન્ટ કરવો.</div>
+          <div class="tally-mini-wrapper">
+            Voucher Printing -> Sales Invoice:<br>
+            Show Company Logo: <span class="cell-hl-adv">Yes (BMP / JPEG Image Path)</span>
+          </div>
+          <div class="target-cell-badge" style="color:#0284c7;">📍 સેટિંગ: <strong>Alter -> Company -> Enable Logo</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Configuration</span><p class="prompt-text">Company Alteration -> Enable Company Logo = Yes -> Give Image Path</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>Company Alter માં જઈ Logo Path સેટ કરો.</li><li>બિલ પ્રિન્ટ કરતી વખતે લોગો સાથેનું પ્રોફેશનલ ઇનવોઇસ મેળવો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_t_adv8', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 9 -->
+      <div class="lesson-card" id="card_t_adv9" style="border-color:#bae6fd;">
+        <div>
+          <span class="badge badge-adv">Advanced 9</span>
+          <div class="lesson-title">AI Prompting for Accounting & Tally</div>
+          <div class="lesson-desc">જટિલ જર્નલ એન્ટ્રી કે ટેક્સ ગણતરી માટે ગૂગલ જેમિની પાસેથી ગુજરાતીમાં માર્ગદર્શન મેળવવું.</div>
+          <div class="tally-mini-wrapper">
+            🤖 <span class="cell-hl-adv">AI Prompt: "ગુડ્ઝ ખરીદ્યા ₹50,000 ના 18% GST સાથે - ટેલી એન્ટ્રી સમજાવો"</span>
+          </div>
+          <div class="target-cell-badge" style="color:#0284c7;">📍 AI ટૂલ: <strong>Gemini / ChatGPT</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">AI Prompt</span><p class="prompt-text">"Act as a Tally Prime Expert. Give exact debit and credit voucher entry steps for purchasing goods worth ₹50,000 with 18% GST in Tally."</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>આ પ્રોમ્પ્ટ ગૂગલ જેમિનીમાં રન કરો.</li><li>મળેલા એકાઉન્ટિંગ સોલ્યુશન મુજબ ટેલીમાં ડાયરેક્ટ એન્ટ્રી કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_t_adv9', this)">⚪ Mark as Completed</button>
+      </div>
+
+    </div>
+
+    <!-- 5. NEW DIGITAL SKILLS BUTTON -->
+    <div class="next-course-strip">
+      <a href="index.html" class="digital-skills-btn">💻 ડિજિટલ સ્કીલ્સ શીખો, ભવિષ્ય બનાવો! 🚀</a>
+    </div>
+
+  </div>
+
+  <script>
+    // Toggle Hide / Show Lab (Default Hidden)
+    function toggleLab() {
+      const body = document.getElementById('sandboxBody');
+      const btn = document.getElementById('labToggleBtn');
+      if (body.style.display === 'none' || body.style.display === '') {
+        body.style.display = 'block';
+        btn.innerHTML = '👁️ Hide Lab';
+      } else {
+        body.style.display = 'none';
+        btn.innerHTML = '👁️ Open Live Lab';
+      }
+    }
+
+    // Interactive Mark as Completed Tracking Engine
+    let completedCount = 0;
+    function toggleComplete(cardId, btn) {
+      const card = document.getElementById(cardId);
+      const counter = document.getElementById('completedCounter');
+      
+      if (card.classList.contains('is-completed')) {
+        card.classList.remove('is-completed');
+        btn.classList.remove('completed-active');
+        btn.innerHTML = '⚪ Mark as Completed';
+        completedCount = Math.max(0, completedCount - 1);
+      } else {
+        card.classList.add('is-completed');
+        btn.classList.add('completed-active');
+        btn.innerHTML = '✅ Completed';
+        completedCount++;
+      }
+      counter.innerText = completedCount;
+    }
+
+    // Tally Screen Simulation Engine
+    function loadTallyScreen(type) {
+      const body = document.getElementById('tallyScreenBody');
+      const title = document.getElementById('tallyScreenTitle');
+      const msg = document.getElementById('tallyStatusMsg');
+
+      if (type === 'gateway') {
+        title.innerText = "TallyPrime | Gateway of Tally";
+        body.innerHTML = `
+          <div class="tally-box">
+            <div class="tally-box-title">Getway of Tally</div>
+            <div class="tally-menu-item" onclick="loadTallyScreen('masters')">📁 1. Create (Masters)</div>
+            <div class="tally-menu-item" onclick="loadTallyScreen('vouchers')">💼 2. Vouchers (Transactions)</div>
+            <div class="tally-menu-item" onclick="loadTallyScreen('reports')">📊 3. Balance Sheet / P&L</div>
+          </div>
+          <div class="tally-box">
+            <div class="tally-box-title">Company Info (Alt+K)</div>
+            <div class="tally-menu-item">🏢 Select Company</div>
+            <div class="tally-menu-item">🔄 Alter Company Features</div>
+            <div class="tally-menu-item">🔒 Security Control & Backup</div>
+          </div>
+        `;
+        msg.innerHTML = "💡 <strong>Gateway of Tally:</strong> આ ટેલી પ્રાઇમનું મુખ્ય હોમ પેજ છે જ્યાંથી માસ્ટર્સ અને વોચર્સમાં જવાય છે.";
+      } else if (type === 'masters') {
+        title.innerText = "TallyPrime | List of Masters (Ledgers & Groups)";
+        body.innerHTML = `
+          <div class="tally-box">
+            <div class="tally-box-title">Accounting Masters</div>
+            <div class="tally-menu-item">🔹 Capital Account (Primary)</div>
+            <div class="tally-menu-item">🔹 Sales Account (Sales Group)</div>
+            <div class="tally-menu-item">🔹 Purchase Account (Purchase Group)</div>
+            <div class="tally-menu-item">🔹 Sundry Debtors (Customers)</div>
+          </div>
+          <div class="tally-box">
+            <div class="tally-box-title">Inventory Masters</div>
+            <div class="tally-menu-item">📦 Stock Groups (Electronics)</div>
+            <div class="tally-menu-item">📦 Stock Items (Dell Laptops)</div>
+            <div class="tally-menu-item">📏 Units of Measure (Nos / Pcs)</div>
+          </div>
+        `;
+        msg.innerHTML = "📁 <strong>Accounts Masters:</strong> અહીં ગ્રાહકો, બેંક અને ખર્ચના લેજર્સ (Ledgers) બનાવવામાં આવે છે.";
+      } else if (type === 'vouchers') {
+        title.innerText = "TallyPrime | Accounting Voucher Creation";
+        body.innerHTML = `
+          <div class="tally-box">
+            <div class="tally-box-title">Voucher Types (Function Keys)</div>
+            <div class="tally-menu-item">🟢 F4: Contra (Bank / Cash)</div>
+            <div class="tally-menu-item">🔵 F5: Payment (Expenses / Bills)</div>
+            <div class="tally-menu-item">🟠 F6: Receipt (Cash / Cheque Received)</div>
+            <div class="tally-menu-item">🟣 F8: Sales (Invoice to Party)</div>
+          </div>
+          <div class="tally-box">
+            <div class="tally-box-title">Active Voucher Entry Sample</div>
+            <div style="font-size:12.5px; line-height:1.6; color:#22d3ee;">
+              <strong>Type:</strong> Payment (F5)<br>
+              <strong>Dr:</strong> Rent Expense : ₹10,000<br>
+              <strong>Cr:</strong> SBI Bank A/c : ₹10,000<br>
+              <em>[Narration: Rent paid for August 2026]</em>
+            </div>
+          </div>
+        `;
+        msg.innerHTML = "💼 <strong>Voucher Entry:</strong> રોજિંદા વ્યવહારો (ખરીદી, વેચાણ, ખર્ચ) ફંક્શન કીઝ દ્વારા નોંધવામાં આવે છે.";
+      } else if (type === 'reports') {
+        title.innerText = "TallyPrime | Financial Statements & Reports";
+        body.innerHTML = `
+          <div class="tally-box">
+            <div class="tally-box-title">Balance Sheet Summary</div>
+            <div style="font-size:12.5px; line-height:1.6; color:#22d3ee;">
+              <strong>Capital A/c:</strong> ₹5,00,000<br>
+              <strong>Current Liabilities:</strong> ₹50,000<br>
+              <strong>Fixed Assets:</strong> ₹2,50,000<br>
+              <strong>Current Assets (Cash/Bank):</strong> ₹3,00,000
+            </div>
+          </div>
+          <div class="tally-box">
+            <div class="tally-box-title">Profit & Loss Account</div>
+            <div style="font-size:12.5px; line-height:1.6; color:#22d3ee;">
+              <strong>Gross Profit:</strong> ₹3,50,000<br>
+              <strong>Indirect Expenses:</strong> ₹1,10,000<br>
+              <strong>Net Profit:</strong> <span style="color:#4ade80; font-weight:800;">₹2,40,000</span>
+            </div>
+          </div>
+        `;
+        msg.innerHTML = "📊 <strong>Financial Reports:</strong> બિઝનેસની નફાકારકતા અને આર્થિક સ્થિતિ દર્શાવતા પવિત્ર અહેવાલો.";
+      }
+    }
+
+    function resetTallyLab() {
+      loadTallyScreen('gateway');
+      document.getElementById('tallyStatusMsg').innerHTML = "🔄 <strong>ટેલી લેબ રીસેટ:</strong> ગેટવે ઓફ ટેલી સ્ક્રીન ફરી લોડ થઈ ગઈ છે.";
+    }
+
+    function toggleTheme() {
+      const b = document.body, btn = document.getElementById("themeBtn");
+      b.classList.toggle("dark-theme");
+      btn.innerHTML = b.classList.contains("dark-theme") ? "☀️ Light Mode" : "🌙 Dark Mode";
+    }
+
+    window.onload = function() {
+      loadTallyScreen('gateway');
+    };
+  </script>
+</body>
+</html>

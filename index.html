@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Master Course (ડિજિટલ માસ્ટર કોર્સ)</title>
+    <style>
+        /* CSS Variables */
+        :root {
+            --bg-gradient: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
+            --text-color: #1A237E;
+            --nav-bg: #1565C0;
+            --nav-text: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --card-border: rgba(255, 255, 255, 0.5);
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        [data-theme="dark"] {
+            --bg-gradient: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            --text-color: #E0E0E0;
+            --nav-bg: #E91E63;
+            --nav-text: #ffffff;
+            --card-bg: rgba(22, 33, 62, 0.7);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        body {
+            margin: 0; padding: 0; background: var(--bg-gradient); color: var(--text-color);
+            font-family: 'Comic Sans MS', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            text-align: center; transition: 0.5s ease-in-out; min-height: 100vh; overflow-x: hidden;
+        }
+
+        /* --- Floating Background Shapes --- */
+        .bg-shapes {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0; pointer-events: none; overflow: hidden;
+        }
+        .shape { 
+            position: absolute; opacity: 0.25; 
+            animation: float 15s infinite linear; 
+        }
+        [data-theme="dark"] .shape { opacity: 0.15; }
+        
+        .shape:nth-child(1) { left: 5%; top: 80%; animation-duration: 18s; font-size: 50px; }
+        .shape:nth-child(2) { left: 85%; top: 10%; animation-duration: 22s; font-size: 60px; }
+        .shape:nth-child(3) { left: 15%; top: 70%; animation-duration: 15s; font-size: 45px; }
+        .shape:nth-child(4) { left: 75%; top: 80%; animation-duration: 25s; font-size: 55px; }
+        .shape:nth-child(5) { left: 50%; top: 40%; animation-duration: 20s; font-size: 70px; }
+        .shape:nth-child(6) { left: 25%; top: 20%; animation-duration: 19s; font-size: 40px; }
+        .shape:nth-child(7) { left: 65%; top: 60%; animation-duration: 24s; font-size: 50px; }
+        .shape:nth-child(8) { left: 40%; top: 90%; animation-duration: 17s; font-size: 65px; }
+        .shape:nth-child(9) { left: 90%; top: 50%; animation-duration: 21s; font-size: 45px; }
+        .shape:nth-child(10) { left: 10%; top: 40%; animation-duration: 23s; font-size: 55px; }
+
+        @keyframes float { 
+            0% { transform: translateY(120vh) rotate(0deg); } 
+            100% { transform: translateY(-30vh) rotate(360deg); } 
+        }
+
+        /* --- Navbar --- */
+        #navbar {
+            background-color: var(--nav-bg); color: var(--nav-text); padding: 15px 20px;
+            display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); position: relative; z-index: 10;
+        }
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2); border: 2px solid #fff; color: #fff; padding: 8px 15px; border-radius: 12px; cursor: pointer; font-size: 22px; transition: 0.3s;
+        }
+        .nav-btn:hover { background: #fff; color: var(--nav-bg); transform: scale(1.05); }
+        .nav-title { font-size: 26px; font-weight: bold; letter-spacing: 1px; }
+
+        /* --- Main Container --- */
+        #app-container { width: 95vw; max-width: 1100px; margin: 30px auto; position: relative; z-index: 10; }
+        
+        .glass-box {
+            margin-bottom: 40px; padding: 30px 20px; background: var(--card-bg); border-radius: 20px; border: 1px solid var(--card-border); backdrop-filter: blur(10px); box-shadow: var(--shadow);
+        }
+        
+        .hero-title { font-size: 34px; font-weight: bold; margin: 0 0 15px 0; color: #E91E63; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); }
+        [data-theme="dark"] .hero-title { color: #FFC107; }
+        .hero-desc { font-size: 18px; margin: 0 auto; max-width: 900px; line-height: 1.8; font-weight: 500; }
+        .highlight { color: #E91E63; font-weight: bold; }
+        [data-theme="dark"] .highlight { color: #FF9800; }
+
+        /* --- Grid for Course Cards --- */
+        .menu-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; padding: 5px; margin-bottom: 40px;
+        }
+        
+        .class-card {
+            background: var(--card-bg); border-radius: 20px; padding: 25px 15px; cursor: pointer;
+            box-shadow: var(--shadow); backdrop-filter: blur(8px); border: 1px solid var(--card-border);
+            border-bottom: 8px solid #FF9800; display: flex; flex-direction: column; align-items: center; 
+            text-decoration: none; color: inherit; transition: all 0.4s ease;
+            position: relative; overflow: hidden; 
+        }
+        .class-card:hover { transform: translateY(-8px) scale(1.03); box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
+        
+        /* Category Colors */
+        .card-office { border-bottom-color: #2196F3; } 
+        .card-cert { border-bottom-color: #4CAF50; } 
+        .card-design { border-bottom-color: #E91E63; } 
+        .card-prog { border-bottom-color: #9C27B0; } 
+        .card-web { border-bottom-color: #FF9800; } 
+
+        .class-icon { font-size: 55px; margin-bottom: 10px; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2)); transition: 0.3s; }
+        .class-card:hover .class-icon { transform: scale(1.1) rotate(5deg); }
+        
+        .class-title { font-size: 22px; font-weight: bold; letter-spacing: 0.5px; margin-bottom: 5px; }
+        .class-sub { font-size: 14px; opacity: 0.9; }
+
+        /* --- Hover Overlay (Badge) --- */
+        .card-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); display: flex; flex-direction: column;
+            justify-content: center; align-items: center; opacity: 0; transition: opacity 0.4s ease;
+        }
+        .class-card:hover .card-overlay { opacity: 1; }
+        
+        .badge {
+            background: #FF9800; color: white; padding: 8px 18px; border-radius: 20px; font-size: 15px; font-weight: bold; margin: 5px 0; border: 2px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        
+        .badge-office { background: #2196F3; } 
+        .badge-cert { background: #4CAF50; } 
+        .badge-design { background: #E91E63; } 
+        .badge-prog { background: #9C27B0; } 
+        .badge-web { background: #FF9800; } 
+
+        @media (max-width: 768px) {
+            .menu-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+            .hero-title { font-size: 24px; } .hero-desc { font-size: 15px; }
+            .class-icon { font-size: 40px; } .class-title { font-size: 18px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Floating Background Shapes -->
+    <div class="bg-shapes">
+        <div class="shape">💻</div>
+        <div class="shape">⌨️</div>
+        <div class="shape">🖱️</div>
+        <div class="shape">📊</div>
+        <div class="shape">🌐</div>
+        <div class="shape">🎨</div>
+        <div class="shape">🧠</div>
+        <div class="shape">📈</div>
+        <div class="shape">⚙️</div>
+        <div class="shape">🚀</div>
+    </div>
+
+    <!-- Navigation -->
+    <div id="navbar">
+        <div class="nav-title">💻 Digital Master Course</div>
+        <button class="nav-btn" onclick="toggleTheme()" title="Theme Toggle">🌗</button>
+    </div>
+
+    <div id="app-container">
+        
+        <!-- Header / Value Proposition -->
+        <div class="glass-box">
+            <h1 class="hero-title">ડિજિટલ સ્કીલ્સ શીખો, ભવિષ્ય બનાવો! 🚀</h1>
+            <p class="hero-desc">
+                અહીં તમને <span class="highlight">બેઝિક કમ્પ્યુટરથી લઈને એડવાન્સ પ્રોગ્રામિંગ</span> સુધીના તમામ કોર્સ મળશે.<br> 
+                Office ટૂલ્સ, ડિઝાઇનિંગ, પ્રોગ્રામિંગ લેંગ્વેજીસ અને સર્ટિફિકેશન કોર્સ (CCC/PMGDISHA) ની સંપૂર્ણ તૈયારી કરો.
+            </p>
+        </div>
+        
+        <!-- SINGLE COMBINED GRID FOR ALL COURSES -->
+        <div class="menu-grid">
+            
+            <!-- Office / Productivity -->
+            <a href="word-course.html" class="class-card card-office">
+                <div class="class-icon">📝</div><div class="class-title">MS Word</div><div class="class-sub">ડોક્યુમેન્ટ ફોર્મેટિંગ</div>
+                <div class="card-overlay"><span class="badge badge-office">Office Tool</span></div>
+            </a>
+            
+            <a href="excel-course.html" class="class-card card-office">
+                <div class="class-icon">📊</div><div class="class-title">MS Excel</div><div class="class-sub">ડેટા અને ફોર્મ્યુલા</div>
+                <div class="card-overlay"><span class="badge badge-office">Office Tool</span></div>
+            </a>
+            
+            <a href="ppt-course.html" class="class-card card-office">
+                <div class="class-icon">📽️</div><div class="class-title">PowerPoint</div><div class="class-sub">પ્રેઝન્ટેશન સ્કીલ્સ</div>
+                <div class="card-overlay"><span class="badge badge-office">Office Tool</span></div>
+            </a>
+
+            <a href="access-course.html" class="class-card card-office">
+                <div class="class-icon">🗄️</div><div class="class-title">MS Access</div><div class="class-sub">ડેટાબેઝ મેનેજમેન્ટ</div>
+                <div class="card-overlay"><span class="badge badge-office">Office Tool</span></div>
+            </a>
+
+            <a href="tally-course.html" class="class-card card-office">
+                <div class="class-icon">💰</div><div class="class-title">Tally</div><div class="class-sub">એકાઉન્ટિંગ સોફ્ટવેર</div>
+                <div class="card-overlay"><span class="badge badge-office">Accounting</span></div>
+            </a>
+            
+            <!-- Certifications -->
+            <a href="ccc-course.html" class="class-card card-cert">
+                <div class="class-icon">🎓</div><div class="class-title">CCC/CCC+</div><div class="class-sub">સરકારી માન્ય કોર્સ</div>
+                <div class="card-overlay"><span class="badge badge-cert">Certification</span></div>
+            </a>
+            
+            <a href="pmgdisha-course.html" class="class-card card-cert">
+                <div class="class-icon">🇮🇳</div><div class="class-title">PMGDISHA</div><div class="class-sub">ડિજિટલ સાક્ષરતા</div>
+                <div class="card-overlay"><span class="badge badge-cert">Certification</span></div>
+            </a>
+
+            <!-- Tech / Design -->
+            <a href="ai-course.html" class="class-card card-design">
+                <div class="class-icon">🤖</div><div class="class-title">AI Course</div><div class="class-sub">આર્ટિફિશિયલ ઇન્ટેલિજન્સ</div>
+                <div class="card-overlay"><span class="badge badge-design">Technology</span></div>
+            </a>
+            
+            <a href="canva-course.html" class="class-card card-design">
+                <div class="class-icon">🎨</div><div class="class-title">Canva</div><div class="class-sub">ગ્રાફિક ડિઝાઇનિંગ</div>
+                <div class="card-overlay"><span class="badge badge-design">Design Tool</span></div>
+            </a>
+
+            <a href="mslogo-course.html" class="class-card card-design">
+                <div class="class-icon">🐢</div><div class="class-title">MS Logo</div><div class="class-sub">બેઝિક પ્રોગ્રામિંગ</div>
+                <div class="card-overlay"><span class="badge badge-design">Programming</span></div>
+            </a>
+
+            <a href="photoshop-course.html" class="class-card card-design">
+                <div class="class-icon">🖼️</div><div class="class-title">Photoshop</div><div class="class-sub">ફોટો એડિટિંગ</div>
+                <div class="card-overlay"><span class="badge badge-design">Design Tool</span></div>
+            </a>
+
+            <!-- Programming & Dev -->
+            <a href="cpp-course.html" class="class-card card-prog">
+                <div class="class-icon">⚙️</div><div class="class-title">C C++ Prog.</div><div class="class-sub">કોડિંગનો પાયો</div>
+                <div class="card-overlay"><span class="badge badge-prog">Programming</span></div>
+            </a>
+            
+            <a href="adv-java-course.html" class="class-card card-prog">
+                <div class="class-icon">☕</div><div class="class-title">Adv. JAVA</div><div class="class-sub">સોફ્ટવેર ડેવલપમેન્ટ</div>
+                <div class="card-overlay"><span class="badge badge-prog">Programming</span></div>
+            </a>
+
+            <a href="python-course.html" class="class-card card-prog">
+                <div class="class-icon">🐍</div><div class="class-title">Python</div><div class="class-sub">આધુનિક કોડિંગ</div>
+                <div class="card-overlay"><span class="badge badge-prog">Programming</span></div>
+            </a>
+
+            <a href="web-dev-course.html" class="class-card card-web">
+                <div class="class-icon">🌐</div><div class="class-title">Web Dev.</div><div class="class-sub">HTML, CSS, JS</div>
+                <div class="card-overlay"><span class="badge badge-web">Development</span></div>
+            </a>
+
+        </div>
+    </div>
+
+    <script>
+        let isDarkMode = localStorage.getItem('theme') !== 'light'; 
+        function applyTheme() {
+            if (isDarkMode) {
+                document.body.setAttribute('data-theme', 'dark');
+            } else {
+                document.body.removeAttribute('data-theme');
+            }
+        }
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+            applyTheme();
+        }
+        applyTheme();
+    </script>
+</body>
+</html>

@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Microsoft Access Master Course - Smart Digital School</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --card-bg: #ffffff;
+    --card-border: #cbd5e1;
+    --box-bg: #f1f5f9;
+    --accent: #b91c1c;
+    --accent-hover: #991b1b;
+    --accent-adv: #2563eb;
+    --toolbar-bg: #f1f5f9;
+    --toolbar-border: #cbd5e1;
+    --access-screen-bg: #ffffff;
+    --highlight-cell: #fee2e2;
+    --highlight-adv: #dbeafe;
+    --completed-bg: #f0fdf4;
+    --completed-border: #86efac;
+  }
+  body.dark-theme {
+    --bg-color: #0f172a;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --card-bg: #1e293b;
+    --card-border: #334155;
+    --box-bg: #0b0f19;
+    --accent: #f87171;
+    --accent-hover: #ef4444;
+    --accent-adv: #60a5fa;
+    --toolbar-bg: #1e293b;
+    --toolbar-border: #334155;
+    --access-screen-bg: #09090b;
+    --highlight-cell: #7f1d1d;
+    --highlight-adv: #1e3a8a;
+    --completed-bg: #064e3b;
+    --completed-border: #059669;
+  }
+  * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.2s ease; }
+  body { background-color: var(--bg-color); margin: 0; padding: 14px; color: var(--text-main); font-size: 15px; }
+  
+  .container { max-width: 1150px; margin: 0 auto; }
+  
+  .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .back-btn { text-decoration: none; background: var(--card-bg); border: 1.5px solid var(--card-border); color: var(--text-main); padding: 7px 16px; border-radius: 20px; font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+  .back-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .theme-toggle-btn { background: var(--card-bg); border: 1.5px solid var(--card-border); color: var(--text-main); padding: 7px 16px; border-radius: 20px; font-size: 13.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+
+  /* Hero Banner */
+  .header-card { background: linear-gradient(135deg, #991b1b, #b91c1c); color: white; border-radius: 18px; padding: 26px 18px; text-align: center; margin-bottom: 24px; box-shadow: 0 10px 25px -5px rgba(185, 28, 28, 0.25); }
+  .header-title { font-size: 28px; font-weight: 800; margin: 0 0 8px 0; }
+  .header-sub { font-size: 15.5px; opacity: 0.95; max-width: 750px; margin: auto; line-height: 1.5; }
+  .progress-badge-top { display: inline-block; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); padding: 5px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; margin-top: 10px; }
+
+  /* Section Header */
+  .section-header-box { text-align: center; margin: 34px 0 18px 0; }
+  .section-main-title { font-size: 22px; font-weight: 800; margin: 0 0 6px 0; color: var(--text-main); display: inline-block; position: relative; }
+  .section-main-title::after { content: ''; display: block; width: 50px; height: 3.5px; background: var(--accent); margin: 6px auto 0 auto; border-radius: 2px; }
+  .section-sub-text { font-size: 13.5px; color: var(--text-muted); margin-top: 6px; }
+
+  /* SIDE-BY-SIDE OVERVIEW CONTAINER */
+  .overview-side-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  .overview-panel {
+    background: var(--card-bg);
+    border: 1.5px solid var(--card-border);
+    border-radius: 18px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+  }
+  .overview-panel-title { font-size: 18.5px; font-weight: 800; color: var(--accent); display: flex; align-items: center; gap: 8px; margin: 0 0 10px 0; }
+  .overview-panel-desc { font-size: 14px; color: var(--text-muted); line-height: 1.65; margin-bottom: 14px; }
+  
+  .intro-mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .intro-mini-box { background: var(--box-bg); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--card-border); font-size: 13px; line-height: 1.5; }
+  @media(max-width: 500px) { .intro-mini-grid { grid-template-columns: 1fr; } }
+
+  .why-mini-list { display: flex; flex-direction: column; gap: 10px; }
+  .why-mini-item { background: var(--box-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 10px 12px; }
+  .why-mini-item h4 { margin: 0 0 4px 0; font-size: 14px; color: var(--text-main); font-weight: 800; display: flex; align-items: center; gap: 6px; }
+  .why-mini-item p { margin: 0; font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
+
+  /* Interactive Access Studio Sandbox (Default Hidden) */
+  .sandbox-card {
+    background: var(--card-bg);
+    border: 2px solid var(--accent);
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 34px;
+    box-shadow: 0 8px 24px -4px rgba(185, 28, 28, 0.18);
+  }
+  .sandbox-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+  .sandbox-title { font-size: 19px; font-weight: 800; color: var(--text-main); margin: 0; display: flex; align-items: center; gap: 8px; }
+  .toggle-lab-btn {
+    background: var(--box-bg);
+    border: 1.5px solid var(--card-border);
+    color: var(--text-main);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .toggle-lab-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Default Hidden State */
+  #sandboxBody { margin-top: 14px; display: none; }
+
+  /* Access Table Simulator */
+  .access-table-wrapper {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    overflow-x: auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+  }
+  .access-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    text-align: center;
+  }
+  .access-table th, .access-table td {
+    border: 1px solid var(--card-border);
+    padding: 8px 10px;
+  }
+  .access-h-col { background: #fee2e2; font-weight: 800; color: #991b1b; font-size: 13px; }
+  body.dark-theme .access-h-col { background: #7f1d1d; color: #f87171; }
+
+  /* Preset Toolbar */
+  .template-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .demo-preset-btn {
+    background: rgba(185,28,28,0.1);
+    border: 1px solid rgba(185,28,28,0.3);
+    color: var(--accent);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .demo-preset-btn:hover { background: var(--accent); color: white; }
+
+  .sandbox-status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    font-weight: 600;
+    padding: 0 4px;
+  }
+
+  /* Lessons Grid */
+  .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 30px; }
+  .lesson-card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--card-border);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  }
+  .lesson-card:hover { border-color: var(--accent); box-shadow: 0 6px 15px -3px rgba(0,0,0,0.06); }
+  .lesson-card.is-completed {
+    background: var(--completed-bg);
+    border-color: var(--completed-border);
+  }
+  
+  .badge { font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 6px; background: rgba(185,28,28,0.12); color: var(--accent); display: inline-block; margin-bottom: 8px; }
+  body.dark-theme .badge { color: #f87171; }
+  .badge-adv { background: rgba(37,99,235,0.12) !important; color: var(--accent-adv) !important; }
+
+  .lesson-title { font-size: 18px; font-weight: 800; color: var(--text-main); margin: 0 0 6px 0; }
+  .lesson-desc { font-size: 13.5px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px; }
+  
+  /* Mini Mockup in Cards */
+  .access-mini-wrapper { overflow-x: auto; margin-bottom: 12px; border: 1px solid var(--card-border); border-radius: 6px; background: #0f172a; color: #f87171; padding: 10px; font-family: monospace; font-size: 12.5px; }
+  .cell-hl { background: rgba(185,28,28,0.2); padding: 2px 6px; border-radius: 4px; font-weight: 700; color: #f87171; }
+  .cell-hl-adv { background: rgba(37,99,235,0.2); padding: 2px 6px; border-radius: 4px; font-weight: 700; color: #60a5fa; }
+  
+  /* Target Badge */
+  .target-cell-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(185,28,28,0.1);
+    border: 1px solid rgba(185,28,28,0.25);
+    color: #991b1b;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    font-family: monospace;
+  }
+  body.dark-theme .target-cell-badge { color: #f87171; background: rgba(185,28,28,0.2); }
+
+  .prompt-box { background: var(--box-bg); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; border: 1px solid var(--card-border); }
+  .prompt-tag { font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; margin-bottom: 3px; display: block; }
+  .prompt-tag-adv { color: var(--accent-adv) !important; }
+  .prompt-text { font-size: 13.5px; color: var(--text-main); line-height: 1.4; margin: 0; font-family: 'Consolas', monospace; font-weight: 700; }
+  
+  .steps-box { background: rgba(185,28,28,0.06); border-left: 3.5px solid var(--accent); padding: 9px 12px; border-radius: 4px; margin-bottom: 14px; }
+  .steps-box-adv { background: rgba(37,99,235,0.06) !important; border-left: 3.5px solid var(--accent-adv) !important; }
+  .steps-title { font-size: 12.5px; font-weight: 800; color: var(--text-main); margin-bottom: 4px; }
+  .steps-list { margin: 0; padding-left: 16px; font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+  /* Mark as Completed Button */
+  .btn-complete {
+    width: 100%;
+    background: var(--box-bg);
+    border: 1.5px solid var(--card-border);
+    color: var(--text-main);
+    padding: 9px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .btn-complete:hover { border-color: #b91c1c; color: #b91c1c; }
+  .btn-complete.completed-active { background: #16a34a; border-color: #16a34a; color: white; }
+
+  /* Modified Strip For Next Page Button */
+  .next-course-strip {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .digital-skills-btn {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: #fff !important;
+    text-decoration: none;
+    padding: 16px 28px;
+    border-radius: 14px;
+    font-size: 18px;
+    font-weight: 800;
+    display: inline-block;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+  .digital-skills-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+
+</style>
+</head>
+<body class="dark-theme">
+
+  <div class="container">
+    
+    <div class="top-bar">
+      <a href="index.html" class="back-btn">← Back to Home</a>
+      <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">☀️ Light Mode</button>
+    </div>
+
+    <!-- Hero Header -->
+    <div class="header-card">
+      <div class="header-title">🗄️ Microsoft Access Master Course</div>
+      <div class="header-sub">રિલેશનલ ડેટાબેઝ મેનેજમેન્ટ પાયો, ૧૨ ફાઉન્ડેશન અને ૯ એડવાન્સ મોડ્યુલ્સ (Tables, Queries, Forms અને Reports સહિત કુલ ૨૧ લેસન્સ).</div>
+      <div class="progress-badge-top">🎯 પ્રગતિ: <span id="completedCounter">0</span> / 21 લેસન્સ પૂર્ણ</div>
+    </div>
+
+    <!-- 1. LIVE INTERACTIVE ACCESS LAB SANDBOX (DEFAULT HIDDEN) -->
+    <div class="sandbox-card">
+      <div class="sandbox-header">
+        <div class="sandbox-title">⚡ લાઈવ ડેટાબેઝ ટેબલ લેબ (Interactive Access Studio)</div>
+        <button class="toggle-lab-btn" onclick="toggleLab()" id="labToggleBtn">👁️ Open Live Lab</button>
+      </div>
+
+      <div id="sandboxBody">
+        <!-- Preset Template Buttons -->
+        <div class="template-bar">
+          <span style="font-size:12.5px; font-weight:800; color:var(--accent); padding-right:4px;">📋 Load Table:</span>
+          <button class="demo-preset-btn" onclick="loadAccessTable('students')">🎓 વિદ્યાર્થીઓનું ટેબલ (Students)</button>
+          <button class="demo-preset-btn" onclick="loadAccessTable('fees')">💰 ફી કલેક્શન ટેબલ (Fees)</button>
+          <button class="demo-preset-btn" onclick="loadAccessTable('query')">🔍 સિલેક્ટ ક્વેરી (SQL Query)</button>
+          <button class="demo-preset-btn" style="background:#fee2e2; color:#dc2626; border-color:#fca5a5; margin-left:auto;" onclick="resetAccessLab()">🔄 Reset Table</button>
+        </div>
+
+        <!-- Access Table View -->
+        <div class="access-table-wrapper">
+          <table class="access-table" id="accessMainTable">
+            <thead>
+              <tr id="tableHeaderRow">
+                <!-- Dynamic Header -->
+              </tr>
+            </thead>
+            <tbody id="tableBodyRows">
+              <!-- Dynamic Rows -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sandbox-status-bar">
+          <span id="accessStatusMsg">💡 <strong>સૂચના:</strong> ડેટાબેઝ ટેબલ અને પ્રાઇમરી કી (Primary Key) ની રચના જુઓ.</span>
+          <span>MS Access Database Engine v16.0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. SIDE-BY-SIDE PANELS: What is MS Access? & Why Learn? -->
+    <div class="section-header-box">
+      <div class="section-main-title">Access Overview & Benefits</div>
+      <div class="section-sub-text">રિલેશનલ ડેટાબેઝ મેનેજમેન્ટ સિસ્ટમ (DBMS) અને વિશાળ ડેટાને સુરક્ષિત રાખવાની રીત.</div>
+    </div>
+
+    <div class="overview-side-container">
+      
+      <!-- Panel 1: MS Access શું છે? -->
+      <div class="overview-panel">
+        <div class="overview-panel-title">🌱 MS Access શું છે? (Architecture)</div>
+        <div class="overview-panel-desc">
+          Microsoft Access એ RDBMS સોફ્ટવેર છે જે ટેબલ્સ, ક્વેરીઝ, ફોર્મ્સ અને રિપોર્ટ્સ દ્વારા વિશાળ ડેટાબેઝ મેનેજ કરવા વપરાય છે.
+        </div>
+        <div class="intro-mini-grid">
+          <div class="intro-mini-box"><strong>📌 Tables:</strong> રો અને કોલમમાં ડેટા સ્ટોર કરવો.</div>
+          <div class="intro-mini-box"><strong>📌 Primary Key:</strong> યુનિક આઇડી જે ક્યારેય રિપીટ ન થાય.</div>
+          <div class="intro-mini-box"><strong>📌 Queries:</strong> ચોક્કસ શરત મુજબ ડેટા ફિલ્ટર કરવો.</div>
+          <div class="intro-mini-box"><strong>📌 Forms & Reports:</strong> યુઝર ફ્રેન્ડલી ડેટા એન્ટ્રી અને પ્રિન્ટિંગ.</div>
+        </div>
+      </div>
+
+      <!-- Panel 2: શા માટે MS Access શીખવું જોઈએ? -->
+      <div class="overview-panel">
+        <div class="overview-panel-title">💡 શા માટે MS Access શીખવું જોઈએ?</div>
+        <div class="overview-panel-desc">
+          વિદ્યાર્થીઓ અને ડેટા મેનેજર્સ માટે એક્સેલ કરતાં પણ વધુ પાવરફુલ ડેટાબેઝ મેનેજમેન્ટ સ્કિલ:
+        </div>
+        <div class="why-mini-list">
+          <div class="why-mini-item">
+            <h4><span>🗄️</span> લાખ્ખો રેકોર્ડ્સનું સંચાલન</h4>
+            <p>એક્સેલની મર્યાદા વગર વિશાળ ડેટાબેઝ એકસાથે સચોટ રીતે સાચવવા.</p>
+          </div>
+          <div class="why-mini-item">
+            <h4><span>🔗</span> ટેબલ રિલેશનશિપ (1-to-Many)</h4>
+            <p>વિદ્યાર્થીઓ અને તેના કોર્સ વચ્ચેનો સંબંધ સચોટ રીતે જોડવો.</p>
+          </div>
+          <div class="why-mini-item">
+            <h4><span>🎓</span> GSEB & કોમ્પ્યુટર અભ્યાસક્રમ</h4>
+            <p>બોર્ડની પરીક્ષાઓ અને કોલેજ સિલેબસમાં અતિ મહત્વપૂર્ણ પ્રકરણ.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 3. PART 1: 12 FOUNDATION LESSONS -->
+    <div class="section-header-box">
+      <div class="section-main-title">Level 1: 12 Foundation Lessons</div>
+      <div class="section-sub-text">ટેબલ ડિઝાઇન, ડેટા ટાઇપ્સ, પ્રાઇમરી કી, ક્વેરીઝ, ફોર્મ્સ અને રિપોર્ટ્સ.</div>
+    </div>
+
+    <div class="grid-container">
+
+      <!-- L1 -->
+      <div class="lesson-card" id="card_ac_l1">
+        <div>
+          <span class="badge">Lesson 1</span>
+          <div class="lesson-title">ડેટાબેઝ ક્રિએશન (Blank Database)</div>
+          <div class="lesson-desc">એક્સેસ ઓપન કરી નવી ડેટાબેઝ ફાઇલ (.accdb) સેવ કરવી.</div>
+          <div class="access-mini-wrapper">
+            File -> New -> Blank Database -> <span class="cell-hl">SchoolDB.accdb</span>
+          </div>
+          <div class="target-cell-badge">📍 ફાઇલ એક્સટેન્શન: <strong>.accdb</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Action</span><p class="prompt-text">Open Access -> Blank Database -> Name file -> Create</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>એક્સેસ ઓપન કરી બ્લેન્ક ડેટાબેઝ સિલેક્ટ કરો.</li><li>ફાઇલનું નામ આપી સેવ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ac_l1', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L2 -->
+      <div class="lesson-card" id="card_ac_l2">
+        <div>
+          <span class="badge">Lesson 2</span>
+          <div class="lesson-title">ટેબલ ડિઝાઇન વ્યૂ (Table Design View)</div>
+          <div class="lesson-desc">ફિલ્ડના નામ (Field Name) અને તેના ડેટા ટાઇપ્સ (Data Types) જાતે નક્કી કરવા.</div>
+          <div class="access-mini-wrapper">
+            Field Name &nbsp;&nbsp;&nbsp; Data Type<br>
+            StudentID &nbsp;&nbsp;&nbsp;&nbsp; <span class="cell-hl">AutoNumber</span><br>
+            StudentName &nbsp;&nbsp; <span class="cell-hl">Short Text</span>
+          </div>
+          <div class="target-cell-badge">📍 વ્યૂ: <strong>Design View -> Field Names & Types</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Design View</span><p class="prompt-text">Create -> Table Design -> Enter Fields & Data Types</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>Create ટેબમાંથી Table Design ઓપન કરો.</li><li>ફિલ્ડના નામ અને ડેટા ટાઇપ સેટ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ac_l2', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L3 -->
+      <div class="lesson-card" id="card_ac_l3">
+        <div>
+          <span class="badge">Lesson 3</span>
+          <div class="lesson-title">પ્રાઇમરી કી (Primary Key Concept)</div>
+          <div class="lesson-desc">કોઈપણ રેકોર્ડ ડુપ્લિકેટ ન થાય અને યુનિક રહે તે માટે પ્રાઇમરી કી સેટ કરવી.</div>
+          <div class="access-mini-wrapper">
+            🔑 <span class="cell-hl">Primary Key</span> on StudentID (No duplicate values allowed)
+          </div>
+          <div class="target-cell-badge">📍 ફીચર: <strong>Right Click Field -> Primary Key</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Primary Key</span><p class="prompt-text">Select ID Field -> Click 'Primary Key' in Design tab</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>યુનિક આઈડી ફિલ્ડ પર રાઇટ-ક્લિક કરી Primary Key આપો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ac_l3', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L4 -->
+      <div class="lesson-card" id="card_ac_l4">
+        <div>
+          <span class="badge">Lesson 4</span>
+          <div class="lesson-title">ડેટા ટાઇપ્સ (Short Text, Number, Date/Time)</div>
+          <div class="lesson-desc">નામ માટે Short Text, ઉંમર માટે Number અને જન્મતારીખ માટે Date/Time વાપરવું.</div>
+          <div class="access-mini-wrapper">
+            • Short Text (Names, City)<br>
+            • Number / Currency (Marks, Fees)<br>
+            • <span class="cell-hl">Date/Time (Admission Date)</span>
+          </div>
+          <div class="target-cell-badge">📍 ડેટા ટાઇપ્સ: <strong>Short Text, Number, Currency, Yes/No</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Data Types</span><p class="prompt-text">Choose appropriate data type for each column</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્્સ:</div><ol class="steps-list"><li>ડેટા મુજબ સાચો ડેટા ટાઇપ સિલેક્ટ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ac_l4', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L5 -->
+      <div class="lesson-card" id="card_ac_l5">
+        <div>
+          <span class="badge">Lesson 5</span>
+          <div class="lesson-title">ડેટા શીટ વ્યૂ એન્ટ્રી (Datasheet View)</div>
+          <div class="lesson-desc">ટેબલ સેવ કર્યા પછી એક્સેલની જેમ સીધી ડેટા એન્ટ્રી કરવી.</div>
+          <div class="access-mini-wrapper">
+            Datasheet View: Enter rows of student details directly into table cells.
+          </div>
+          <div class="target-cell-badge">📍 વ્યૂ: <strong>View -> Datasheet View</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Datasheet</span><p class="prompt-text">Switch to Datasheet View to enter records</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>ટેબલ વ્યુ બદલી Datasheet View માં ડેટા ભરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ac_l5', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L6 -->
+      <div class="lesson-card" id="card_ac_l6">
+        <div>
+          <span class="badge">Lesson 6</span>
+          <div class="lesson-title">સિમ્પલ સિલેક્ટ ક્વેરી (Select Query)</div>
+          <div class="lesson-desc">લાખો રેકોર્ડ્સમાંથી માત્ર "અમદાવાદ" શહેરના વિદ્યાર્થીઓની યાદી અલગ તારવવી.</div>
+          <div class="access-mini-wrapper">
+            Query Criteria: <span class="cell-hl">"Ahmedabad"</span> under City column.
+          </div>
+          <div class="target-cell-badge">📍 મેનુ: <strong>Create -> Query Design</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Query</span><p class="prompt-text">Create -> Query Design -> Add Table -> Set Criteria</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>Query Design માં ટેબલ એડ કરી ક્રાઈટેરિયા આપો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ac_l6', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L7 -->
+      <div class="lesson-card" id="card_ac_l7">
+        <div>
+          <span class="badge">Lesson 7</span>
+          <div class="lesson-title">ક્રાઈટેરિયા અને ઓપરેટર્સ (Criteria & Like / Between)</div>
+          <div class="lesson-desc">ચોક્કસ માર્ક્સથી વધુ સ્કોર કરનાર (>80) કે ચોક્કસ અક્ષરથી શરૂ થતા નામ શોધવા.</div>
+          <div class="access-mini-wrapper">
+            Criteria Examples: <span class="cell-hl">> 80</span> OR <span class="cell-hl">Like "A*"</span>
+          </div>
+          <div class="target-cell-badge">📍 ક્રાઈટેરિયા: <strong>>35, Between 50 and 90, Like "R*"</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Criteria</span><p class="prompt-text">Type criteria in Query Design grid row</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>ક્રાઈટેરિયા રો માં શરતો લખી ક્વેરી રન કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ac_l7', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L8 -->
+      <div class="lesson-card" id="card_ac_l8">
+        <div>
+          <span class="badge">Lesson 8</span>
+          <div class="lesson-title">ડેટાબેઝ ફોર્મ્સ (Forms Wizard)</div>
+          <div class="lesson-desc">સુંદર ગ્રાફિકલ ફોર્મ બનાવી પ્રોફેશનલ રીતે ડેટા એન્ટ્રી કરવી.</div>
+          <div class="access-mini-wrapper">
+            Create -> <span class="cell-hl">Form Wizard</span> -> Select Fields -> Finish.
+          </div>
+          <div class="target-cell-badge">📍 મેનુ: <strong>Create -> Form Wizard</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Form</span><p class="prompt-text">Create -> Form Wizard -> Select Table -> Generate Form</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>Form Wizard દ્વારા આકર્ષક ડેટા એન્ટ્રી ફોર્મ બનાવો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ac_l8', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L9 -->
+      <div class="lesson-card" id="card_ac_l9">
+        <div>
+          <span class="badge">Lesson 9</span>
+          <div class="lesson-title">પ્રોફેશનલ રિપોર્ટ્સ (Reports Wizard)</div>
+          <div class="lesson-desc">પ્રિન્ટ કરવા માટે યોગ્ય ફોર્મેટમાં માર્કશીટ કે ફી રિપોર્ટ તૈયાર કરવો.</div>
+          <div class="access-mini-wrapper">
+            Create -> <span class="cell-hl">Report Wizard</span> -> Grouping & Layout -> Print Ready.
+          </div>
+          <div class="target-cell-badge">📍 મેનુ: <strong>Create -> Report Wizard</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Report</span><p class="prompt-text">Create -> Report Wizard -> Select Fields -> Print Preview</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>Report Wizard થી પ્રિન્ટ કાઢવા લાયક રિપોર્ટ બનાવો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ac_l9', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L10 -->
+      <div class="lesson-card" id="card_ac_l10">
+        <div>
+          <span class="badge">Lesson 10</span>
+          <div class="lesson-title">ટેબલ રિલેશનશિપ (Relationships 1-to-Many)</div>
+          <div class="lesson-desc">બે અલગ ટેબલ (Students અને Courses) વચ્ચે ડ્રેગ એન્ડ ડ્રોપથી કનેクション જોੜવું.</div>
+          <div class="access-mini-wrapper">
+            Database Tools -> Relationships -> <span class="cell-hl">Drag StudentID to CourseTable</span>
+          </div>
+          <div class="target-cell-badge">📍 મેનુ: <strong>Database Tools -> Relationships</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Relationship</span><p class="prompt-text">Database Tools -> Relationships -> Link Primary Key to Foreign Key</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>Relationships ઓપન કરી પ્રાઇમરી કી ને ફોરેન કી સાથે લિંક કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ac_l10', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L11 -->
+      <div class="lesson-card" id="card_ac_l11">
+        <div>
+          <span class="badge">Lesson 11</span>
+          <div class="lesson-title">પામોલિસ્ટ / લુકઅપ વિઝાર્ડ (Lookup Wizard)</div>
+          <div class="lesson-desc">ટેબલ એન્ટ્રી વખતે ટાઈપ કરવાના બદલે ડ્રોપડાઉન લિસ્ટ (Dropdown) આપવું.</div>
+          <div class="access-mini-wrapper">
+            Data Type: <span class="cell-hl">Lookup Wizard</span> -> Enter values: "Regular, Part-time"
+          </div>
+          <div class="target-cell-badge">📍 ડેટા ટાઇપ: <strong>Lookup Wizard</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Lookup</span><p class="prompt-text">Design View -> Data Type -> Lookup Wizard</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>ડેટા ટાઇપમાં Lookup Wizard પસંદ કરી ઓપ્શન્સ નાખો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ac_l11', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L12 -->
+      <div class="lesson-card" id="card_ac_l12">
+        <div>
+          <span class="badge">Lesson 12</span>
+          <div class="lesson-title">ડેટાબેઝ બેકઅપ & સિક્યુરિટી (Database Backup)</div>
+          <div class="lesson-desc">મહત્વના ડેટાબેઝને પાસવર્ડ પ્રોટેક્ટ કરવો અને બેકઅપ લેવો.</div>
+          <div class="access-mini-wrapper">
+            File -> Save As -> <span class="cell-hl">Back Up Database (.accdb)</span>
+          </div>
+          <div class="target-cell-badge">📍 મેનુ: <strong>File -> Save As -> Back Up Database</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Backup</span><p class="prompt-text">File -> Save As -> Back Up Database</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>File મેનુમાંથી Back Up Database ઓપ્શન યુઝ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ac_l12', this)">⚪ Mark as Completed</button>
+      </div>
+
+    </div>
+
+    <!-- 4. PART 2: 9 ADVANCED & CORPORATE LESSONS -->
+    <div class="section-header-box">
+      <div class="section-main-title" style="color:#2563eb;">Level 2: 9 Corporate & Advanced Modules</div>
+      <div class="section-sub-text">Action Queries, Macros, VBA Programming, SQL Views અને AI Database Prompting.</div>
+    </div>
+
+    <div class="grid-container">
+
+      <!-- Adv 1 -->
+      <div class="lesson-card" id="card_ac_adv1" style="border-color:#dbeafe;">
+        <div>
+          <span class="badge badge-adv">Advanced 1</span>
+          <div class="lesson-title">એક્શન ક્વેરીઝ (Action Queries - Append & Update)</div>
+          <div class="lesson-desc">એકસાથે હજારો રેકોર્ડ્સ અપડેટ કરવા અથવા બીજા ટેબલમાં ડેટા અપેન્ડ (Append) કરવો.</div>
+          <div class="access-mini-wrapper">
+            Query Type: <span class="cell-hl-adv">Update Query / Append Query</span> (Bulk Operations)
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 મેનુ: <strong>Query Design -> Design Tab (Update / Append)</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Action Query</span><p class="prompt-text">Query Design -> Change to Update Query -> Set Update To value</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>ક્વેરી ડિઝાઇન ઓપન કરી Update કે Append ટાઇપ સિલેક્ટ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ac_adv1', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 2 -->
+      <div class="lesson-card" id="card_ac_adv2" style="border-color:#dbeafe;">
+        <div>
+          <span class="badge badge-adv">Advanced 2</span>
+          <div class="lesson-title">મેક-ટેબલ & ડિલીટ ક્વેરી (Make-Table & Delete Query)</div>
+          <div class="lesson-desc">હાલના ડેટામાંથી નવું ટેબલ ઓટોમેટિક જનરેટ કરવું અથવા જૂનો ડેટા ડિલીટ કરવો.</div>
+          <div class="access-mini-wrapper">
+            Query Type: <span class="cell-hl-adv">Make Table Query / Delete Query</span>
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 મેનુ: <strong>Query Design -> Make Table / Delete</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Make Table</span><p class="prompt-text">Query Design -> Make Table -> Enter new table name</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>Make Table ક્વેરી દ્વારા ફિલ્ટર ડેટાનું અલગ ટેબલ બનાવો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ac_adv2', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 3 -->
+      <div class="lesson-card" id="card_ac_adv3" style="border-color:#dbeafe;">
+        <div>
+          <span class="badge badge-adv">Advanced 3</span>
+          <div class="lesson-title">એસક્યુએલ વ્યૂ (SQL View in Access)</div>
+          <div class="lesson-desc">ગ્રાફિકલ ગ્રીડના બદલે ડાયરેક્ટ SQL સ્ટેટમેન્ટ્સ (SELECT, JOIN, WHERE) લખવા.</div>
+          <div class="access-mini-wrapper">
+            SELECT * FROM Students <br>
+            <span class="cell-hl-adv">INNER JOIN Fees ON Students.ID = Fees.StudentID;</span>
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 વ્યૂ: <strong>Query View -> SQL View</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">SQL Syntax</span><p class="prompt-text">SELECT ColumnName FROM TableName WHERE Condition;</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્્સ:</div><ol class="steps-list"><li>ક્વેરીમાં SQL View ઓપન કરી સ્ટાન્ડર્ડ એસક્યુએલ કોડ લખો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ac_adv3', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 4 -->
+      <div class="lesson-card" id="card_ac_adv4" style="border-color:#dbeafe;">
+        <div>
+          <span class="badge badge-adv">Advanced 4</span>
+          <div class="lesson-title">મેક્રો ઓટોમેશન (Macros & Switchboard)</div>
+          <div class="lesson-desc">બટન ક્લિક કરવાથી ફોર્મ ઓપન થાય કે રિપોર્ટ પ્રિન્ટ થાય તેવી મેક્રો રચના.</div>
+          <div class="access-mini-wrapper">
+            Create -> Macro -> Action: <span class="cell-hl-adv">OpenForm / OpenReport / QuitAccess</span>
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 મેનુ: <strong>Create -> Macro</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Macro Automation</span><p class="prompt-text">Create -> Macro -> Select OpenForm action</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>મેક્રો દ્વારા ફોર્મ ઓપન થવાનું ઓટોમેશન સેટ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ac_adv4', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 5 -->
+      <div class="lesson-card" id="card_ac_adv5" style="border-color:#dbeafe;">
+        <div>
+          <span class="badge badge-adv">Advanced 5</span>
+          <div class="lesson-title">વીબીએ પ્રોગ્રામિંગ (VBA - Visual Basic for Applications)</div>
+          <div class="lesson-desc">એડવાન્સ લોજિક અને ફોર્મવેલિડેશન માટે VBA કોડિંગ (Sub Procedures).</div>
+          <div class="code-mini-wrapper" style="background:#09090b; color:#38bdf8; padding:8px; border-radius:4px; font-size:12px;">
+            Private Sub btnSave_Click()<br>
+            &nbsp;&nbsp;MsgBox "Record Saved Successfully!"<br>
+            End Sub
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 શોર્ટકટ: <strong>Alt + F11 (VBA Editor)</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">VBA Code</span><p class="prompt-text">Press Alt + F11 to open VBA macro editor</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li><code>Alt + F11</code> દબાવી VBA એડિટરમાં કોડ લખો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ac_adv5', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 6 -->
+      <div class="lesson-card" id="card_ac_adv6" style="border-color:#dbeafe;">
+        <div>
+          <span class="badge badge-adv">Advanced 6</span>
+          <div class="lesson-title">ક્રોસટેબ ક્વેરીઝ (Crosstab Queries)</div>
+          <div class="lesson-desc">એક્સેલ પિવોટ ટેબલ જેવી સમરી એક્સેસ ક્રોસટેબ ક્વેરી દ્વારા તૈયાર કરવી.</div>
+          <div class="access-mini-wrapper">
+            Query Wizard -> <span class="cell-hl-adv">Crosstab Query Wizard</span> (Row/Column Matrix Summary)
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 મેનુ: <strong>Create -> Query Wizard -> Crosstab</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Crosstab</span><p class="prompt-text">Create -> Query Wizard -> Crosstab Query</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>Query Wizard માંથી Crosstab પસંદ કરી સમરી બનાવો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ac_adv6', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 7 -->
+      <div class="lesson-card" id="card_ac_adv7" style="border-color:#dbeafe;">
+        <div>
+          <span class="badge badge-adv">Advanced 7</span>
+          <div class="lesson-title">ડેટાબેઝ સ્પ્લિટિંગ (Split Database - Front-End & Back-End)</div>
+          <div class="lesson-desc">મલ્ટી-યુઝર એન્વાયર્મેન્ટ માટે ટેબલ સર્વર પર અને ફોર્મ્સ લોકલ પીસી પર રાખવા.</div>
+          <div class="access-mini-wrapper">
+            Database Tools -> <span class="cell-hl-adv">Access Database Splitter</span> (Split into BE & FE)
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 મેનુ: <strong>Database Tools -> Access Database Splitter</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Splitter</span><p class="prompt-text">Database Tools -> Move tables to backend file</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>ડેટાબેઝ સ્પ્લિટર ટૂલ દ્વારા ફ્રન્ટએન્ડ અને બેકએન્ડ છૂટા પાડો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ac_adv7', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 8 -->
+      <div class="lesson-card" id="card_ac_adv8" style="border-color:#dbeafe;">
+        <div>
+          <span class="badge badge-adv">Advanced 8</span>
+          <div class="lesson-title">ડેટા એક્સપોર્ટ અને લિંકિંગ (Excel / SQL Server Import)</div>
+          <div class="lesson-desc">એક્સેલ શીટ અથવા એસક્યુએલ સર્વરનો ડેટા એક્સેસમાં ઇમ્પોર્ટ કે લિંક કરવો.</div>
+          <div class="access-mini-wrapper">
+            External Data -> <span class="cell-hl-adv">New Data Source -> From File (Excel / CSV)</span>
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 મેનુ: <strong>External Data -> New Data Source</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">External Data</span><p class="prompt-text">External Data -> Import Excel / Text File</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>External Data ટેબથી એક્સેલ ફાઇલ એક્સેસમાં લાવો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ac_adv8', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 9 -->
+      <div class="lesson-card" id="card_ac_adv9" style="border-color:#dbeafe;">
+        <div>
+          <span class="badge badge-adv">Advanced 9</span>
+          <div class="lesson-title">AI Prompting for MS Access SQL & VBA</div>
+          <div class="lesson-desc">જટિલ SQL ક્વેરીઝ અને VBA ઓટોમેશન કોડ માટે ગૂગલ જેમિની પાસેથી માર્ગદર્શન મેળવવું.</div>
+          <div class="access-mini-wrapper">
+            🤖 <span class="cell-hl-adv">AI Prompt: "MS Access માટે Student Fees Management SQL Join Query આપો"</span>
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 AI ટૂલ: <strong>Gemini / ChatGPT</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">AI Prompt</span><p class="prompt-text">"Act as a Database Administrator. Write an MS Access SQL query to find students who have unpaid fees using INNER JOIN."</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>જેમિની પાસેથી SQL કોડ મેળવી એક્સેસ SQL વ્યુમાં પેસ્ટ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_ac_adv9', this)">⚪ Mark as Completed</button>
+      </div>
+
+    </div>
+
+    <!-- 5. NEW DIGITAL SKILLS BUTTON -->
+    <div class="next-course-strip">
+      <a href="index.html" class="digital-skills-btn">💻 ડિજિટલ સ્કીલ્સ શીખો, ભવિષ્ય બનાવો! 🚀</a>
+    </div>
+
+  </div>
+
+  <script>
+    // Toggle Hide / Show Lab (Default Hidden)
+    function toggleLab() {
+      const body = document.getElementById('sandboxBody');
+      const btn = document.getElementById('labToggleBtn');
+      if (body.style.display === 'none' || body.style.display === '') {
+        body.style.display = 'block';
+        btn.innerHTML = '👁️ Hide Lab';
+      } else {
+        body.style.display = 'none';
+        btn.innerHTML = '👁️ Open Live Lab';
+      }
+    }
+
+    // Interactive Mark as Completed Tracking Engine
+    let completedCount = 0;
+    function toggleComplete(cardId, btn) {
+      const card = document.getElementById(cardId);
+      const counter = document.getElementById('completedCounter');
+      
+      if (card.classList.contains('is-completed')) {
+        card.classList.remove('is-completed');
+        btn.classList.remove('completed-active');
+        btn.innerHTML = '⚪ Mark as Completed';
+        completedCount = Math.max(0, completedCount - 1);
+      } else {
+        card.classList.add('is-completed');
+        btn.classList.add('completed-active');
+        btn.innerHTML = '✅ Completed';
+        completedCount++;
+      }
+      counter.innerText = completedCount;
+    }
+
+    // Access Database Simulation Engine
+    function loadAccessTable(type) {
+      const headerRow = document.getElementById('tableHeaderRow');
+      const bodyRows = document.getElementById('tableBodyRows');
+      const msg = document.getElementById('accessStatusMsg');
+
+      if (type === 'students') {
+        headerRow.innerHTML = `
+          <th class="access-h-col">🔑 StudentID (PK)</th>
+          <th class="access-h-col">Student Name</th>
+          <th class="access-h-col">Standard</th>
+          <th class="access-h-col">City</th>
+        `;
+        bodyRows.innerHTML = `
+          <tr><td>101</td><td>અમિત પટેલ</td><td>ધોરણ ૧૦</td><td>અમદાવાદ</td></tr>
+          <tr><td>102</td><td>પ્રિયા શાહ</td><td>ધોરણ ૧૦</td><td>વડોદરા</td></tr>
+          <tr><td>103</td><td>રાહુલ મહેતા</td><td>ધોરણ ૯</td><td>રાજકોટ</td></tr>
+        `;
+        msg.innerHTML = `✅ <strong>Students Table:</strong> પ્રાઇમરી કી (StudentID) સાથેનું મુખ્ય ડેટાબેઝ ટેબલ લોડ થયું છે.`;
+      } else if (type === 'fees') {
+        headerRow.innerHTML = `
+          <th class="access-h-col">ReceiptNo (PK)</th>
+          <th class="access-h-col">StudentID (FK)</th>
+          <th class="access-h-col">Amount (₹)</th>
+          <th class="access-h-col">Status</th>
+        `;
+        bodyRows.innerHTML = `
+          <tr><td>R-501</td><td>101</td><td>₹15,000</td><td style="color:#16a34a; font-weight:800;">Paid</td></tr>
+          <tr><td>R-502</td><td>102</td><td>₹15,000</td><td style="color:#16a34a; font-weight:800;">Paid</td></tr>
+          <tr><td>R-503</td><td>103</td><td>₹12,000</td><td style="color:#dc2626; font-weight:800;">Pending</td></tr>
+        `;
+        msg.innerHTML = `✅ <strong>Fees Collection Table:</strong> ફોરેન કી (StudentID) દ્વારા લિંક થયેલ ફી રેકોર્ડ્સ.`;
+      } else if (type === 'query') {
+        headerRow.innerHTML = `
+          <th class="access-h-col">Student Name</th>
+          <th class="access-h-col">City Filter</th>
+          <th class="access-h-col">SQL Criteria Result</th>
+        `;
+        bodyRows.innerHTML = `
+          <tr><td>અમિત પટેલ</td><td>અમદાવાદ</td><td style="color:#2563eb; font-weight:800;">Match Found (1 Record)</td></tr>
+        `;
+        msg.innerHTML = `✅ <strong>Select Query:</strong> [City = "અમદાવાદ"] શરત મુજબ ફિલ્ટર થયેલ આઉટપુટ.`;
+      }
+    }
+
+    function resetAccessLab() {
+      loadAccessTable('students');
+      document.getElementById('accessStatusMsg').innerHTML = `🔄 <strong>ટેબલ રીસેટ:</strong> ડિફોલ્ટ વિદ્યાર્થીઓનું ટેબલ લોડ થઈ ગયું છે.`;
+    }
+
+    function toggleTheme() {
+      const b = document.body, btn = document.getElementById("themeBtn");
+      b.classList.toggle("dark-theme");
+      btn.innerHTML = b.classList.contains("dark-theme") ? "☀️ Light Mode" : "🌙 Dark Mode";
+    }
+
+    window.onload = function() {
+      loadAccessTable('students');
+    };
+  </script>
+</body>
+</html>

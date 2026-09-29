@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PMGDISHA - Digital Literacy Master Course</title>
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --card-bg: #ffffff;
+    --card-border: #cbd5e1;
+    --box-bg: #f1f5f9;
+    --accent: #15803d;
+    --accent-hover: #16a34a;
+    --accent-adv: #2563eb;
+    --toolbar-bg: #f1f5f9;
+    --toolbar-border: #cbd5e1;
+    --pmg-screen-bg: #0f172a;
+    --highlight-cell: #dcfce7;
+    --highlight-adv: #dbeafe;
+    --completed-bg: #f0fdf4;
+    --completed-border: #86efac;
+  }
+  body.dark-theme {
+    --bg-color: #0f172a;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --card-bg: #1e293b;
+    --card-border: #334155;
+    --box-bg: #0b0f19;
+    --accent: #4ade80;
+    --accent-hover: #22c55e;
+    --accent-adv: #60a5fa;
+    --toolbar-bg: #1e293b;
+    --toolbar-border: #334155;
+    --pmg-screen-bg: #09090b;
+    --highlight-cell: #064e3b;
+    --highlight-adv: #1e3a8a;
+    --completed-bg: #064e3b;
+    --completed-border: #059669;
+  }
+  * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; transition: all 0.2s ease; }
+  body { background-color: var(--bg-color); margin: 0; padding: 14px; color: var(--text-main); font-size: 15px; }
+  
+  .container { max-width: 1150px; margin: 0 auto; }
+  
+  .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .back-btn { text-decoration: none; background: var(--card-bg); border: 1.5px solid var(--card-border); color: var(--text-main); padding: 7px 16px; border-radius: 20px; font-size: 13.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+  .back-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .theme-toggle-btn { background: var(--card-bg); border: 1.5px solid var(--card-border); color: var(--text-main); padding: 7px 16px; border-radius: 20px; font-size: 13.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+
+  /* Hero Banner */
+  .header-card { background: linear-gradient(135deg, #166534, #15803d); color: white; border-radius: 18px; padding: 26px 18px; text-align: center; margin-bottom: 24px; box-shadow: 0 10px 25px -5px rgba(21, 128, 61, 0.25); }
+  .header-title { font-size: 28px; font-weight: 800; margin: 0 0 8px 0; }
+  .header-sub { font-size: 15.5px; opacity: 0.95; max-width: 750px; margin: auto; line-height: 1.5; }
+  .progress-badge-top { display: inline-block; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); padding: 5px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; margin-top: 10px; }
+
+  /* Section Header */
+  .section-header-box { text-align: center; margin: 34px 0 18px 0; }
+  .section-main-title { font-size: 22px; font-weight: 800; margin: 0 0 6px 0; color: var(--text-main); display: inline-block; position: relative; }
+  .section-main-title::after { content: ''; display: block; width: 50px; height: 3.5px; background: var(--accent); margin: 6px auto 0 auto; border-radius: 2px; }
+  .section-sub-text { font-size: 13.5px; color: var(--text-muted); margin-top: 6px; }
+
+  /* SIDE-BY-SIDE OVERVIEW CONTAINER */
+  .overview-side-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  .overview-panel {
+    background: var(--card-bg);
+    border: 1.5px solid var(--card-border);
+    border-radius: 18px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+  }
+  .overview-panel-title { font-size: 18.5px; font-weight: 800; color: var(--accent); display: flex; align-items: center; gap: 8px; margin: 0 0 10px 0; }
+  .overview-panel-desc { font-size: 14px; color: var(--text-muted); line-height: 1.65; margin-bottom: 14px; }
+  
+  .intro-mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .intro-mini-box { background: var(--box-bg); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--card-border); font-size: 13px; line-height: 1.5; }
+  @media(max-width: 500px) { .intro-mini-grid { grid-template-columns: 1fr; } }
+
+  .why-mini-list { display: flex; flex-direction: column; gap: 10px; }
+  .why-mini-item { background: var(--box-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 10px 12px; }
+  .why-mini-item h4 { margin: 0 0 4px 0; font-size: 14px; color: var(--text-main); font-weight: 800; display: flex; align-items: center; gap: 6px; }
+  .why-mini-item p { margin: 0; font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
+
+  /* Interactive PMGDISHA Sandbox (Default Hidden) */
+  .sandbox-card {
+    background: var(--card-bg);
+    border: 2px solid var(--accent);
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 34px;
+    box-shadow: 0 8px 24px -4px rgba(21, 128, 61, 0.18);
+  }
+  .sandbox-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+  .sandbox-title { font-size: 19px; font-weight: 800; color: var(--text-main); margin: 0; display: flex; align-items: center; gap: 8px; }
+  .toggle-lab-btn {
+    background: var(--box-bg);
+    border: 1.5px solid var(--card-border);
+    color: var(--text-main);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .toggle-lab-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Default Hidden State */
+  #sandboxBody { margin-top: 14px; display: none; }
+
+  /* Simulator Box */
+  .pmg-sim-wrapper {
+    background: #1e293b;
+    color: #f8fafc;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+    border: 1px solid #334155;
+  }
+  .pmg-top-hud { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid #334155; padding-bottom: 10px; font-size: 14px; font-weight: 700; flex-wrap: wrap; gap: 8px; }
+  .pmg-timer-badge { background: #dc2626; color: white; padding: 4px 12px; border-radius: 20px; font-family: monospace; font-size: 15px; }
+  
+  .pmg-question-box { font-size: 17px; font-weight: 700; margin-bottom: 16px; color: #4ade80; line-height: 1.5; }
+  .pmg-option-btn {
+    display: block;
+    width: 100%;
+    background: #0f172a;
+    border: 1px solid #475569;
+    color: #f8fafc;
+    padding: 10px 14px;
+    border-radius: 6px;
+    text-align: left;
+    font-size: 14px;
+    margin-bottom: 8px;
+    cursor: pointer;
+  }
+  .pmg-option-btn:hover { background: #334155; border-color: var(--accent); }
+  .pmg-option-btn.correct { background: #16a34a !important; border-color: #22c55e !important; }
+  .pmg-option-btn.wrong { background: #dc2626 !important; border-color: #ef4444 !important; }
+
+  /* Preset Toolbar */
+  .template-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .demo-preset-btn {
+    background: rgba(21,128,61,0.1);
+    border: 1px solid rgba(21,128,61,0.3);
+    color: var(--accent);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .demo-preset-btn:hover { background: var(--accent); color: white; }
+
+  .sandbox-status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    font-weight: 600;
+    padding: 0 4px;
+  }
+
+  /* Lessons Grid */
+  .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 30px; }
+  .lesson-card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--card-border);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  }
+  .lesson-card:hover { border-color: var(--accent); box-shadow: 0 6px 15px -3px rgba(0,0,0,0.06); }
+  .lesson-card.is-completed {
+    background: var(--completed-bg);
+    border-color: var(--completed-border);
+  }
+  
+  .badge { font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 6px; background: rgba(21,128,61,0.12); color: var(--accent); display: inline-block; margin-bottom: 8px; }
+  body.dark-theme .badge { color: #4ade80; }
+  .badge-adv { background: rgba(37,99,235,0.12) !important; color: var(--accent-adv) !important; }
+
+  .lesson-title { font-size: 18px; font-weight: 800; color: var(--text-main); margin: 0 0 6px 0; }
+  .lesson-desc { font-size: 13.5px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px; }
+  
+  /* Mini Mockup in Cards */
+  .pmg-mini-wrapper { overflow-x: auto; margin-bottom: 12px; border: 1px solid var(--card-border); border-radius: 6px; background: #0f172a; color: #4ade80; padding: 10px; font-family: monospace; font-size: 12.5px; }
+  .cell-hl { background: rgba(21,128,61,0.2); padding: 2px 6px; border-radius: 4px; font-weight: 700; color: #4ade80; }
+  .cell-hl-adv { background: rgba(37,99,235,0.2); padding: 2px 6px; border-radius: 4px; font-weight: 700; color: #60a5fa; }
+  
+  /* Target Badge */
+  .target-cell-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(21,128,61,0.1);
+    border: 1px solid rgba(21,128,61,0.25);
+    color: #166534;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    font-family: monospace;
+  }
+  body.dark-theme .target-cell-badge { color: #4ade80; background: rgba(21,128,61,0.2); }
+
+  .prompt-box { background: var(--box-bg); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; border: 1px solid var(--card-border); }
+  .prompt-tag { font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; margin-bottom: 3px; display: block; }
+  .prompt-tag-adv { color: var(--accent-adv) !important; }
+  .prompt-text { font-size: 13.5px; color: var(--text-main); line-height: 1.4; margin: 0; font-family: 'Consolas', monospace; font-weight: 700; }
+  
+  .steps-box { background: rgba(21,128,61,0.06); border-left: 3.5px solid var(--accent); padding: 9px 12px; border-radius: 4px; margin-bottom: 14px; }
+  .steps-box-adv { background: rgba(37,99,235,0.06) !important; border-left: 3.5px solid var(--accent-adv) !important; }
+  .steps-title { font-size: 12.5px; font-weight: 800; color: var(--text-main); margin-bottom: 4px; }
+  .steps-list { margin: 0; padding-left: 16px; font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+  /* Mark as Completed Button */
+  .btn-complete {
+    width: 100%;
+    background: var(--box-bg);
+    border: 1.5px solid var(--card-border);
+    color: var(--text-main);
+    padding: 9px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .btn-complete:hover { border-color: #15803d; color: #15803d; }
+  .btn-complete.completed-active { background: #16a34a; border-color: #16a34a; color: white; }
+
+  /* Modified Strip For Next Page Button */
+  .next-course-strip {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .digital-skills-btn {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: #fff !important;
+    text-decoration: none;
+    padding: 16px 28px;
+    border-radius: 14px;
+    font-size: 18px;
+    font-weight: 800;
+    display: inline-block;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+  .digital-skills-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+
+</style>
+</head>
+<body class="dark-theme">
+
+  <div class="container">
+    
+    <div class="top-bar">
+      <!-- Back to Home Updated to index.html -->
+      <a href="index.html" class="back-btn">← Back to Home</a>
+      <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">☀️ Light Mode</button>
+    </div>
+
+    <!-- Hero Banner -->
+    <div class="header-card">
+      <div class="header-title">💻 PMGDISHA - Digital Literacy Master Course</div>
+      <div class="header-sub">પ્રધાન મંત્રી ગ્રામીણ ડિજિટલ સાક્ષરતા અભિયાન (PMGDISHA) અંતર્ગત ગ્રામીણ વિસ્તારોમાં ડિજિટલ તાલીમ અને પરીક્ષાની સંપૂર્ણ તૈયારી (૧૨ ફાઉન્ડેશન અને ૯ એડવાન્સ મોડ્યુલ્સ).</div>
+      <div class="progress-badge-top">🎯 પ્રગતિ: <span id="completedCounter">0</span> / 21 લેસન્સ પૂર્ણ</div>
+    </div>
+
+    <!-- 1. LIVE INTERACTIVE PMGDISHA SANDBOX (DEFAULT HIDDEN) -->
+    <div class="sandbox-card">
+      <div class="sandbox-header">
+        <div class="sandbox-title">⚡ લાઈવ PMGDISHA મોક ટેસ્ટ લેબ (Live Exam with Timer & Q&A)</div>
+        <button class="toggle-lab-btn" onclick="toggleLab()" id="labToggleBtn">👁️ Open Live Lab</button>
+      </div>
+
+      <div id="sandboxBody">
+        <!-- Preset Template Buttons -->
+        <div class="template-bar">
+          <span style="font-size:12.5px; font-weight:800; color:var(--accent); padding-right:4px;">📋 Exam Mode:</span>
+          <button class="demo-preset-btn" onclick="startPmgExam(10)">🚀 નવી રેન્ડમ ૧૦ પ્રશ્નોની લાઈવ ટેસ્ટ શરૂ કરો</button>
+          <button class="demo-preset-btn" style="background:#fee2e2; color:#dc2626; border-color:#fca5a5; margin-left:auto;" onclick="resetPmgExam()">🔄 Reset Exam</button>
+        </div>
+
+        <!-- Simulator Screen with Timer -->
+        <div class="pmg-sim-wrapper">
+          <div class="pmg-top-hud">
+            <span id="pmgExamProgress">Question 1 of 10</span>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span>⏱️ સમય બાકી:</span>
+              <span class="pmg-timer-badge" id="pmgTimerDisplay">00:30</span>
+            </div>
+            <span style="color:#22c55e; font-weight:800;">Score: <span id="pmgLiveScore">0</span></span>
+          </div>
+
+          <div class="pmg-question-box" id="pmgQText">ટેસ્ટ શરૂ કરવા ઉપરના બટન પર ક્લિક કરો.</div>
+          <div id="pmgOptionsContainer">
+            <!-- Dynamic Options -->
+          </div>
+        </div>
+
+        <div class="sandbox-status-bar">
+          <span id="pmgStatusMsg">💡 <strong>સૂચના:</strong> પ્રત્યેક પ્રશ્ન માટે ૩૦ સેકન્ડનો સમય છે. સાચો વિકલ્પ પસંદ કરો.</span>
+          <span>PMGDISHA Digital Literacy Exam v2.0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. SIDE-BY-SIDE PANELS: What is PMGDISHA? & Why Learn? -->
+    <div class="section-header-box">
+      <div class="section-main-title">PMGDISHA Scheme Overview</div>
+      <div class="section-sub-text">ગ્રામીણ ભારતમાં ડિજિટલ અસમાનતા દૂર કરવા અને ટેક્નોલોજી સશક્તિકરણની પહેલ.</div>
+    </div>
+
+    <div class="overview-side-container">
+      
+      <!-- Panel 1: PMGDISHA શું છે? -->
+      <div class="overview-panel">
+        <div class="overview-panel-title">🌱 PMGDISHA શું છે? (Scheme Scope)</div>
+        <div class="overview-panel-desc">
+          પ્રધાન મંત્રી ગ્રામીણ ડિજિટલ સાક્ષરતા અભિયાન એ દુનિયાના સૌથી મોટા ડિજિટલ લિટરસી પ્રોગ્રામ્સમાંનો એક છે, જેનો ઉદ્દેશ્ય ગ્રામીણ પરિવારોને ડિજિટલ રીતે સક્ષમ બનાવવાનો છે.
+        </div>
+        <div class="intro-mini-grid">
+          <div class="intro-mini-box"><strong>📌 Target:</strong> ગ્રામીણ પરિવારમાંથી ૧ સભ્યને તાલીમ.</div>
+          <div class="intro-mini-box"><strong>📌 Duration:</strong> ૨૦ કલાકનો બેઝિક કોર્સ.</div>
+          <div class="intro-mini-box"><strong>📌 Eligibility:</strong> ઉંમર ૧૪ થી ૬૦ વર્ષ.</div>
+          <div class="intro-mini-box"><strong>📌 Certification:</strong> NIELIT / NIOS દ્વારા પ્રમાણપત્ર.</div>
+        </div>
+      </div>
+
+      <!-- Panel 2: શા માટે PMGDISHA જરૂરી છે? -->
+      <div class="overview-panel">
+        <div class="overview-panel-title">💡 શા માટે આ તાલીમ મહત્વપૂર્ણ છે?</div>
+        <div class="overview-panel-desc">
+          ગ્રામીણ નાગરિકોને સ્માર્ટફોન, ઈન્ટરનેટ અને સરકારી ઓનલાઇન સેવાઓ વાપરતા શીખવવું:
+        </div>
+        <div class="why-mini-list">
+          <div class="why-mini-item">
+            <h4><span>📱</span> ડિજિટલ ઉપકરણોનો ઉપયોગ</h4>
+            <p>કમ્પ્યુટર, ટેબ્લેટ અને સ્માર્ટફોન ઓપરેટ કરવાની પાયાની તાલીમ.</p>
+          </div>
+          <div class="why-mini-item">
+            <h4><span>💳</span> કેશલેસ ટ્રાન્ઝેક્શન & UPI</h4>
+            <p>ડિજિટલ વોલેટ, ભીમ અને યુપીઆઈ દ્વારા સુરક્ષિત ઓનલાઇન ચૂકવણી.</p>
+          </div>
+          <div class="why-mini-item">
+            <h4><span>🏛️</span> સરકારી G2C સેવાઓ</h4>
+            <p>આવકના દાખલા, રેશનકાર્ડ અને આધાર કાર્ડ જેવી ઓનલાઇન સેવાઓ મેળવવી.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 3. PART 1: 12 FOUNDATION LESSONS -->
+    <div class="section-header-box">
+      <div class="section-main-title">Level 1: 12 Foundation Lessons (Digital Basics)</div>
+      <div class="section-sub-text">ડિજિટલ ડિવાઈસીસ, ઈન્ટરનેટ બ્રાઉઝિંગ, ઈમેલ, ડિજીલોકર અને ઓનલાઇન પેમેન્ટ.</div>
+    </div>
+
+    <div class="grid-container">
+
+      <!-- L1 -->
+      <div class="lesson-card" id="card_pmg_l1">
+        <div>
+          <span class="badge">Lesson 1</span>
+          <div class="lesson-title">ડિજિટલ ડિવાઈસીસનો પરિચય (Introduction to Digital Devices)</div>
+          <div class="lesson-desc">કમ્પ્યુટર, લેપટોપ, ટેબ્લેટ અને સ્માર્ટફોનના મૂળભૂત ભાગો અને ઉપયોગ.</div>
+          <div class="pmg-mini-wrapper">
+            • Screen, Touch, Ports, Power Button<br>
+            • Operating system basics (Android & Windows)
+          </div>
+          <div class="target-cell-badge">📍 મોડ્યુલ: <strong>Introduction to Digital Devices</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Module 1</span><p class="prompt-text">Operating and handling touchscreens and keyboards.</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>મોબાઈલ અને કમ્પ્યુટર ચાલુ-બંધ કરતા શીખો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_pmg_l1', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L2 -->
+      <div class="lesson-card" id="card_pmg_l2">
+        <div>
+          <span class="badge">Lesson 2</span>
+          <div class="lesson-title">ડિવાઈસ ઓપરેટિંગ & ફાઈલ મેનેજમેન્ટ (Operating Devices)</div>
+          <div class="lesson-desc">વોલપેપર બદલવું, સાઉન્ડ સેટિંગ્સ અને ફોટા/વિડિયો ફોલ્ડરમાં સેવ કરવા.</div>
+          <div class="pmg-mini-wrapper">
+            • Gallery, File Manager, Sound & Brightness
+          </div>
+          <div class="target-cell-badge">📍 મોડ્યુલ: <strong>Operating Digital Devices</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Module 2</span><p class="prompt-text">Managing files, folders, and device settings.</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>ફોલ્ડર બનાવી ફોટા વ્યવસ્થિત ગોઠવો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_pmg_l2', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L3 -->
+      <div class="lesson-card" id="card_pmg_l3">
+        <div>
+          <span class="badge">Lesson 3</span>
+          <div class="lesson-title">ઇન્ટરનેટનો પરિચય અને બ્રાઉઝિંગ (Introduction to Internet)</div>
+          <div class="lesson-desc">વેબ બ્રાઉઝર (Google Chrome) ખોલવું અને માહિતી સર્ચ કરવી.</div>
+          <div class="pmg-mini-wrapper">
+            • Google Search, URL Typing, Web Navigation
+          </div>
+          <div class="target-cell-badge">📍 મોડ્યુલ: <strong>Introduction to the Internet</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Module 3</span><p class="prompt-text">Opening a web browser and searching information.</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>બ્રાઉઝર ઓપન કરી ગૂગલ પર માહિતી શોધો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_pmg_l3', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L4 -->
+      <div class="lesson-card" id="card_pmg_l4">
+        <div>
+          <span class="badge">Lesson 4</span>
+          <div class="lesson-title">સંચાર અને ઈમેલ (Communications via Internet)</div>
+          <div class="lesson-desc">ઈમેલ આઈડી બનાવવું, મેલ મોકલવો અને રીસીવ કરવો.</div>
+          <div class="pmg-mini-wrapper">
+            • Gmail account, Compose, Inbox, Send, Attachments
+          </div>
+          <div class="target-cell-badge">📍 મોડ્યુલ: <strong>Communications using the Internet</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Module 4</span><p class="prompt-text">Sending and receiving emails with documents.</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>નવું ઈમેલ એકાઉન્ટ બનાવી મિત્રને મેલ મોકલો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_pmg_l4', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L5 -->
+      <div class="lesson-card" id="card_pmg_l5">
+        <div>
+          <span class="badge">Lesson 5</span>
+          <div class="lesson-title">ડિજિટલ ફાઈનાન્સ અને કેશલેસ લેવડદેવડ (Digital Payments)</div>
+          <div class="lesson-desc">UPI, BHIM App, QR Code સ્કેન કરી ઓનલાઇન પેમેન્ટ કરવું.</div>
+          <div class="pmg-mini-wrapper">
+            • UPI ID, QR Scan & Pay, Pin Security
+          </div>
+          <div class="target-cell-badge">📍 મોડ્યુલ: <strong>Digital Financial Tools & Cashless Tx</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Digital Pay</span><p class="prompt-text">Making secure digital payments via UPI.</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>ક્યુઆર કોડ સ્કેન કરી પેમેન્ટ કરવાની રીત સમજો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_pmg_l5', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L6 -->
+      <div class="lesson-card" id="card_pmg_l6">
+        <div>
+          <span class="badge">Lesson 6</span>
+          <div class="lesson-title">ડિજીલોકરનો ઉપયોગ (DigiLocker Services)</div>
+          <div class="lesson-desc">આધાર કાર્ડ, પાસિંગ સર્ટિફિકેટ અને માર્કશીટ ક્લાઉડમાં સેવ રાખવા.</div>
+          <div class="pmg-mini-wrapper">
+            • Digital certificates verification and cloud storage.
+          </div>
+          <div class="target-cell-badge">📍 મોડ્યુલ: <strong>Use Digital Locker</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">DigiLocker</span><p class="prompt-text">Storing official documents securely in DigiLocker.</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>ડિજીલોકર એપ પર આધાર કાર્ડ લિંક કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_pmg_l6', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L7 -->
+      <div class="lesson-card" id="card_pmg_l7">
+        <div>
+          <span class="badge">Lesson 7</span>
+          <div class="lesson-title">સરકારી ઓનલાઇન સેવાઓ - G2C (Citizen Services)</div>
+          <div class="lesson-desc">આવકનો દાખલો, જાતિ પ્રમાણપત્ર અને રેશનકાર્ડ માટે ઓનલાઇન અરજી.</div>
+          <div class="pmg-mini-wrapper">
+            • Income Certificate, Domicile, Caste verification.
+          </div>
+          <div class="target-cell-badge">📍 મોડ્યુલ: <strong>Online Citizen-Centric Services</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">G2C Services</span><p class="prompt-text">Applying for government certificates online.</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>ડિજિટલ ગુજરાત કે સીએસસી પોર્ટલની માહિતી મેળવો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_pmg_l7', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L8 -->
+      <div class="lesson-card" id="card_pmg_l8">
+        <div>
+          <span class="badge">Lesson 8</span>
+          <div class="lesson-title">રેલવે ટિકિટ અને બિલ પેમેન્ટ (IRCTC & Utility Bills)</div>
+          <div class="lesson-desc">ઘરે બેઠા લાઈટ બિલ ભરવું અને રેલવે ટિકિટ બુક કરવી.</div>
+          <div class="pmg-mini-wrapper">
+            • Electricity bill payment, IRCTC train ticket booking.
+          </div>
+          <div class="target-cell-badge">📍 મોડ્યુલ: <strong>Utility Bills & IRCTC</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Utility</span><p class="prompt-text">Paying electricity bills and booking tickets online.</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>કન્ઝ્યુમર નંબર નાખી લાઈટ બિલ પેમેન્ટ કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_pmg_l8', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L9 -->
+      <div class="lesson-card" id="card_pmg_l9">
+        <div>
+          <span class="badge">Lesson 9</span>
+          <div class="lesson-title">મોબાઈલ બેન્કિંગ અને આધાર પેમેન્ટ (AEPS & USSD)</div>
+          <div class="lesson-desc">આધાર નંબર દ્વારા બેંક બેલેન્સ ચેક કરવું અને ફિંગરપ્રિન્ટ પેમેન્ટ.</div>
+          <div class="pmg-mini-wrapper">
+            • AEPS (Aadhaar Enabled Payment System), USSD (*99#)
+          </div>
+          <div class="target-cell-badge">📍 મોડ્યુલ: <strong>AEPS & Mobile Banking</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">AEPS</span><p class="prompt-text">Banking transactions using Aadhaar biometric authentication.</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>એઈપીએસ સિસ્ટમની કાર્યપદ્ધતિ સમજો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_pmg_l9', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L10 -->
+      <div class="lesson-card" id="card_pmg_l10">
+        <div>
+          <span class="badge">Lesson 10</span>
+          <div class="lesson-title">સોશિયલ મીડિયા અને સુરક્ષિત મેસેજિંગ (Social Media)</div>
+          <div class="lesson-desc">વોટ્સએપ, ફેસબુક અને યુટ્યુબનો શિક્ષણ અને મનોરંજન માટે સદઉપયોગ.</div>
+          <div class="pmg-mini-wrapper">
+            • WhatsApp messaging, YouTube educational videos.
+          </div>
+          <div class="target-cell-badge">📍 મોડ્યુલ: <strong>Social Media & Apps</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Social Media</span><p class="prompt-text">Using social messaging apps safely and responsibly.</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>યુટ્યુબ પર શૈક્ષણિક વિડિયો સર્ચ કરતા શીખો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_pmg_l10', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L11 -->
+      <div class="lesson-card" id="card_pmg_l11">
+        <div>
+          <span class="badge">Lesson 11</span>
+          <div class="lesson-title">સાયબર ક્રાઈમ અને સાવચેતી (Cyber Fraud Awareness)</div>
+          <div class="lesson-desc">ઓનલાઇન ફ્રોડ, ઓટીપી શેર ન કરવાના નિયમો અને સાયબર હેલ્પલાઈન ૧૯૩૦.</div>
+          <div class="pmg-mini-wrapper">
+            • Never share OTP/Password, Cyber Helpline: 1930
+          </div>
+          <div class="target-cell-badge">📍 મોડ્યુલ: <strong>Cyber Security & Fraud Prevention</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Cyber Safety</span><p class="prompt-text">Protecting oneself from online financial scams.</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>ઓટીપી કોઈને ન આપવાના નિયમનું પાલન કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_pmg_l11', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- L12 -->
+      <div class="lesson-card" id="card_pmg_l12">
+        <div>
+          <span class="badge">Lesson 12</span>
+          <div class="lesson-title">રોજિંદા જીવનમાં ટેક્નોલોજી (Tech in Everyday Life)</div>
+          <div class="lesson-desc">આરોગ્ય સેતુ, કિસાન પોર્ટલ અને ઓનલાઇન એજ્યુકેશન એપ્સનો ઉપયોગ.</div>
+          <div class="pmg-mini-wrapper">
+            • E-Agriculture, Tele-medicine, Online learning portals.
+          </div>
+          <div class="target-cell-badge">📍 મોડ્યુલ: <strong>Technology in Daily Life</strong></div>
+          <div class="prompt-box"><span class="prompt-tag">Daily Tech</span><p class="prompt-text">Using apps for health, farming, and education.</p></div>
+          <div class="steps-box"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>દૈનિક જીવનમાં ડિજિટલ સાધનોનો ઉપયોગ વધારો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_pmg_l12', this)">⚪ Mark as Completed</button>
+      </div>
+
+    </div>
+
+    <!-- 4. PART 2: 9 ADVANCED MODULES -->
+    <div class="section-header-box">
+      <div class="section-main-title" style="color:#2563eb;">Level 2: 9 Advanced Digital Literacy Modules</div>
+      <div class="section-sub-text">એડવાન્સ ડિજિટલ બેન્કિંગ, ઈ-કોમર્સ, ઓનલાઇન ફોર્મ ફિલિંગ અને AI Prompting.</div>
+    </div>
+
+    <div class="grid-container">
+
+      <!-- Adv 1 -->
+      <div class="lesson-card" id="card_pmg_adv1" style="border-color:#dbeafe;">
+        <div>
+          <span class="badge badge-adv">Advanced 1</span>
+          <div class="lesson-title">ઓનલાઇન શોપિંગ અને ઈ-કોમર્સ (E-Commerce)</div>
+          <div class="lesson-desc">એમેઝોન કે ફ્લિપકાર્ટ પર ઓર્ડર કરવો અને કેશ ઓન ડિલીવરી/ઓનલાઇન પેમેન્ટ કરવું.</div>
+          <div class="pmg-mini-wrapper">
+            • Product search, Cart, COD vs Online Payment.
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 મોડ્યુલ: <strong>Online Shopping & Safety</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">E-Commerce</span><p class="prompt-text">Buying products safely on e-commerce platforms.</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>વિશ્વસનીય વેબસાઇટ્સ પરથી જ ઓનલાઇન ખરીદી કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_pmg_adv1', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 2 -->
+      <div class="lesson-card" id="card_pmg_adv2" style="border-color:#dbeafe;">
+        <div>
+          <span class="badge badge-adv">Advanced 2</span>
+          <div class="lesson-title">ઓનલાઇન બેન્કિંગ અને ફિક્સ ડિપોઝિટ (Net Banking)</div>
+          <div class="lesson-desc">મોબાઈલ કે લેપટોપથી ઘર બેઠા સ્ટેટમેન્ટ ચેક કરવું અને એફડી કરવી.</div>
+          <div class="pmg-mini-wrapper">
+            • Account Statement, Fund Transfer (NEFT/RTGS).
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 મોડ્યુલ: <strong>Internet Banking & Statements</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Net Banking</span><p class="prompt-text">Viewing bank statements and transferring funds online.</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>નેટ બેન્કિંગ દ્વારા પાસબુક એન્ટ્રી ચેક કરો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_pmg_adv2', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 3 -->
+      <div class="lesson-card" id="card_pmg_adv3" style="border-color:#dbeafe;">
+        <div>
+          <span class="badge badge-adv">Advanced 3</span>
+          <div class="lesson-title">ડિજિટલ એજ્યુકેશન પોર્ટલ (DIKSHA & SWAYAM)</div>
+          <div class="lesson-desc">સરકારના શૈક્ષણિક પ્લેટફોર્મ દ્વારા ઓનલાઇન અભ્યાસક્રમો કરવા.</div>
+          <div class="pmg-mini-wrapper">
+            • DIKSHA Portal, SWAYAM Online Courses.
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 મોડ્યુલ: <strong>Online Learning Portals</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">E-Learning</span><p class="prompt-text">Accessing free educational courses online.</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>દિક્ષા પોર્ટલ પર લોગિન કરી અભ્યાસ સામગ્રી જુઓ.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_pmg_adv3', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 4 -->
+      <div class="lesson-card" id="card_pmg_adv4" style="border-color:#dbeafe;">
+        <div>
+          <span class="badge badge-adv">Advanced 4</span>
+          <div class="lesson-title">ટેલીમેડિસિન અને સ્વાસ્થ્ય સેવાઓ (e-Sanjeevani)</div>
+          <div class="lesson-desc">ઓનલાઇન ડોક્ટરની સલાહ લેવા માટે ઈ-સંજીવની ઓપન સોર્સ એપનો ઉપયોગ.</div>
+          <div class="pmg-mini-wrapper">
+            • e-Sanjeevani OPD, Online Doctor Consultation.
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 મોડ્યુલ: <strong>Telemedicine & Health Apps</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Health Tech</span><p class="prompt-text">Consulting doctors online through e-Sanjeevani.</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>ટેલીમેડિસિન એપ દ્વારા પ્રિસ્ક્રિપ્શન મેળવો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_pmg_adv4', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 5 -->
+      <div class="lesson-card" id="card_pmg_adv5" style="border-color:#dbeafe;">
+        <div>
+          <span class="badge badge-adv">Advanced 5</span>
+          <div class="lesson-title">કૃષિ અને કિસાન પોર્ટલ સેવાઓ (Agri Tech & e-NAM)</div>
+          <div class="lesson-desc">ખેડૂતો માટે હવામાનની માહિતી, બજાર ભાવ અને સરકારી સહાય યોજનાઓ.</div>
+          <div class="pmg-mini-wrapper">
+            • e-NAM, Kisan Credit Card, Weather Apps.
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 મોડ્યુલ: <strong>Agricultural Portals</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Agri Tech</span><p class="prompt-text">Using farmer portals for market prices and subsidies.</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>કિસાન પોર્ટલ પર પાકની માહિતી મેળવો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_pmg_adv5', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 6 -->
+      <div class="lesson-card" id="card_pmg_adv6" style="border-color:#dbeafe;">
+        <div>
+          <span class="badge badge-adv">Advanced 6</span>
+          <div class="lesson-title">ઓનલાઇન જોબ પોર્ટલ અને રોજગાર (National Career Service)</div>
+          <div class="lesson-desc">રોજગાર વિનિમય કચેરી અને નેશનલ કરિયર સર્વિસ પોર્ટલ પર રજીસ્ટ્રેશન.</div>
+          <div class="pmg-mini-wrapper">
+            • NCS Portal, Resume uploading, Job alerts.
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 મોડ્યુલ: <strong>Job Portals & Employment</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Job Portal</span><p class="prompt-text">Registering on government job portals.</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>એનસીએસ પોર્ટલ પર પ્રોફાઈલ બનાવો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_pmg_adv6', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 7 -->
+      <div class="lesson-card" id="card_pmg_adv7" style="border-color:#dbeafe;">
+        <div>
+          <span class="badge badge-adv">Advanced 7</span>
+          <div class="lesson-title">કોલાબોરેશન ટૂલ્સ અને ગૂગલ મીટ (Online Meetings)</div>
+          <div class="lesson-desc">ગૂગલ મીટ કે ઝૂમ એપ દ્વારા ઓનલાઇન મીટિંગ કે ક્લાસમાં જોડાવવું.</div>
+          <div class="pmg-mini-wrapper">
+            • Google Meet, Zoom, Microsoft Teams basics.
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 મોડ્યુલ: <strong>Video Conferencing</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Meeting</span><p class="prompt-text">Joining online video calls and classes.</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>મીટિંગ લિંક પર ક્લિક કરી ઓનલાઇન જોડાવો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_pmg_adv7', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 8 -->
+      <div class="lesson-card" id="card_pmg_adv8" style="border-color:#dbeafe;">
+        <div>
+          <span class="badge badge-adv">Advanced 8</span>
+          <div class="lesson-title">ડિજિટલ સિગ્નેચર અને સર્ટિફિકેટ્સ (Digital Signatures)</div>
+          <div class="lesson-desc">સરકારી અને કાનૂની દસ્તાવેજો પર ઓનલાઇન ડિજિટલ સાઈન કરવાની રીત.</div>
+          <div class="pmg-mini-wrapper">
+            • DSC (Digital Signature Certificate) verification.
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 મોડ્યુલ: <strong>Digital Signatures & Security</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">Security</span><p class="prompt-text">Using cryptographic digital signatures for documents.</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>ડિજિટલ સહીની ઉપયોગિતા સમજો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_pmg_adv8', this)">⚪ Mark as Completed</button>
+      </div>
+
+      <!-- Adv 9 -->
+      <div class="lesson-card" id="card_pmg_adv9" style="border-color:#dbeafe;">
+        <div>
+          <span class="badge badge-adv">Advanced 9</span>
+          <div class="lesson-title">AI Prompting for Digital Literacy Training</div>
+          <div class="lesson-desc">ગ્રામીણ વિદ્યાર્થીઓને ડિજિટલ સાક્ષરતા શીખવવા માટે ગૂગલ જેમિની પાસેથી તાલીમી સામગ્રી મેળવવી.</div>
+          <div class="pmg-mini-wrapper">
+            🤖 <span class="cell-hl-adv">AI Prompt: "ગ્રામીણ નાગરિકોને UPI પેમેન્ટ શીખવવા માટે ૫ સરળ સ્ટેપ્સ આપો"</span>
+          </div>
+          <div class="target-cell-badge" style="color:#2563eb;">📍 AI ટૂલ: <strong>Gemini / ChatGPT</strong></div>
+          <div class="prompt-box"><span class="prompt-tag prompt-tag-adv">AI Prompt</span><p class="prompt-text">"Act as a Digital Literacy Trainer. Create a simple 5-step guide for rural villagers on how to use DigiLocker."</p></div>
+          <div class="steps-box steps-box-adv"><div class="steps-title">પ્રેક્ટિકલ સ્ટેપ્સ:</div><ol class="steps-list"><li>જેમિની પાસેથી ટ્રેનિંગ કન્ટેન્ટ મેળવી વિદ્યાર્થીઓને શીખવો.</li></ol></div>
+        </div>
+        <button class="btn-complete" onclick="toggleComplete('card_pmg_adv9', this)">⚪ Mark as Completed</button>
+      </div>
+
+    </div>
+
+    <!-- 5. NEW DIGITAL SKILLS BUTTON -->
+    <div class="next-course-strip">
+      <a href="index.html" class="digital-skills-btn">💻 ડિજિટલ સ્કીલ્સ શીખો, ભવિષ્ય બનાવો! 🚀</a>
+    </div>
+
+  </div>
+
+  <script>
+    // Toggle Hide / Show Lab (Default Hidden)
+    function toggleLab() {
+      const body = document.getElementById('sandboxBody');
+      const btn = document.getElementById('labToggleBtn');
+      if (body.style.display === 'none' || body.style.display === '') {
+        body.style.display = 'block';
+        btn.innerHTML = '👁️ Hide Lab';
+      } else {
+        body.style.display = 'none';
+        btn.innerHTML = '👁️ Open Live Lab';
+      }
+    }
+
+    // Interactive Mark as Completed Tracking Engine
+    let completedCount = 0;
+    function toggleComplete(cardId, btn) {
+      const card = document.getElementById(cardId);
+      const counter = document.getElementById('completedCounter');
+      
+      if (card.classList.contains('is-completed')) {
+        card.classList.remove('is-completed');
+        btn.classList.remove('completed-active');
+        btn.innerHTML = '⚪ Mark as Completed';
+        completedCount = Math.max(0, completedCount - 1);
+      } else {
+        card.classList.add('is-completed');
+        btn.classList.add('completed-active');
+        btn.innerHTML = '✅ Completed';
+        completedCount++;
+      }
+      counter.innerText = completedCount;
+    }
+
+    // PMGDISHA Question Bank
+    const pmgQuestionBank = [
+      { q: "૧. PMGDISHA યોજનાનો મુખ્ય ઉદ્દેશ્ય શું છે?", options: ["A) ગ્રામીણ વિસ્તારોમાં ડિજિટલ સાક્ષરતા વધારવી", "B) ફ્રી લેપટોપ વિતરણ", "C) સ્માર્ટફોન વેચાણ", "D) ફ્રી ઇન્ટરનેટ કનેક્શન"], correct: 0 },
+      { q: "૨. PMGDISHA કોર્સની કુલ તાલીમી અવધિ (Duration) કેટલા કલાકની છે?", options: ["A) ૧૦ કલાક", "B) ૨૦ કલાક", "C) ૫૦ કલાક", "D) ૧૦૦ કલાક"], correct: 1 },
+      { q: "૩. PMGDISHA તાલીમ માટે પાત્રતા વય મર્યાદા કેટલી છે?", options: ["A) ૬ થી ૧૮ વર્ષ", "B) ૧૪ થી ૬૦ વર્ષ", "C) ૧૮ થી ૩૫ વર્ષ", "D) કોઈ મર્યાદા નથી"], correct: 1 },
+      { q: "૪. સ્માર્ટફોન કે ટેબ્લેટમાં માહિતી સર્ચ કરવા માટે કયા સોફ્ટવેરનો ઉપયોગ થાય છે?", options: ["A) MS Word", "B) Web Browser (Google Chrome)", "C) Calculator", "D) Notepad"], correct: 1 },
+      { q: "૫. ઈમેલ મોકલતી વખતે 'BCC' નો અર્થ શું થાય છે?", options: ["A) Blind Carbon Copy", "B) Basic Computer Copy", "C) Best Central Code", "D) Bulk Client Connect"], correct: 0 },
+      { q: "૬. ડિજીલોકર (DigiLocker) માં કયા દસ્તાવેજો સાચવી શકાય છે?", options: ["A) આધાર કાર્ડ, માર્કશીટ, સર્ટિફિકેટ", "B) માત્ર ફોટા", "C) માત્ર વિડિયો", "D) ગેમ્સ"], correct: 0 },
+      { q: "૭. ઓનલાઇન પેમેન્ટ માટે યુપીઆઈ (UPI) પિન કેટલા અંકનો હોય છે?", options: ["A) ૨ અંકનો", "B) ૪ કે ૬ અંકનો", "C) ૧૦ અંકનો", "D) ૧૨ અંકનો"], correct: 1 },
+      { q: "૮. સાયબર ફ્રોડ કે ઓનલાઇન છેતરપિંડી થાય ત્યારે કયા હેલ્પલાઈન નંબર પર કોલ કરવો?", options: ["A) 100", "B) 108", "C) 1930", "D) 104"], correct: 2 },
+      { q: "૯. સરકારી ઓનલાઇન સેવાઓ મેળવવા માટે ગુજરાત સરકારનું અધિકૃત પોર્ટલ કયું છે?", options: ["A) Digital Gujarat", "B) Amazon", "C) Flipkart", "D) YouTube"], correct: 0 },
+      { q: "૧૦. કમ્પ્યુટરમાંથી ડિલીટ થયેલી ફાઈલ ક્યાં જાય છે?", options: ["A) My Computer", "B) Recycle Bin", "C) Control Panel", "D) Desktop"], correct: 1 }
+    ];
+
+    let activePmgQuestions = [];
+    let currentPmgIdx = 0;
+    let pmgTimerInterval = null;
+    let pmgTimeLeft = 30;
+    let pmgScore = 0;
+
+    function startPmgExam(numQ) {
+      let shuffled = [...pmgQuestionBank].sort(() => 0.5 - Math.random());
+      activePmgQuestions = shuffled.slice(0, numQ);
+      currentPmgIdx = 0;
+      pmgScore = 0;
+      document.getElementById('pmgLiveScore').innerText = pmgScore;
+      loadPmgQuestion(0);
+    }
+
+    function loadPmgQuestion(idx) {
+      currentPmgIdx = idx;
+      const qData = activePmgQuestions[idx];
+      document.getElementById('pmgExamProgress').innerText = `Question ${idx + 1} of ${activePmgQuestions.length}`;
+      document.getElementById('pmgQText').innerText = qData.q;
+      
+      const optContainer = document.getElementById('pmgOptionsContainer');
+      optContainer.innerHTML = '';
+
+      qData.options.forEach((opt, oIdx) => {
+        const btn = document.createElement('button');
+        btn.className = 'pmg-option-btn';
+        btn.innerText = opt;
+        btn.onclick = () => checkPmgAnswer(oIdx, qData.correct);
+        optContainer.appendChild(btn);
+      });
+
+      document.getElementById('pmgStatusMsg').innerHTML = `💡 <strong>પરીક્ષા ચાલુ છે:</strong> સાચો વિકલ્પ પસંદ કરો.`;
+      
+      // Reset & Start Timer
+      clearInterval(pmgTimerInterval);
+      pmgTimeLeft = 30;
+      updatePmgTimerDisplay();
+      pmgTimerInterval = setInterval(() => {
+        pmgTimeLeft--;
+        updatePmgTimerDisplay();
+        if (pmgTimeLeft <= 0) {
+          clearInterval(pmgTimerInterval);
+          document.getElementById('pmgStatusMsg').innerHTML = `⏰ <strong>સમય સમાપ્ત!</strong> આગામી પ્રશ્ન પર જાઓ.`;
+          autoAdvancePmgQuestion();
+        }
+      }, 1000);
+    }
+
+    function updatePmgTimerDisplay() {
+      const min = String(Math.floor(pmgTimeLeft / 60)).padStart(2, '0');
+      const sec = String(pmgTimeLeft % 60).padStart(2, '0');
+      document.getElementById('pmgTimerDisplay').innerText = `${min}:${sec}`;
+    }
+
+    function checkPmgAnswer(selected, correct) {
+      clearInterval(pmgTimerInterval);
+      const allBtns = document.querySelectorAll('.pmg-option-btn');
+      allBtns.forEach((b, idx) => {
+        b.style.pointerEvents = 'none';
+        if (idx === correct) {
+          b.classList.add('correct');
+        } else if (idx === selected) {
+          b.classList.add('wrong');
+        }
+      });
+
+      const msg = document.getElementById('pmgStatusMsg');
+      if (selected === correct) {
+        pmgScore++;
+        document.getElementById('pmgLiveScore').innerText = pmgScore;
+        msg.innerHTML = `✅ <strong>અભિનંદન! તમારો જવાબ સાચો છે.</strong>`;
+      } else {
+        msg.innerHTML = `❌ <strong>ખોટો જવાબ.</strong> સાચો જવાબ લીલા રંગમાં દર્શાવેલ છે.`;
+      }
+
+      setTimeout(() => {
+        autoAdvancePmgQuestion();
+      }, 2000);
+    }
+
+    function autoAdvancePmgQuestion() {
+      currentPmgIdx++;
+      if (currentPmgIdx < activePmgQuestions.length) {
+        loadPmgQuestion(currentPmgIdx);
+      } else {
+        const passingScore = Math.ceil(activePmgQuestions.length * 0.5);
+        const isPassed = pmgScore >= passingScore;
+        document.getElementById('pmgStatusMsg').innerHTML = isPassed ? `🎉 <strong>ટેસ્ટ પાસ!</strong> અભિનંદન.` : `⚠️ <strong>ટેસ્ટ નાપાસ.</strong> વધુ પ્રેક્ટિસ કરો.`;
+        document.getElementById('pmgQText').innerText = `🏆 ટેસ્ટ પૂર્ણ! તમારો કુલ સ્કોર: ${pmgScore} / ${activePmgQuestions.length} (${isPassed ? 'PASS ✅' : 'FAIL ❌'})`;
+        document.getElementById('pmgOptionsContainer').innerHTML = `<button class="demo-preset-btn" onclick="startPmgExam(10)" style="width:100%; padding:12px; font-size:15px;">ફરીથી ટેસ્ટ આપો (Retake Test)</button>`;
+        document.getElementById('pmgTimerDisplay').innerText = "00:00";
+      }
+    }
+
+    function resetPmgExam() {
+      startPmgExam(10);
+    }
+
+    function toggleTheme() {
+      const b = document.body, btn = document.getElementById("themeBtn");
+      b.classList.toggle("dark-theme");
+      btn.innerHTML = b.classList.contains("dark-theme") ? "☀️ Light Mode" : "🌙 Dark Mode";
+    }
+
+    window.onload = function() {
+      startPmgExam(10);
+    };
+  </script>
+</body>
+</html>
